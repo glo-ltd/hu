@@ -111,13 +111,30 @@ a:hover { color: var(--burgundy-800); }
 /* ============================================================
    UTILITIES
    ============================================================ */
+/* Skip link for keyboard / screen-reader users */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: clamp(24px, 5vw, 40px);
+  background: var(--burgundy-700);
+  color: var(--cream-50);
+  padding: 10px 20px;
+  border-radius: var(--radius-xs);
+  font-family: var(--font-text);
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 10000;
+}
+.skip-link:focus { top: 8px; color: var(--cream-50); }
+
 .eyebrow {
   font-family: var(--font-text);
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--gold-700);
+  /* #6B5A28 gives 5.42:1 contrast on cream — passes WCAG AA */
+  color: #6B5A28;
   display: block;
 }
 
@@ -307,7 +324,7 @@ a:hover { color: var(--burgundy-800); }
 
 .hero-image {
   min-height: 400px;
-  background-image: url('../images/lifestyle-04.jpg');
+  background-image: url('../images/lifestyle-04.webp');
   background-size: cover;
   background-position: center 20%;
 }
@@ -360,7 +377,7 @@ a:hover { color: var(--burgundy-800); }
 
 .hero-stat-sub {
   font-size: 13.5px;
-  color: var(--text-muted);
+  color: var(--ink-700);
   margin-top: 2px;
 }
 
@@ -515,7 +532,7 @@ a:hover { color: var(--burgundy-800); }
 
 .vietnam-image {
   min-height: 600px;
-  background-image: url('../images/lifestyle-01.jpg');
+  background-image: url('../images/lifestyle-01.webp');
   background-size: cover;
   background-position: center;
 }
@@ -682,7 +699,7 @@ a:hover { color: var(--burgundy-800); }
 .testimonials-note {
   text-align: center;
   font-size: 13px;
-  color: var(--text-muted);
+  color: var(--ink-600);
   margin-top: 28px;
 }
 
@@ -765,7 +782,7 @@ a:hover { color: var(--burgundy-800); }
 .booking-bg {
   position: absolute;
   inset: 0;
-  background-image: url('../images/lifestyle-03.jpg');
+  background-image: url('../images/lifestyle-03.webp');
   background-size: cover;
   background-position: center 30%;
   opacity: 0.16;

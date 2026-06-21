@@ -23,6 +23,7 @@
   function toggleMenu() {
     var isOpen = mobileMenu.classList.toggle('open');
     nav.classList.toggle('menu-open', isOpen);
+    menuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     menuIconOpen.style.display = isOpen ? 'none' : 'block';
     menuIconClose.style.display = isOpen ? 'block' : 'none';
   }
@@ -41,9 +42,10 @@
   function scrollToBook() { scrollToId('book', 16); }
   function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
-  /* nav links */
+  /* nav links — prevent default href jump, use smooth scroll instead */
   document.querySelectorAll('[data-scroll-to]').forEach(function (el) {
-    el.addEventListener('click', function () {
+    el.addEventListener('click', function (e) {
+      e.preventDefault();
       var target = el.getAttribute('data-scroll-to');
       if (target === 'top') {
         scrollToTop();
