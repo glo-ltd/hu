@@ -1,0 +1,44 @@
+/* Heritage Union — Typography System
+   Display: Cormorant Garamond (warm, classic serif — headlines & wordmark)
+   Text:    Spectral (refined transitional serif — body, UI, captions)
+   Everything is serif. No sans. Quiet authority through generous size and air. */
+
+:root {
+  /* ---- Families ---- */
+  --font-display: 'Cormorant Garamond', 'Cormorant', Georgia, 'Times New Roman', serif;
+  --font-text:    'Spectral', Georgia, 'Times New Roman', serif;
+
+  /* ---- Weights ---- */
+  --weight-light:    300;
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  /* ---- Type scale (display = Cormorant) ---- */
+  --text-display-xl: 88px;  /* hero wordlines */
+  --text-display-l:  64px;  /* page titles */
+  --text-display-m:  48px;  /* section titles */
+  --text-display-s:  36px;  /* sub-section */
+  --text-title:      28px;  /* card titles */
+
+  /* ---- Type scale (text = Spectral) ---- */
+  --text-lead:   21px;  /* standfirst / intro */
+  --text-body:   17px;  /* default body */
+  --text-small:  15px;  /* secondary */
+  --text-caption:13px;  /* meta */
+  --text-eyebrow:13px;  /* tracked label */
+
+  /* ---- Line heights ---- */
+  --leading-tight:   1.04;  /* display headlines */
+  --leading-snug:    1.18;  /* sub-titles */
+  --leading-normal:  1.6;   /* body */
+  --leading-relaxed: 1.75;  /* long-form body */
+
+  /* ---- Letter spacing ---- */
+  --tracking-tight:   -0.01em;
+  --tracking-normal:  0;
+  --tracking-wide:    0.04em;
+  --tracking-wider:   0.14em;  /* wordmark / nav */
+  --tracking-eyebrow: 0.24em;  /* gold eyebrow labels */
+}

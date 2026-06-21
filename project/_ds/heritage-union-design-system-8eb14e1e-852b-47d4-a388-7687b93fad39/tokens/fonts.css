@@ -1,0 +1,8 @@
+/* Heritage Union — Webfonts
+   Display: Cormorant Garamond (headlines, wordmark)
+   Text:    Spectral (body, captions, UI)
+   Both are the brand-specified typefaces, served from Google Fonts.
+   NOTE: served via CDN @import for fidelity. To fully self-host, drop woff2
+   files in assets/fonts/ and swap the @import for @font-face src rules. */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');

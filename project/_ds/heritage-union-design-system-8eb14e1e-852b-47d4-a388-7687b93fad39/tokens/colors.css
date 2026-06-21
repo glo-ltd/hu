@@ -1,0 +1,86 @@
+/* Heritage Union — Colour System
+   Four-colour brand palette with tint & shade ramps.
+   Heritage Burgundy (primary) · Antique Gold (accent) · Warm Cream (canvas) · Ink (contrast) */
+
+:root {
+  /* ---- Brand core ---- */
+  --burgundy: #5E2A2E;   /* Heritage Burgundy — primary */
+  --gold:     #C2A35A;   /* Antique Gold — accent */
+  --cream:    #F2EADA;   /* Warm Cream — canvas */
+  --ink:      #16202E;   /* Ink — contrast */
+
+  /* ---- Burgundy ramp ---- */
+  --burgundy-900: #3A1719;
+  --burgundy-800: #4A2023;
+  --burgundy-700: #5E2A2E;  /* base */
+  --burgundy-600: #6F3539;
+  --burgundy-500: #834447;
+  --burgundy-300: #A87B7D;
+  --burgundy-100: #D8C3C4;
+  --burgundy-050: #EFE2E2;
+
+  /* ---- Gold ramp ---- */
+  --gold-700: #9A7E3C;
+  --gold-600: #AE8F49;
+  --gold-500: #C2A35A;  /* base */
+  --gold-400: #CCB272;
+  --gold-300: #D8C088;
+  --gold-200: #E6D6AE;
+  --gold-100: #F0E6CC;
+
+  /* ---- Cream / canvas ramp ---- */
+  --cream-50:  #FBF7EF;  /* lightest surface */
+  --cream-100: #F2EADA;  /* base canvas */
+  --cream-200: #E9DFC9;  /* sunken / hairline on cream */
+  --cream-300: #DDCFB2;
+
+  /* ---- Ink ramp ---- */
+  --ink-900: #0D141E;
+  --ink-800: #16202E;  /* base */
+  --ink-700: #243245;
+  --ink-600: #3A4A60;
+  --ink-400: #6B7888;
+  --ink-200: #AEB6C0;
+
+  /* ---- Pure ---- */
+  --white: #FFFFFF;
+  --black: #0A0F16;
+
+  /* ================= Semantic aliases ================= */
+
+  /* Surfaces */
+  --surface-canvas:   var(--cream-100);  /* default page background */
+  --surface-raised:   var(--cream-50);   /* cards on cream */
+  --surface-sunken:   var(--cream-200);
+  --surface-contrast: var(--ink-800);    /* dark sections */
+  --surface-brand:    var(--burgundy-700);
+  --surface-card:     var(--white);
+
+  /* Text */
+  --text-strong:  var(--burgundy-700);   /* headlines on light */
+  --text-body:    var(--ink-800);        /* body copy */
+  --text-muted:   var(--ink-400);        /* captions, meta */
+  --text-accent:  var(--gold-700);       /* gold eyebrow on light */
+  --text-on-dark: var(--cream-50);       /* body on ink/burgundy */
+  --text-on-brand:var(--cream-50);
+  --text-inverse: var(--cream-50);
+
+  /* Lines & borders */
+  --border-hairline: var(--cream-300);
+  --border-strong:   var(--burgundy-700);
+  --border-gold:     var(--gold-500);
+  --border-on-dark:  rgba(242, 234, 218, 0.18);
+
+  /* Interactive */
+  --action-primary:        var(--burgundy-700);
+  --action-primary-hover:  var(--burgundy-800);
+  --action-primary-active: var(--burgundy-900);
+  --action-accent:         var(--gold-500);
+  --action-accent-hover:   var(--gold-600);
+  --focus-ring:            var(--gold-500);
+
+  /* Semantic status (kept muted & heritage-toned) */
+  --status-success: #4E6B4A;
+  --status-error:   #8A3A36;
+  --status-info:    var(--ink-700);
+}

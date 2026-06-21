@@ -1,0 +1,92 @@
+/* Heritage Union — Base element styles & utility helpers
+   Sensible defaults so any consumer page inherits the brand voice. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-text);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-body);
+  line-height: var(--leading-normal);
+  color: var(--text-body);
+  background: var(--surface-canvas);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-medium);
+  color: var(--text-strong);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  margin: 0 0 0.4em;
+  text-wrap: balance;
+}
+h1 { font-size: var(--text-display-l); }
+h2 { font-size: var(--text-display-m); }
+h3 { font-size: var(--text-display-s); }
+h4 { font-size: var(--text-title); }
+
+p { margin: 0 0 1em; text-wrap: pretty; }
+a { color: var(--burgundy-700); text-decoration: none; }
+a:hover { color: var(--burgundy-800); }
+
+::selection { background: var(--gold-200); color: var(--ink-800); }
+
+/* ---------- Brand utility classes ---------- */
+
+/* Gold tracked eyebrow label (e.g. COMPANIONSHIP · MARRIAGE · FAMILY) */
+.hu-eyebrow {
+  font-family: var(--font-text);
+  font-size: var(--text-eyebrow);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-accent);
+}
+
+/* Wordmark setting */
+.hu-wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--text-strong);
+}
+
+/* Display headline helper */
+.hu-display {
+  font-family: var(--font-display);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-strong);
+}
+
+/* Standfirst / lead paragraph */
+.hu-lead {
+  font-size: var(--text-lead);
+  line-height: var(--leading-relaxed);
+  color: var(--text-body);
+}
+
+/* Container */
+.hu-container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Thin gold divider */
+.hu-rule-gold {
+  width: 48px;
+  height: 1px;
+  background: var(--gold-500);
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}

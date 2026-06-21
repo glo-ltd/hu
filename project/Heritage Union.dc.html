@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/heritage-union-design-system-8eb14e1e-852b-47d4-a388-7687b93fad39/styles.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    html, body { margin: 0; background: var(--cream-100); }
+    #root { min-height: 100vh; }
+  </style>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="_ds/heritage-union-design-system-8eb14e1e-852b-47d4-a388-7687b93fad39/_ds_bundle.js"></script>
+</helmet>
+<div id="root"></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() { this.boot(); }
+
+  async boot() {
+    // Reuse the runtime's React so the components and ReactDOM share one
+    // instance (avoids the null-dispatcher version mismatch from CDN UMD).
+    window.React = React;
+    const ready = () => window.React && window.ReactDOM && window.Babel
+      && window.lucide && window.HeritageUnionDesignSystem_8eb14e;
+    for (let i = 0; i < 300 && !ready(); i++) {
+      await new Promise(r => setTimeout(r, 50));
+    }
+    if (!ready()) { console.error('Heritage Union: dependencies failed to load'); return; }
+
+    try {
+      const [sch, sec] = await Promise.all([
+        fetch('site/Scheduler.jsx').then(r => r.text()),
+        fetch('site/sections.jsx').then(r => r.text()),
+      ]);
+      const code = window.Babel.transform(sch + '\n' + sec, { presets: ['react'] }).code;
+      (0, eval)(code);
+
+      const R = window.React;
+      const order = ['SiteNav', 'SiteHero', 'TrustSection', 'ProcessSection',
+        'VietnamSection', 'StorySection', 'PromiseBand', 'Testimonials',
+        'FAQ', 'BookingSection', 'SiteFooter'];
+      const root = document.getElementById('root');
+      if (!root) return;
+      window.ReactDOM.createRoot(root).render(
+        R.createElement(R.Fragment, null,
+          ...order.map((n, i) => window[n] ? R.createElement(window[n], { key: i }) : null))
+      );
+    } catch (e) {
+      console.error('Heritage Union render error', e);
+    }
+  }
+}
+</script>
+</body>
+</html>
