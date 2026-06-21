@@ -207,9 +207,9 @@ a:hover { color: var(--burgundy-800); }
 .site-nav.menu-open { border-color: var(--cream-300); }
 
 .nav-inner {
-  max-width: 1280px;
+  max-width: calc(1280px + 2 * max(clamp(24px, 5vw, 40px), (100vw - 1280px) / 2));
   margin: 0 auto;
-  padding: 16px clamp(24px, 5vw, 40px);
+  padding: 16px max(clamp(24px, 5vw, 40px), calc((100vw - 1280px) / 2));
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -278,7 +278,7 @@ a:hover { color: var(--burgundy-800); }
   .nav-cta { display: flex; }
   .nav-cta .btn { display: inline-flex; }
   .nav-menu-btn { display: block; }
-  .nav-inner { padding: 14px clamp(24px, 5vw, 40px); }
+  .nav-inner { padding: 14px clamp(24px, 5vw, 40px); max-width: 100%; }
   .nav-logo svg.logo-full { display: none; }
   .nav-logo svg.logo-mark { display: block; }
 }
