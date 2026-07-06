@@ -1064,8 +1064,17 @@ a:hover { color: var(--burgundy-800); }
    MEET JAMES — FOUNDER PAGE
    ============================================================ */
 .hero-image--founder {
-  background-image: url('../images/james-founder.webp');
-  background-position: center 18%;
+  background-image: none;
+  overflow: hidden;
+  display: block;
+}
+
+.hero-image--founder img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
 }
 
 .founder-story { background: var(--cream-100); }
