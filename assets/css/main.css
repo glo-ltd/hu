@@ -252,6 +252,16 @@ a:hover { color: var(--burgundy-800); }
 }
 .nav-links a:hover { color: var(--burgundy-700); }
 
+.nav-links a[aria-current="page"] {
+  color: var(--burgundy-700);
+  border-bottom: 1px solid var(--gold-500);
+}
+
+.nav-mobile a[aria-current="page"] {
+  display: inline-block;
+  border-bottom: 1px solid var(--gold-500);
+}
+
 .nav-cta { display: flex; align-items: center; gap: 10px; }
 
 .nav-menu-btn {
@@ -903,6 +913,28 @@ a:hover { color: var(--burgundy-800); }
   min-width: 320px;
   width: 100%;
   height: 700px;
+  position: relative;
+  background: linear-gradient(90deg, var(--cream-100) 25%, var(--cream-50) 37%, var(--cream-100) 63%);
+  background-size: 400% 100%;
+  animation: calendly-shimmer 1.6s ease-in-out infinite;
+}
+
+.calendly-inline-widget::before {
+  content: 'Loading availability\2026';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: var(--ink-400);
+  pointer-events: none;
+}
+
+@keyframes calendly-shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
 }
 
 @media (max-width: 819px) {
@@ -1032,8 +1064,8 @@ a:hover { color: var(--burgundy-800); }
    MEET JAMES — FOUNDER PAGE
    ============================================================ */
 .hero-image--founder {
-  background-image: url('../images/lifestyle-03.webp');
-  background-position: center 25%;
+  background-image: url('../images/james-founder.webp');
+  background-position: center 18%;
 }
 
 .founder-story { background: var(--cream-100); }
@@ -1075,58 +1107,6 @@ a:hover { color: var(--burgundy-800); }
   border-left: 3px solid var(--gold-500);
   padding-left: 24px;
   margin: 28px 0 0;
-}
-
-.video-section { background: var(--cream-50); }
-
-.video-intro {
-  text-align: center;
-  max-width: 720px;
-  margin: 0 auto clamp(36px, 5vw, 50px);
-}
-
-.video-intro h2 {
-  font-size: clamp(32px, 6vw, 44px);
-  margin: 0;
-}
-
-.video-placeholder {
-  max-width: 860px;
-  aspect-ratio: 16 / 9;
-  margin: 0 auto;
-  border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--ink-800), var(--ink-700));
-  box-shadow: var(--shadow-lg);
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.video-placeholder-play {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  border: 1px solid rgba(251, 247, 239, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--cream-50);
-}
-
-.video-placeholder-caption {
-  position: absolute;
-  bottom: 26px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--cream-50);
-  opacity: 0.75;
 }
 
 /* ============================================================
