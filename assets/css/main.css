@@ -1127,15 +1127,21 @@ a:hover { color: var(--burgundy-800); }
    AUDIO PLAY BUTTON — READ ALOUD (Web Speech API)
    ============================================================ */
 .audio-play-btn {
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
   display: inline-flex;
   align-items: center;
   gap: 9px;
+  width: auto;
+  height: auto;
   background: var(--white);
   border: 1px solid var(--cream-300);
   color: var(--burgundy-700);
   font-family: var(--font-text);
   font-size: 13px;
   font-weight: 500;
+  line-height: 1;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 9px 16px;
@@ -1149,7 +1155,8 @@ a:hover { color: var(--burgundy-800); }
 .audio-play-btn:hover { border-color: var(--gold-500); background: var(--cream-100); }
 .audio-play-btn:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
 
-.audio-play-btn[data-state="playing"] {
+.audio-play-btn[data-state="playing"],
+.audio-play-btn[data-state="paused"] {
   background: var(--burgundy-700);
   border-color: var(--burgundy-700);
   color: var(--cream-50);

@@ -129,7 +129,8 @@
   if (audioButtons.length && 'speechSynthesis' in window) {
     var synth = window.speechSynthesis;
     var currentBtn = null;
-    var voiceCache = null;
+    var queue = [];
+    var voiceCache = [];
 
     var preferredVoiceNames = [
       'Daniel', 'George', 'Arthur',
@@ -137,9 +138,14 @@
       'UK English Male'
     ];
 
+    function refreshVoices() { voiceCache = synth.getVoices(); }
+    refreshVoices();
+    if (synth.onvoiceschanged !== undefined) {
+      synth.addEventListener('voiceschanged', refreshVoices);
+    }
+
     function pickVoice() {
-      var voices = voiceCache || synth.getVoices();
-      voiceCache = voices;
+      var voices = voiceCache.length ? voiceCache : synth.getVoices();
       for (var i = 0; i < preferredVoiceNames.length; i++) {
         for (var j = 0; j < voices.length; j++) {
           if (voices[j].name.indexOf(preferredVoiceNames[i]) !== -1) return voices[j];
@@ -157,20 +163,57 @@
       return voices[0] || null;
     }
 
-    if (synth.onvoiceschanged !== undefined) {
-      synth.addEventListener('voiceschanged', function () { voiceCache = synth.getVoices(); });
-    }
-
     function resetButton(btn) {
       btn.setAttribute('data-state', 'idle');
       var label = btn.querySelector('.audio-play-label');
       if (label) label.textContent = btn.getAttribute('data-label-play');
     }
 
-    function stopAll() {
-      synth.cancel();
+    /* Chunk into per-paragraph utterances chained via onend — Chrome silently
+       stops any single utterance longer than ~15s, so one long utterance per
+       article is unreliable. Chaining shorter ones also makes pause/resume
+       reliable, since browsers handle that poorly on very long utterances. */
+    function speakNext(btn) {
+      if (currentBtn !== btn || !queue.length) return;
+      var text = queue.shift();
+      var utterance = new SpeechSynthesisUtterance(text);
+      var voice = pickVoice();
+      if (voice) {
+        utterance.voice = voice;
+        utterance.lang = voice.lang;
+      } else {
+        utterance.lang = 'en-GB';
+      }
+      utterance.rate = 0.94;
+      utterance.pitch = 0.96;
+      utterance.onend = function () {
+        if (currentBtn !== btn) return;
+        if (queue.length) {
+          speakNext(btn);
+        } else {
+          resetButton(btn);
+          currentBtn = null;
+        }
+      };
+      utterance.onerror = function (e) {
+        if (e && e.error === 'interrupted') return;
+        if (currentBtn === btn) { resetButton(btn); currentBtn = null; }
+      };
+      synth.speak(utterance);
+    }
+
+    function stopAll(then) {
+      queue = [];
       if (currentBtn) resetButton(currentBtn);
       currentBtn = null;
+      if (synth.speaking || synth.pending) {
+        synth.cancel();
+        /* Chrome can silently drop a speak() issued in the same tick as a
+           cancel() — deferring one tick lets the engine reset first. */
+        window.setTimeout(then || function () {}, 50);
+      } else if (then) {
+        then();
+      }
     }
 
     audioButtons.forEach(function (btn) {
@@ -183,37 +226,37 @@
       btn.setAttribute('data-label-pause', 'Pause reading');
 
       btn.addEventListener('click', function () {
-        var wasPlaying = btn.getAttribute('data-state') === 'playing';
-        stopAll();
-        if (wasPlaying) return;
+        var state = btn.getAttribute('data-state');
 
-        var paragraphs = target.querySelectorAll('p');
-        var text = Array.prototype.map.call(paragraphs, function (p) {
-          return p.textContent.trim();
-        }).join(' ');
-        if (!text) return;
-
-        var utterance = new SpeechSynthesisUtterance(text);
-        var voice = pickVoice();
-        if (voice) {
-          utterance.voice = voice;
-          utterance.lang = voice.lang;
-        } else {
-          utterance.lang = 'en-GB';
+        if (state === 'playing') {
+          synth.pause();
+          btn.setAttribute('data-state', 'paused');
+          if (label) label.textContent = btn.getAttribute('data-label-play');
+          return;
         }
-        utterance.rate = 0.94;
-        utterance.pitch = 0.96;
-        utterance.onend = function () { resetButton(btn); currentBtn = null; };
-        utterance.onerror = function () { resetButton(btn); currentBtn = null; };
+        if (state === 'paused' && currentBtn === btn) {
+          synth.resume();
+          btn.setAttribute('data-state', 'playing');
+          if (label) label.textContent = btn.getAttribute('data-label-pause');
+          return;
+        }
 
-        currentBtn = btn;
-        btn.setAttribute('data-state', 'playing');
-        if (label) label.textContent = btn.getAttribute('data-label-pause');
-        synth.speak(utterance);
+        stopAll(function () {
+          var paragraphs = target.querySelectorAll('p');
+          queue = Array.prototype.map.call(paragraphs, function (p) {
+            return p.textContent.trim();
+          }).filter(function (t) { return t.length > 0; });
+          if (!queue.length) return;
+
+          currentBtn = btn;
+          btn.setAttribute('data-state', 'playing');
+          if (label) label.textContent = btn.getAttribute('data-label-pause');
+          speakNext(btn);
+        });
       });
     });
 
-    window.addEventListener('beforeunload', stopAll);
+    window.addEventListener('beforeunload', function () { synth.cancel(); });
   } else {
     audioButtons.forEach(function (btn) { btn.style.display = 'none'; });
   }
