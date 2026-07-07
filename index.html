@@ -172,11 +172,23 @@
 
     <!-- Desktop nav -->
     <ul class="nav-links" role="list">
-      <li><a href="#process" data-scroll-to="process">The Process</a></li>
-      <li><a href="#vietnam" data-scroll-to="vietnam">Why Vietnam</a></li>
-      <li><a href="#story" data-scroll-to="story">Our Story</a></li>
-      <li><a href="/meet-james">Meet James</a></li>
+      <li><a href="/how-it-works">How It Works</a></li>
+      <li><a href="/services">Services</a></li>
+      <li><a href="/success-stories">Success Stories</a></li>
+      <li class="nav-dropdown">
+        <button class="nav-dropdown-btn" aria-expanded="false" aria-haspopup="true" aria-controls="nav-about-menu">
+          About
+          <svg class="nav-dropdown-caret" viewBox="0 0 10 6" aria-hidden="true"><polyline points="1 1 5 5 9 1"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" id="nav-about-menu">
+          <a href="/meet-james">Meet James</a>
+          <a href="/meet-huyen">Meet Huyen</a>
+          <a href="#story" data-scroll-to="story">Our Story</a>
+          <a href="#vietnam" data-scroll-to="vietnam">Why Vietnam</a>
+        </div>
+      </li>
       <li><a href="#faq" data-scroll-to="faq">FAQ</a></li>
+      <li><a href="/contact">Contact</a></li>
     </ul>
 
     <div class="nav-cta">
@@ -197,11 +209,15 @@
   <!-- Mobile menu -->
   <div class="nav-mobile" id="nav-mobile" role="navigation" aria-label="Mobile navigation">
     <nav>
-      <a href="#process" data-scroll-to="process">The Process</a>
-      <a href="#vietnam" data-scroll-to="vietnam">Why Vietnam</a>
-      <a href="#story" data-scroll-to="story">Our Story</a>
+      <a href="/how-it-works">How It Works</a>
+      <a href="/services">Services</a>
+      <a href="/success-stories">Success Stories</a>
       <a href="/meet-james">Meet James</a>
+      <a href="/meet-huyen">Meet Huyen</a>
+      <a href="#story" data-scroll-to="story">Our Story</a>
+      <a href="#vietnam" data-scroll-to="vietnam">Why Vietnam</a>
       <a href="#faq" data-scroll-to="faq">FAQ</a>
+      <a href="/contact">Contact</a>
     </nav>
   </div>
 </header>
@@ -320,6 +336,57 @@
         <p>Cultural guidance and concierge support continue throughout — discreet from first conversation to lasting marriage.</p>
       </article>
     </div>
+    <p style="margin-top: 36px; text-align: center;">
+      <a class="hero-link" href="/how-it-works">See the full journey, step by step</a>
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SERVICES TEASER
+     ============================================================ -->
+<section class="story section-pad" aria-labelledby="services-teaser-heading" style="background: var(--cream-50);">
+  <div class="story-inner">
+    <span class="eyebrow eyebrow--center" style="margin-bottom: 22px;">What We Offer</span>
+    <h2 id="services-teaser-heading" class="story-quote">
+      A full relationship consultancy — never a catalogue of profiles.
+    </h2>
+    <p class="story-body">
+      Compatibility assessment, candidate search and screening, curated introductions, cross-cultural guidance and ongoing relationship support — every service considered, never transactional.
+    </p>
+    <a class="btn btn--secondary btn--md" href="/services">Explore our services</a>
+  </div>
+</section>
+
+<!-- ============================================================
+     MEET JAMES & HUYEN
+     ============================================================ -->
+<section class="trust section-pad" aria-labelledby="founders-heading">
+  <div class="container">
+    <div class="trust-intro" style="max-width: 720px; margin: 0 auto; text-align: center;">
+      <span class="eyebrow eyebrow--gold eyebrow--center" style="margin-bottom: 18px;">Your Advisers</span>
+      <h2 id="founders-heading">Meet James &amp; Huyen.</h2>
+      <p class="trust-lead" style="margin: 0 auto;">Two founders, two continents, one shared standard of care.</p>
+    </div>
+    <hr class="trust-divider" aria-hidden="true">
+    <div class="trust-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 900px; margin: 0 auto;">
+      <div class="trust-item">
+        <svg class="icon icon--gold" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+        <h3>James</h3>
+        <p>Founder and adviser. Divorced at fifty after thirty-four years of marriage, James rebuilt his life in Vietnam — and built the consultancy he wished had existed.</p>
+        <p style="margin-top: 14px;"><a href="/meet-james" style="color: var(--gold-300); border-bottom: 1px solid rgba(216,192,136,0.4);">Read James's story &rarr;</a></p>
+      </div>
+      <div class="trust-item">
+        <svg class="icon icon--gold" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        <h3>Huyen</h3>
+        <p>Co-founder and Vietnam Relationship &amp; Cultural Manager. Local expertise, careful screening and honest guidance for every candidate and client.</p>
+        <p style="margin-top: 14px;"><a href="/meet-huyen" style="color: var(--gold-300); border-bottom: 1px solid rgba(216,192,136,0.4);">Read Huyen's story &rarr;</a></p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -390,6 +457,9 @@
       <span class="eyebrow eyebrow--center" style="margin-bottom: 18px;">In their words</span>
       <h2 id="testimonials-heading">Quiet confidence, earned.</h2>
     </div>
+    <p style="text-align: center; margin-bottom: 40px;">
+      <a class="hero-link" href="/success-stories">Read the full success stories</a>
+    </p>
     <div class="testimonials-grid">
       <article class="testimonial-card">
         <span class="testimonial-mark" aria-hidden="true">"</span>
@@ -462,6 +532,9 @@
         <p class="faq-a" id="faq-a-5">Entirely. Discretion is central to how we work — your details are never shared, and every conversation is held in strict confidence from the first word.</p>
       </li>
     </ul>
+    <p style="text-align: center; margin-top: 40px;">
+      <a class="hero-link" href="/faq">Read the full list of frequently asked questions</a>
+    </p>
   </div>
 </section>
 
@@ -559,15 +632,25 @@
         <a class="btn btn--gold btn--md" href="#book" data-scroll-to="book">Schedule a free consultation</a>
       </div>
 
-      <!-- Links column -->
+      <!-- Explore column -->
       <div>
-        <span class="footer-col-title">Heritage Union</span>
+        <span class="footer-col-title">Explore</span>
         <ul class="footer-links" role="list">
-          <li><a href="#process" data-scroll-to="process">The Process</a></li>
-          <li><a href="#vietnam" data-scroll-to="vietnam">Why Vietnam</a></li>
-          <li><a href="#story" data-scroll-to="story">Our Story</a></li>
-          <li><a href="/meet-james">Meet James</a></li>
+          <li><a href="/how-it-works">How It Works</a></li>
+          <li><a href="/services">Services</a></li>
+          <li><a href="/success-stories">Success Stories</a></li>
           <li><a href="#faq" data-scroll-to="faq">FAQ</a></li>
+        </ul>
+      </div>
+
+      <!-- About column -->
+      <div>
+        <span class="footer-col-title">About</span>
+        <ul class="footer-links" role="list">
+          <li><a href="/meet-james">Meet James</a></li>
+          <li><a href="/meet-huyen">Meet Huyen</a></li>
+          <li><a href="#story" data-scroll-to="story">Our Story</a></li>
+          <li><a href="#vietnam" data-scroll-to="vietnam">Why Vietnam</a></li>
         </ul>
       </div>
 
@@ -576,7 +659,7 @@
         <span class="footer-col-title">Contact</span>
         <ul class="footer-links" role="list">
           <li><a href="mailto:team@heritage-union.com">team@heritage-union.com</a></li>
-          <li><span class="footer-muted">heritage-union.com</span></li>
+          <li><a href="/contact">Contact page</a></li>
           <li><span class="footer-muted">By application only</span></li>
         </ul>
       </div>

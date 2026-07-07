@@ -61,6 +61,32 @@
     });
   });
 
+  /* ---- Nav "About" dropdown ---- */
+  document.querySelectorAll('.nav-dropdown').forEach(function (dropdown) {
+    var btn = dropdown.querySelector('.nav-dropdown-btn');
+    if (!btn) return;
+
+    function close() {
+      dropdown.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+    function toggle() {
+      var isOpen = dropdown.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      toggle();
+    });
+    dropdown.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { close(); btn.focus(); }
+    });
+    document.addEventListener('click', function (e) {
+      if (!dropdown.contains(e.target)) close();
+    });
+  });
+
   /* ---- FAQ accordion ---- */
   var faqItems = document.querySelectorAll('.faq-item');
   faqItems.forEach(function (item, idx) {
