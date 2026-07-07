@@ -265,6 +265,30 @@ a:hover { color: var(--burgundy-800); }
 
 .nav-cta { display: flex; align-items: center; gap: 10px; }
 
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-text);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.lang-switch a { color: var(--ink-400); cursor: pointer; }
+.lang-switch a:hover { color: var(--burgundy-700); }
+.lang-switch a.lang-switch-active {
+  color: var(--burgundy-700);
+  font-weight: 500;
+  border-bottom: 1px solid var(--gold-500);
+}
+.lang-switch-sep { color: var(--cream-300); }
+
+.lang-switch--mobile {
+  padding: 4px 0 18px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--cream-200);
+}
+
 .nav-menu-btn {
   display: none;
   background: none;

@@ -1,75 +1,219 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://heritage-union.com/</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/"/>
+  </url>
+  <url>
+    <loc>https://heritage-union.com/vi/</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/"/>
   </url>
   <url>
     <loc>https://heritage-union.com/how-it-works</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/how-it-works"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/how-it-works"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/how-it-works"/>
+  </url>
+  <url>
+    <loc>https://heritage-union.com/vi/how-it-works</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/how-it-works"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/how-it-works"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/how-it-works"/>
   </url>
   <url>
     <loc>https://heritage-union.com/services</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/services"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/services"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/services"/>
+  </url>
+  <url>
+    <loc>https://heritage-union.com/vi/services</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/services"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/services"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/services"/>
   </url>
   <url>
     <loc>https://heritage-union.com/meet-james</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/meet-james"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/meet-james"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/meet-james"/>
+  </url>
+  <url>
+    <loc>https://heritage-union.com/vi/meet-james</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/meet-james"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/meet-james"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/meet-james"/>
   </url>
   <url>
     <loc>https://heritage-union.com/meet-huyen</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/meet-huyen"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/meet-huyen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/meet-huyen"/>
+  </url>
+  <url>
+    <loc>https://heritage-union.com/vi/meet-huyen</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/meet-huyen"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/meet-huyen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/meet-huyen"/>
   </url>
   <url>
     <loc>https://heritage-union.com/success-stories</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/success-stories"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/success-stories"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/success-stories"/>
+  </url>
+  <url>
+    <loc>https://heritage-union.com/vi/success-stories</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/success-stories"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/success-stories"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/success-stories"/>
   </url>
   <url>
     <loc>https://heritage-union.com/faq</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/faq"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/faq"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/faq"/>
+  </url>
+  <url>
+    <loc>https://heritage-union.com/vi/faq</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/faq"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/faq"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/faq"/>
   </url>
   <url>
     <loc>https://heritage-union.com/contact</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/contact"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/contact"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/contact"/>
+  </url>
+  <url>
+    <loc>https://heritage-union.com/vi/contact</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/contact"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/contact"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/contact"/>
   </url>
   <url>
     <loc>https://heritage-union.com/ask-huyen</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/ask-huyen"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/ask-huyen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/ask-huyen"/>
+  </url>
+  <url>
+    <loc>https://heritage-union.com/vi/ask-huyen</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/ask-huyen"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/ask-huyen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/ask-huyen"/>
   </url>
   <url>
     <loc>https://heritage-union.com/insights</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/insights"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/insights"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/insights"/>
+  </url>
+  <url>
+    <loc>https://heritage-union.com/vi/insights</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/insights"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/insights"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/insights"/>
   </url>
   <url>
     <loc>https://heritage-union.com/founding-circle</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/founding-circle"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/founding-circle"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/founding-circle"/>
+  </url>
+  <url>
+    <loc>https://heritage-union.com/vi/founding-circle</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/founding-circle"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/founding-circle"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/founding-circle"/>
   </url>
   <url>
     <loc>https://heritage-union.com/become-a-candidate</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/become-a-candidate"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/become-a-candidate"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/become-a-candidate"/>
+  </url>
+  <url>
+    <loc>https://heritage-union.com/vi/become-a-candidate</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/become-a-candidate"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/become-a-candidate"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/become-a-candidate"/>
   </url>
 </urlset>
