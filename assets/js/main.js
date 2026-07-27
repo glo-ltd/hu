@@ -124,4 +124,64 @@
     }
   }
 
+  /* ---- Fee structure request form ---- */
+  var feeForm = document.getElementById('fee-structure-form');
+  if (feeForm) {
+    var feeSubmitBtn = document.getElementById('fee-form-submit');
+    var feeErrorEl = document.getElementById('fee-form-error');
+    var feeSuccessEl = document.getElementById('fee-form-success');
+    var feeSubmitDefaultText = feeSubmitBtn.textContent;
+
+    function showFeeError(message) {
+      feeErrorEl.textContent = message;
+      feeErrorEl.classList.add('visible');
+    }
+
+    function hideFeeError() {
+      feeErrorEl.textContent = '';
+      feeErrorEl.classList.remove('visible');
+    }
+
+    feeForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      hideFeeError();
+
+      var name = feeForm.elements.name.value.trim();
+      var email = feeForm.elements.email.value.trim();
+      var country = feeForm.elements.country.value.trim();
+      var website = feeForm.elements.website ? feeForm.elements.website.value : '';
+
+      if (!name || !email || !country) {
+        showFeeError('Please complete all fields.');
+        return;
+      }
+
+      feeSubmitBtn.disabled = true;
+      feeSubmitBtn.textContent = 'Sending...';
+
+      fetch('/.netlify/functions/request-fee-structure', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name, email: email, country: country, website: website })
+      })
+        .then(function (response) {
+          return response.json().catch(function () { return {}; }).then(function (data) {
+            if (!response.ok) {
+              throw new Error(data.error || 'Something went wrong. Please try again.');
+            }
+            return data;
+          });
+        })
+        .then(function () {
+          feeForm.style.display = 'none';
+          feeSuccessEl.style.display = 'block';
+        })
+        .catch(function (err) {
+          showFeeError(err.message || 'We could not send the document right now. Please try again shortly.');
+          feeSubmitBtn.disabled = false;
+          feeSubmitBtn.textContent = feeSubmitDefaultText;
+        });
+    });
+  }
+
 })();
