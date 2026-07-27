@@ -1,0 +1,9 @@
+{
+  "name": "heritage-union-website",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Heritage Union static site — Netlify Functions dependencies for the fee structure request form.",
+  "dependencies": {
+    "resend": "^4.0.1"
+  }
+}

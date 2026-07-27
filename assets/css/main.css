@@ -1068,6 +1068,82 @@ a:hover { color: var(--burgundy-800); }
 }
 
 /* ============================================================
+   FEE STRUCTURE ANNOUNCEMENT BAR — sitewide CTA
+   ============================================================ */
+.fee-announce-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  background: linear-gradient(90deg, var(--burgundy-800), var(--burgundy-700));
+  color: var(--cream-50);
+  text-decoration: none;
+  padding: 11px 20px;
+  font-family: var(--font-text);
+  font-size: 13.5px;
+  letter-spacing: 0.01em;
+  text-align: center;
+  transition: background var(--duration-normal) var(--ease-standard);
+}
+
+.fee-announce-bar:hover,
+.fee-announce-bar:focus-visible {
+  background: linear-gradient(90deg, var(--burgundy-900), var(--burgundy-800));
+  color: var(--cream-50);
+}
+
+.fee-announce-bar-text { color: var(--cream-100); }
+
+.fee-announce-bar-cta {
+  font-weight: 600;
+  color: var(--gold-300);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+@media (max-width: 599px) {
+  .fee-announce-bar { font-size: 12.5px; padding: 10px 16px; }
+}
+
+/* ============================================================
+   FEE STRUCTURE REQUEST FORM
+   ============================================================ */
+.fee-form-panel {
+  max-width: 560px;
+  margin: 0 auto;
+  background: var(--white);
+  border: 1px solid var(--cream-300);
+  border-radius: var(--radius-sm);
+  padding: clamp(28px, 5vw, 44px);
+}
+
+.fee-form-success {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.fee-form-success .icon-check {
+  width: 44px;
+  height: 44px;
+  color: var(--burgundy-700);
+  margin: 0 auto 18px;
+  display: block;
+}
+
+.fee-form-success h3 { margin: 0 0 10px; }
+
+.fee-form-error {
+  color: var(--status-error, #8A3A36);
+  font-size: 14px;
+  margin: 0 0 16px;
+  display: none;
+}
+
+.fee-form-error.visible { display: block; }
+
+/* ============================================================
    ICONS (inline SVG helpers)
    ============================================================ */
 .icon {
