@@ -28,3 +28,15 @@
   to = "https://heritage-union.com/:splat"
   status = 301
   force = true
+
+[[redirects]]
+  from = "/founding-circle"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/vi/founding-circle"
+  to = "/vi/"
+  status = 301
+  force = true
