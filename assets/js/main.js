@@ -104,7 +104,7 @@
 
   /* ---- Calendly inline widget ---- */
   var calUrl = 'https://calendly.com/james-heritage-union/30min'
-    + '?hide_event_type_details=1&hide_gdpr_banner=1'
+    + '?hide_event_type_details=1'
     + '&primary_color=4a2023&text_color=16202e&background_color=ffffff';
 
   var calWrap = document.getElementById('calendly-embed');

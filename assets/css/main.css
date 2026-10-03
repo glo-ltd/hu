@@ -1043,6 +1043,8 @@ a:hover { color: var(--burgundy-800); }
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
+  gap: 8px 20px;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -1061,6 +1063,21 @@ a:hover { color: var(--burgundy-800); }
 .footer-credit a {
   color: var(--gold-300);
   border-bottom: 1px solid rgba(216,192,136,0.4);
+}
+
+.footer-legal-links {
+  color: var(--ink-400);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.footer-legal-links a {
+  color: var(--ink-400);
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.footer-legal-links a:hover {
+  color: var(--gold-300);
 }
 
 @media (max-width: 759px) {
