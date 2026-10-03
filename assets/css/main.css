@@ -1523,7 +1523,8 @@ a:hover { color: var(--burgundy-800); }
 }
 
 .form-input,
-.form-textarea {
+.form-textarea,
+select.form-input {
   font-family: var(--font-text);
   font-size: 16px;
   padding: 13px 16px;
@@ -1531,7 +1532,10 @@ a:hover { color: var(--burgundy-800); }
   border-radius: var(--radius-xs);
   background: var(--white);
   color: var(--ink-800);
+  width: 100%;
 }
+
+select.form-input { cursor: pointer; }
 
 .form-input:focus,
 .form-textarea:focus {
@@ -1543,6 +1547,9 @@ a:hover { color: var(--burgundy-800); }
 .form-textarea { min-height: 140px; resize: vertical; }
 
 .form-note { font-size: 13px; line-height: 1.6; color: var(--ink-600); }
+
+#reg-turnstile,
+#reg-turnstile-vi { min-height: 65px; }
 
 .contact-detail-list {
   list-style: none;

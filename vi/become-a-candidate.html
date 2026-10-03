@@ -310,44 +310,179 @@
   <div class="container" style="max-width: 720px;">
     <div class="process-intro" style="text-align: center; margin: 0 auto 40px;">
       <span class="eyebrow eyebrow--center" style="margin-bottom: 18px;">Đăng Ký Quan Tâm</span>
-      <h2 id="register-heading">Hãy cho Huyền biết đôi điều về bạn.</h2>
+      <h2 id="register-heading">Hãy cho chúng tôi biết đôi điều về bạn.</h2>
       <p class="process-lead">
         Đây đơn giản chỉ là một lời giới thiệu — chưa cần ảnh hay video. Chúng tôi sẽ xác nhận đã nhận được đăng ký của bạn và hướng dẫn bước tiếp theo.
       </p>
     </div>
 
-    <form name="candidate-interest-vi" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="contact-form">
-      <input type="hidden" name="form-name" value="candidate-interest-vi">
-      <p style="position:absolute; left:-9999px;" aria-hidden="true">
-        <label>Để trống trường này<input name="bot-field" tabindex="-1" autocomplete="off"></label>
+    <!-- Biểu mẫu danh sách chờ — hiển thị mặc định, là trạng thái an toàn
+         cho đến khi được xác nhận đã mở đăng ký. -->
+    <div id="candidate-waitlist-wrap">
+      <p class="form-note" style="text-align:center; margin-bottom: 24px;">
+        Việc đăng ký sắp được mở. Để lại số Zalo hoặc email của bạn và chúng tôi sẽ báo ngay khi có thể đăng ký.
       </p>
-      <div class="form-field">
-        <label class="form-label" for="cand-name-vi">Họ và tên</label>
-        <input class="form-input" type="text" id="cand-name-vi" name="name" required>
+      <form id="candidate-waitlist-form" class="contact-form">
+        <p style="position:absolute; left:-9999px;" aria-hidden="true">
+          <label>Để trống trường này<input name="website" tabindex="-1" autocomplete="off"></label>
+        </p>
+        <div class="form-field">
+          <label class="form-label" for="wl-name-vi">Họ và tên</label>
+          <input class="form-input" type="text" id="wl-name-vi" name="name" maxlength="100" required>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="wl-contact-vi">Số Zalo hoặc email</label>
+          <input class="form-input" type="text" id="wl-contact-vi" name="contact" maxlength="100" required>
+        </div>
+        <div class="form-field" style="flex-direction: row; align-items: flex-start; gap: 10px;">
+          <input type="checkbox" id="wl-consent-vi" name="consentNotify" required style="margin-top: 4px;">
+          <label class="form-label" for="wl-consent-vi" style="text-transform: none; letter-spacing: normal; font-size: 14px;">Tôi đồng ý để Heritage Union liên hệ với tôi khi việc đăng ký được mở.</label>
+        </div>
+        <p class="fee-form-error" id="wl-error"></p>
+        <button class="btn btn--primary btn--md" type="submit" id="wl-submit" style="justify-self: start;">Báo cho tôi</button>
+      </form>
+      <div class="fee-form-success" id="wl-success" style="display:none;">
+        <h3>Cảm ơn bạn.</h3>
+        <p>Chúng tôi sẽ báo cho bạn ngay khi việc đăng ký được mở.</p>
       </div>
-      <div class="form-field">
-        <label class="form-label" for="cand-age-vi">Tuổi</label>
-        <input class="form-input" type="text" id="cand-age-vi" name="age" required>
+    </div>
+
+    <!-- Biểu mẫu đăng ký đầy đủ — ẩn cho đến khi được xác nhận đã mở. -->
+    <div id="candidate-register-wrap" hidden>
+      <form id="candidate-register-form" class="contact-form">
+        <p style="position:absolute; left:-9999px;" aria-hidden="true">
+          <label>Để trống trường này<input name="website" tabindex="-1" autocomplete="off"></label>
+        </p>
+        <div class="form-field">
+          <label class="form-label" for="reg-name-vi">Họ và tên</label>
+          <input class="form-input" type="text" id="reg-name-vi" name="fullName" maxlength="100" required>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="reg-dob-vi">Ngày sinh</label>
+          <input class="form-input" type="date" id="reg-dob-vi" name="dateOfBirth" required>
+        </div>
+        <div class="form-field" style="flex-direction: row; align-items: flex-start; gap: 10px;">
+          <input type="checkbox" id="reg-age-vi" name="ageDeclared" required style="margin-top: 4px;">
+          <label class="form-label" for="reg-age-vi" style="text-transform: none; letter-spacing: normal; font-size: 14px;">Tôi xác nhận mình từ 18 tuổi trở lên.</label>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="reg-province-vi">Thành phố / Tỉnh</label>
+          <!-- TODO(James): xác nhận danh sách này khớp với đơn vị hành chính hiện tại của Việt Nam trước khi ra mắt. -->
+          <select class="form-input" id="reg-province-vi" name="province" required>
+            <option value="" disabled selected>Chọn...</option>
+          <option value="An Giang">An Giang</option>
+          <option value="Bà Rịa – Vũng Tàu">Bà Rịa – Vũng Tàu</option>
+          <option value="Bạc Liêu">Bạc Liêu</option>
+          <option value="Bắc Giang">Bắc Giang</option>
+          <option value="Bắc Kạn">Bắc Kạn</option>
+          <option value="Bắc Ninh">Bắc Ninh</option>
+          <option value="Bến Tre">Bến Tre</option>
+          <option value="Bình Định">Bình Định</option>
+          <option value="Bình Dương">Bình Dương</option>
+          <option value="Bình Phước">Bình Phước</option>
+          <option value="Bình Thuận">Bình Thuận</option>
+          <option value="Cà Mau">Cà Mau</option>
+          <option value="Cần Thơ">Cần Thơ</option>
+          <option value="Cao Bằng">Cao Bằng</option>
+          <option value="Đà Nẵng">Đà Nẵng</option>
+          <option value="Đắk Lắk">Đắk Lắk</option>
+          <option value="Đắk Nông">Đắk Nông</option>
+          <option value="Điện Biên">Điện Biên</option>
+          <option value="Đồng Nai">Đồng Nai</option>
+          <option value="Đồng Tháp">Đồng Tháp</option>
+          <option value="Gia Lai">Gia Lai</option>
+          <option value="Hà Giang">Hà Giang</option>
+          <option value="Hà Nam">Hà Nam</option>
+          <option value="Hà Nội">Hà Nội</option>
+          <option value="Hà Tĩnh">Hà Tĩnh</option>
+          <option value="Hải Dương">Hải Dương</option>
+          <option value="Hải Phòng">Hải Phòng</option>
+          <option value="Hậu Giang">Hậu Giang</option>
+          <option value="Hòa Bình">Hòa Bình</option>
+          <option value="Hưng Yên">Hưng Yên</option>
+          <option value="Khánh Hòa">Khánh Hòa</option>
+          <option value="Kiên Giang">Kiên Giang</option>
+          <option value="Kon Tum">Kon Tum</option>
+          <option value="Lai Châu">Lai Châu</option>
+          <option value="Lâm Đồng">Lâm Đồng</option>
+          <option value="Lạng Sơn">Lạng Sơn</option>
+          <option value="Lào Cai">Lào Cai</option>
+          <option value="Long An">Long An</option>
+          <option value="Nam Định">Nam Định</option>
+          <option value="Nghệ An">Nghệ An</option>
+          <option value="Ninh Bình">Ninh Bình</option>
+          <option value="Ninh Thuận">Ninh Thuận</option>
+          <option value="Phú Thọ">Phú Thọ</option>
+          <option value="Phú Yên">Phú Yên</option>
+          <option value="Quảng Bình">Quảng Bình</option>
+          <option value="Quảng Nam">Quảng Nam</option>
+          <option value="Quảng Ngãi">Quảng Ngãi</option>
+          <option value="Quảng Ninh">Quảng Ninh</option>
+          <option value="Quảng Trị">Quảng Trị</option>
+          <option value="Sóc Trăng">Sóc Trăng</option>
+          <option value="Sơn La">Sơn La</option>
+          <option value="Tây Ninh">Tây Ninh</option>
+          <option value="Thái Bình">Thái Bình</option>
+          <option value="Thái Nguyên">Thái Nguyên</option>
+          <option value="Thanh Hóa">Thanh Hóa</option>
+          <option value="Thừa Thiên Huế">Thừa Thiên Huế</option>
+          <option value="Tiền Giang">Tiền Giang</option>
+          <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
+          <option value="Trà Vinh">Trà Vinh</option>
+          <option value="Tuyên Quang">Tuyên Quang</option>
+          <option value="Vĩnh Long">Vĩnh Long</option>
+          <option value="Vĩnh Phúc">Vĩnh Phúc</option>
+          <option value="Yên Bái">Yên Bái</option>
+            <option value="Khác">Khác</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="reg-zalo-vi">Số Zalo</label>
+          <input class="form-input" type="tel" id="reg-zalo-vi" name="zaloNumber" maxlength="20" placeholder="VD: 0901234567" required>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="reg-email-vi">Email (không bắt buộc)</label>
+          <input class="form-input" type="email" id="reg-email-vi" name="email" maxlength="100">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="reg-language-vi">Ngôn ngữ ưa thích</label>
+          <select class="form-input" id="reg-language-vi" name="preferredLanguage" required>
+            <option value="vi" selected>Tiếng Việt</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="reg-about-vi">Đôi điều về bản thân bạn, và điều bạn hy vọng tìm kiếm</label>
+          <textarea class="form-textarea" id="reg-about-vi" name="aboutText" maxlength="1500" required></textarea>
+          <p class="form-note" style="text-align:right; margin:0;"><span id="reg-about-count-vi">0</span>/1500</p>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="reg-source-vi">Bạn biết đến chúng tôi qua đâu?</label>
+          <select class="form-input" id="reg-source-vi" name="source">
+            <option value="facebook_group">Nhóm Facebook</option>
+            <option value="friend">Bạn bè giới thiệu</option>
+            <option value="search">Tìm kiếm</option>
+            <option value="other">Khác</option>
+          </select>
+        </div>
+        <div class="form-field" style="flex-direction: row; align-items: flex-start; gap: 10px;">
+          <input type="checkbox" id="reg-consent-contact-vi" name="consentContact" required style="margin-top: 4px;">
+          <label class="form-label" for="reg-consent-contact-vi" style="text-transform: none; letter-spacing: normal; font-size: 14px;">Tôi đồng ý để Heritage Union liên hệ với tôi về đăng ký này.</label>
+        </div>
+        <div class="form-field" style="flex-direction: row; align-items: flex-start; gap: 10px;">
+          <input type="checkbox" id="reg-consent-processing-vi" name="consentProcessing" required style="margin-top: 4px;">
+          <label class="form-label" for="reg-consent-processing-vi" style="text-transform: none; letter-spacing: normal; font-size: 14px;">Tôi đồng ý để thông tin của mình được xử lý theo <a href="/vi/privacy">Chính Sách Bảo Mật</a>, bao gồm việc lưu trữ ngoài lãnh thổ Việt Nam.</label>
+        </div>
+        <div id="reg-turnstile-vi"></div>
+        <p class="fee-form-error" id="reg-error"></p>
+        <button class="btn btn--primary btn--md" type="submit" id="reg-submit" style="justify-self: start;">Đăng ký</button>
+        <p class="form-note">Chúng tôi không bao giờ chia sẻ thông tin của bạn với bất kỳ ai bên ngoài Heritage Union. Xem thêm tại trang <a href="/vi/your-rights">an toàn và quyền lợi của bạn</a>.</p>
+      </form>
+      <div class="fee-form-success" id="reg-success" style="display:none;">
+        <h3>Cảm ơn bạn.</h3>
+        <p>Chúng tôi sẽ sớm liên hệ để hướng dẫn bước tiếp theo.</p>
       </div>
-      <div class="form-field">
-        <label class="form-label" for="cand-city-vi">Thành phố / Tỉnh</label>
-        <input class="form-input" type="text" id="cand-city-vi" name="city" required>
-      </div>
-      <div class="form-field">
-        <label class="form-label" for="cand-contact-vi">Email hoặc số điện thoại</label>
-        <input class="form-input" type="text" id="cand-contact-vi" name="contact" required>
-      </div>
-      <div class="form-field">
-        <label class="form-label" for="cand-message-vi">Đôi điều về bản thân bạn, và điều bạn đang hy vọng tìm kiếm</label>
-        <textarea class="form-textarea" id="cand-message-vi" name="message" required></textarea>
-      </div>
-      <div class="form-field" style="flex-direction: row; align-items: flex-start; gap: 10px;">
-        <input type="checkbox" id="cand-consent-vi" name="consent" required style="margin-top: 4px;">
-        <label class="form-label" for="cand-consent-vi" style="text-transform: none; letter-spacing: normal; font-size: 14px;">Tôi đồng ý để Heritage Union liên hệ với tôi về việc trở thành ứng viên, và hiểu rằng thông tin của tôi sẽ được giữ bảo mật.</label>
-      </div>
-      <button class="btn btn--primary btn--md" type="submit" style="justify-self: start;">Đăng ký quan tâm của tôi</button>
-      <p class="form-note">Chúng tôi không bao giờ chia sẻ thông tin của bạn với bất kỳ ai bên ngoài Heritage Union. Huyền sẽ đích thân phản hồi tin nhắn của bạn.</p>
-    </form>
+    </div>
   </div>
 </section>
 

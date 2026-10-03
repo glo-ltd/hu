@@ -310,44 +310,180 @@
   <div class="container" style="max-width: 720px;">
     <div class="process-intro" style="text-align: center; margin: 0 auto 40px;">
       <span class="eyebrow eyebrow--center" style="margin-bottom: 18px;">Register Your Interest</span>
-      <h2 id="register-heading">Tell Huyen a little about yourself.</h2>
+      <h2 id="register-heading">Tell us a little about yourself.</h2>
       <p class="process-lead">
         This is simply an introduction — no photos or videos needed yet. We'll confirm we've received your registration and explain the next step.
       </p>
     </div>
 
-    <form name="candidate-interest" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="contact-form">
-      <input type="hidden" name="form-name" value="candidate-interest">
-      <p style="position:absolute; left:-9999px;" aria-hidden="true">
-        <label>Leave this field blank<input name="bot-field" tabindex="-1" autocomplete="off"></label>
+    <!-- Waitlist form — shown by default. Only replaced by the full
+         registration form below if candidate-signup-status confirms
+         registrations are open, so this is the safe fallback. -->
+    <div id="candidate-waitlist-wrap">
+      <p class="form-note" style="text-align:center; margin-bottom: 24px;">
+        Registrations are opening soon. Leave your Zalo number or email and we'll let you know the moment they do.
       </p>
-      <div class="form-field">
-        <label class="form-label" for="cand-name">Full name</label>
-        <input class="form-input" type="text" id="cand-name" name="name" required>
+      <form id="candidate-waitlist-form" class="contact-form">
+        <p style="position:absolute; left:-9999px;" aria-hidden="true">
+          <label>Leave this field blank<input name="website" tabindex="-1" autocomplete="off"></label>
+        </p>
+        <div class="form-field">
+          <label class="form-label" for="wl-name">Full name</label>
+          <input class="form-input" type="text" id="wl-name" name="name" maxlength="100" required>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="wl-contact">Zalo number or email</label>
+          <input class="form-input" type="text" id="wl-contact" name="contact" maxlength="100" required>
+        </div>
+        <div class="form-field" style="flex-direction: row; align-items: flex-start; gap: 10px;">
+          <input type="checkbox" id="wl-consent" name="consentNotify" required style="margin-top: 4px;">
+          <label class="form-label" for="wl-consent" style="text-transform: none; letter-spacing: normal; font-size: 14px;">I agree to be contacted by Heritage Union when registrations open.</label>
+        </div>
+        <p class="fee-form-error" id="wl-error"></p>
+        <button class="btn btn--primary btn--md" type="submit" id="wl-submit" style="justify-self: start;">Notify me</button>
+      </form>
+      <div class="fee-form-success" id="wl-success" style="display:none;">
+        <h3>Thank you.</h3>
+        <p>We'll let you know as soon as registrations open.</p>
       </div>
-      <div class="form-field">
-        <label class="form-label" for="cand-age">Age</label>
-        <input class="form-input" type="text" id="cand-age" name="age" required>
+    </div>
+
+    <!-- Full registration form — hidden until confirmed open. -->
+    <div id="candidate-register-wrap" hidden>
+      <form id="candidate-register-form" class="contact-form">
+        <p style="position:absolute; left:-9999px;" aria-hidden="true">
+          <label>Leave this field blank<input name="website" tabindex="-1" autocomplete="off"></label>
+        </p>
+        <div class="form-field">
+          <label class="form-label" for="reg-name">Full name</label>
+          <input class="form-input" type="text" id="reg-name" name="fullName" maxlength="100" required>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="reg-dob">Date of birth</label>
+          <input class="form-input" type="date" id="reg-dob" name="dateOfBirth" required>
+        </div>
+        <div class="form-field" style="flex-direction: row; align-items: flex-start; gap: 10px;">
+          <input type="checkbox" id="reg-age" name="ageDeclared" required style="margin-top: 4px;">
+          <label class="form-label" for="reg-age" style="text-transform: none; letter-spacing: normal; font-size: 14px;">I confirm I am 18 or over.</label>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="reg-province">City / Province</label>
+          <!-- TODO(James): confirm this list matches Vietnam's current administrative divisions before launch. -->
+          <select class="form-input" id="reg-province" name="province" required>
+            <option value="" disabled selected>Select...</option>
+          <option value="An Giang">An Giang</option>
+          <option value="Bà Rịa – Vũng Tàu">Bà Rịa – Vũng Tàu</option>
+          <option value="Bạc Liêu">Bạc Liêu</option>
+          <option value="Bắc Giang">Bắc Giang</option>
+          <option value="Bắc Kạn">Bắc Kạn</option>
+          <option value="Bắc Ninh">Bắc Ninh</option>
+          <option value="Bến Tre">Bến Tre</option>
+          <option value="Bình Định">Bình Định</option>
+          <option value="Bình Dương">Bình Dương</option>
+          <option value="Bình Phước">Bình Phước</option>
+          <option value="Bình Thuận">Bình Thuận</option>
+          <option value="Cà Mau">Cà Mau</option>
+          <option value="Cần Thơ">Cần Thơ</option>
+          <option value="Cao Bằng">Cao Bằng</option>
+          <option value="Đà Nẵng">Đà Nẵng</option>
+          <option value="Đắk Lắk">Đắk Lắk</option>
+          <option value="Đắk Nông">Đắk Nông</option>
+          <option value="Điện Biên">Điện Biên</option>
+          <option value="Đồng Nai">Đồng Nai</option>
+          <option value="Đồng Tháp">Đồng Tháp</option>
+          <option value="Gia Lai">Gia Lai</option>
+          <option value="Hà Giang">Hà Giang</option>
+          <option value="Hà Nam">Hà Nam</option>
+          <option value="Hà Nội">Hà Nội</option>
+          <option value="Hà Tĩnh">Hà Tĩnh</option>
+          <option value="Hải Dương">Hải Dương</option>
+          <option value="Hải Phòng">Hải Phòng</option>
+          <option value="Hậu Giang">Hậu Giang</option>
+          <option value="Hòa Bình">Hòa Bình</option>
+          <option value="Hưng Yên">Hưng Yên</option>
+          <option value="Khánh Hòa">Khánh Hòa</option>
+          <option value="Kiên Giang">Kiên Giang</option>
+          <option value="Kon Tum">Kon Tum</option>
+          <option value="Lai Châu">Lai Châu</option>
+          <option value="Lâm Đồng">Lâm Đồng</option>
+          <option value="Lạng Sơn">Lạng Sơn</option>
+          <option value="Lào Cai">Lào Cai</option>
+          <option value="Long An">Long An</option>
+          <option value="Nam Định">Nam Định</option>
+          <option value="Nghệ An">Nghệ An</option>
+          <option value="Ninh Bình">Ninh Bình</option>
+          <option value="Ninh Thuận">Ninh Thuận</option>
+          <option value="Phú Thọ">Phú Thọ</option>
+          <option value="Phú Yên">Phú Yên</option>
+          <option value="Quảng Bình">Quảng Bình</option>
+          <option value="Quảng Nam">Quảng Nam</option>
+          <option value="Quảng Ngãi">Quảng Ngãi</option>
+          <option value="Quảng Ninh">Quảng Ninh</option>
+          <option value="Quảng Trị">Quảng Trị</option>
+          <option value="Sóc Trăng">Sóc Trăng</option>
+          <option value="Sơn La">Sơn La</option>
+          <option value="Tây Ninh">Tây Ninh</option>
+          <option value="Thái Bình">Thái Bình</option>
+          <option value="Thái Nguyên">Thái Nguyên</option>
+          <option value="Thanh Hóa">Thanh Hóa</option>
+          <option value="Thừa Thiên Huế">Thừa Thiên Huế</option>
+          <option value="Tiền Giang">Tiền Giang</option>
+          <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
+          <option value="Trà Vinh">Trà Vinh</option>
+          <option value="Tuyên Quang">Tuyên Quang</option>
+          <option value="Vĩnh Long">Vĩnh Long</option>
+          <option value="Vĩnh Phúc">Vĩnh Phúc</option>
+          <option value="Yên Bái">Yên Bái</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="reg-zalo">Zalo number</label>
+          <input class="form-input" type="tel" id="reg-zalo" name="zaloNumber" maxlength="20" placeholder="e.g. 0901234567" required>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="reg-email">Email (optional)</label>
+          <input class="form-input" type="email" id="reg-email" name="email" maxlength="100">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="reg-language">Preferred language</label>
+          <select class="form-input" id="reg-language" name="preferredLanguage" required>
+            <option value="en" selected>English</option>
+            <option value="vi">Tiếng Việt</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="reg-about">About you, and what you hope for</label>
+          <textarea class="form-textarea" id="reg-about" name="aboutText" maxlength="1500" required></textarea>
+          <p class="form-note" style="text-align:right; margin:0;"><span id="reg-about-count">0</span>/1500</p>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="reg-source">How did you hear about us?</label>
+          <select class="form-input" id="reg-source" name="source">
+            <option value="facebook_group">Facebook group</option>
+            <option value="friend">Friend</option>
+            <option value="search">Search</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-field" style="flex-direction: row; align-items: flex-start; gap: 10px;">
+          <input type="checkbox" id="reg-consent-contact" name="consentContact" required style="margin-top: 4px;">
+          <label class="form-label" for="reg-consent-contact" style="text-transform: none; letter-spacing: normal; font-size: 14px;">I agree to be contacted by Heritage Union about this registration.</label>
+        </div>
+        <div class="form-field" style="flex-direction: row; align-items: flex-start; gap: 10px;">
+          <input type="checkbox" id="reg-consent-processing" name="consentProcessing" required style="margin-top: 4px;">
+          <label class="form-label" for="reg-consent-processing" style="text-transform: none; letter-spacing: normal; font-size: 14px;">I agree to my information being processed as described in the <a href="/privacy">Privacy Policy</a>, including storage outside Vietnam.</label>
+        </div>
+        <div id="reg-turnstile"></div>
+        <p class="fee-form-error" id="reg-error"></p>
+        <button class="btn btn--primary btn--md" type="submit" id="reg-submit" style="justify-self: start;">Register</button>
+        <p class="form-note">We never share your details with anyone outside Heritage Union. See our <a href="/your-rights">your safety and your rights</a> page for more.</p>
+      </form>
+      <div class="fee-form-success" id="reg-success" style="display:none;">
+        <h3>Thank you.</h3>
+        <p>We'll be in touch shortly with the next step.</p>
       </div>
-      <div class="form-field">
-        <label class="form-label" for="cand-city">City / Province</label>
-        <input class="form-input" type="text" id="cand-city" name="city" required>
-      </div>
-      <div class="form-field">
-        <label class="form-label" for="cand-contact">Email or phone number</label>
-        <input class="form-input" type="text" id="cand-contact" name="contact" required>
-      </div>
-      <div class="form-field">
-        <label class="form-label" for="cand-message">A little about yourself, and what you're hoping to find</label>
-        <textarea class="form-textarea" id="cand-message" name="message" required></textarea>
-      </div>
-      <div class="form-field" style="flex-direction: row; align-items: flex-start; gap: 10px;">
-        <input type="checkbox" id="cand-consent" name="consent" required style="margin-top: 4px;">
-        <label class="form-label" for="cand-consent" style="text-transform: none; letter-spacing: normal; font-size: 14px;">I consent to Heritage Union contacting me about becoming a candidate, and understand my details will be kept confidential.</label>
-      </div>
-      <button class="btn btn--primary btn--md" type="submit" style="justify-self: start;">Register my interest</button>
-      <p class="form-note">We never share your details with anyone outside Heritage Union. Huyen will personally respond to your message.</p>
-    </form>
+    </div>
   </div>
 </section>
 
