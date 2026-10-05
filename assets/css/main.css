@@ -1043,6 +1043,8 @@ a:hover { color: var(--burgundy-800); }
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
+  gap: 8px 20px;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -1061,6 +1063,21 @@ a:hover { color: var(--burgundy-800); }
 .footer-credit a {
   color: var(--gold-300);
   border-bottom: 1px solid rgba(216,192,136,0.4);
+}
+
+.footer-legal-links {
+  color: var(--ink-400);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.footer-legal-links a {
+  color: var(--ink-400);
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.footer-legal-links a:hover {
+  color: var(--gold-300);
 }
 
 @media (max-width: 759px) {
@@ -1105,6 +1122,30 @@ a:hover { color: var(--burgundy-800); }
 
 @media (max-width: 599px) {
   .fee-announce-bar { font-size: 12.5px; padding: 10px 16px; }
+}
+
+/* ============================================================
+   DRAFT / PENDING-REVIEW BANNER
+   ============================================================ */
+.draft-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  background: #3D2E12;
+  color: #F5D98A;
+  text-align: center;
+  padding: 11px 20px;
+  font-family: var(--font-text);
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 599px) {
+  .draft-banner { font-size: 11.5px; padding: 10px 16px; }
 }
 
 /* ============================================================
@@ -1523,7 +1564,8 @@ a:hover { color: var(--burgundy-800); }
 }
 
 .form-input,
-.form-textarea {
+.form-textarea,
+select.form-input {
   font-family: var(--font-text);
   font-size: 16px;
   padding: 13px 16px;
@@ -1531,7 +1573,10 @@ a:hover { color: var(--burgundy-800); }
   border-radius: var(--radius-xs);
   background: var(--white);
   color: var(--ink-800);
+  width: 100%;
 }
+
+select.form-input { cursor: pointer; }
 
 .form-input:focus,
 .form-textarea:focus {
@@ -1543,6 +1588,9 @@ a:hover { color: var(--burgundy-800); }
 .form-textarea { min-height: 140px; resize: vertical; }
 
 .form-note { font-size: 13px; line-height: 1.6; color: var(--ink-600); }
+
+#reg-turnstile,
+#reg-turnstile-vi { min-height: 65px; }
 
 .contact-detail-list {
   list-style: none;
