@@ -324,7 +324,7 @@ a:hover { color: var(--burgundy-800); }
   display: block;
 }
 
-@media (max-width: 1099px) {
+@media (max-width: 1339px) {
   .nav-links,
   .nav-cta .btn { display: none; }
   .nav-cta { display: flex; }
@@ -335,9 +335,54 @@ a:hover { color: var(--burgundy-800); }
   .nav-logo svg.logo-mark { display: block; }
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1340px) {
   .nav-logo svg.logo-mark { display: none; }
   .nav-logo svg.logo-full { display: block; }
+}
+
+/* "For Vietnamese women: Register free" — secondary, so it never competes
+   with the client CTA. Desktop: two short lines. Mobile: inside the menu. */
+.nav-cta .nav-women-btn {
+  flex-direction: column;
+  align-items: center;
+  padding: 5px 14px;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.nav-women-btn-small { font-size: 11px; color: var(--ink-700); }
+.nav-women-btn[aria-current="page"] { background: var(--burgundy-050); }
+
+.nav-mobile a.nav-women-btn-mobile {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0 12px;
+  padding: 12px 16px;
+  font-family: var(--font-text);
+  font-size: 15px;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  text-align: center;
+  line-height: 1.35;
+  border-bottom: 1px solid var(--burgundy-700);
+}
+
+/* Full desktop nav: tighten slightly so the extra button fits on one row */
+@media (min-width: 1340px) {
+  .nav-logo { flex-shrink: 0; margin-right: 20px; }
+  .nav-links { gap: 20px; }
+  .nav-links a,
+  .nav-links .nav-dropdown-btn { font-size: 14px; letter-spacing: 0.02em; white-space: nowrap; }
+  .nav-cta { margin-left: 20px; }
+  .nav-cta .btn { white-space: nowrap; }
+  .nav-cta .nav-women-btn { padding: 5px 12px; }
+}
+
+/* Collapsed nav: keep it in the bar on tablets/small laptops; on phones it
+   lives at the top of the menu instead. */
+@media (max-width: 639px) {
+  .nav-cta .nav-women-btn { display: none; }
 }
 
 /* ============================================================
@@ -433,6 +478,73 @@ a:hover { color: var(--burgundy-800); }
   .hero-ctas .btn--lg { width: 100%; }
   .hero-stats { gap: 22px; margin-top: 36px; }
 }
+
+/* Text-only hero (no photo) */
+.hero--text { grid-template-columns: 1fr; min-height: 0; }
+.hero--text .hero-text { padding-top: clamp(48px, 8vw, 96px); padding-bottom: clamp(48px, 8vw, 96px); }
+.hero--text h1 { max-width: 18ch; }
+
+/* ============================================================
+   CANDIDATE INTRO (top of become-a-candidate)
+   ============================================================ */
+.candidate-intro { background: var(--cream-100); }
+.candidate-intro-inner { max-width: 760px; }
+
+.candidate-intro h1 {
+  font-size: clamp(34px, 6vw, 58px);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 0 0 26px;
+  color: var(--text-strong);
+  overflow-wrap: break-word;
+}
+
+.candidate-intro-text {
+  font-size: clamp(17px, 2.2vw, 19px);
+  line-height: 1.7;
+  color: var(--ink-700);
+  margin: 0 0 18px;
+}
+
+.candidate-intro-points {
+  list-style: none;
+  margin: 30px 0 26px;
+  padding: 22px 0;
+  border-top: 1px solid var(--cream-300);
+  border-bottom: 1px solid var(--cream-300);
+  display: grid;
+  gap: 16px;
+}
+.candidate-intro-points li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--ink-800);
+}
+.candidate-intro-points .icon { flex: 0 0 auto; margin-top: 1px; }
+.candidate-intro-points a,
+.candidate-intro-rights a {
+  color: var(--burgundy-700);
+  border-bottom: 1px solid var(--burgundy-700);
+}
+.candidate-intro-rights { font-size: 17px; color: var(--burgundy-700); margin: 0 0 34px; }
+
+/* Homepage card linking Vietnamese women to the register page */
+.women-card { background: var(--cream-100); }
+.women-card-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(28px, 5vw, 44px);
+  background: var(--cream-50);
+  border: 1px solid var(--cream-300);
+  border-radius: var(--radius-xs);
+  text-align: center;
+}
+.women-card h2 { font-size: clamp(26px, 4vw, 36px); line-height: 1.2; margin: 0 0 16px; }
+.women-card p { font-size: 17px; line-height: 1.65; color: var(--ink-700); margin: 0 auto 26px; max-width: 54ch; }
+.women-card .btn { text-transform: none; letter-spacing: 0.02em; }
 
 /* ============================================================
    TRUST SECTION

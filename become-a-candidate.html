@@ -46,7 +46,7 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap"></noscript>
 
   <!-- Main stylesheet -->
-  <link rel="stylesheet" href="assets/css/main.css?v=2">
+  <link rel="stylesheet" href="assets/css/main.css?v=3">
 
   <!-- Favicon placeholder — replace with brand icon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 44'%3E%3Ccircle cx='26' cy='22' r='12' fill='none' stroke='%235E2A2E' stroke-width='2'/%3E%3Ccircle cx='38' cy='22' r='12' fill='none' stroke='%23C2A35A' stroke-width='2'/%3E%3C/svg%3E">
@@ -126,6 +126,7 @@
         <span class="lang-switch-sep" aria-hidden="true">|</span>
         <a href="/vi/become-a-candidate">VI</a>
       </div>
+      <a class="btn btn--secondary btn--sm nav-women-btn" href="/become-a-candidate?src=nav" aria-current="page"><span class="nav-women-btn-small">For Vietnamese women:</span> <span>Register free</span></a>
       <a class="btn btn--primary btn--sm" href="#register" data-scroll-to="register">Register your interest</a>
       <button class="nav-menu-btn" id="nav-menu-btn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nav-mobile">
         <!-- Menu icon -->
@@ -148,6 +149,7 @@
         <span class="lang-switch-sep" aria-hidden="true">|</span>
         <a href="/vi/become-a-candidate">VI</a>
       </div>
+      <a class="btn btn--secondary btn--md nav-women-btn-mobile" href="/become-a-candidate?src=nav" aria-current="page">For Vietnamese women: Register free</a>
       <a href="/how-it-works">How It Works</a>
       <a href="/services">Services</a>
       <a href="/success-stories">Success Stories</a>
@@ -167,31 +169,39 @@
 <main id="main-content">
 
 <!-- ============================================================
-     HERO
+     INTRODUCTION
      ============================================================ -->
-<section class="hero" aria-label="Become a Candidate — hero">
-  <div class="hero-text">
-    <span class="eyebrow" style="margin-bottom: 26px;">FOR VIETNAMESE WOMEN · BECOME A CANDIDATE</span>
-    <h1>A future built on respect, not swiping.</h1>
-    <p class="hero-standfirst">
-      Heritage Union works with a small number of Vietnamese women who choose to register themselves. Your details are private — never listed on an open profile database.
+<section class="candidate-intro section-pad" aria-labelledby="candidate-intro-heading">
+  <div class="container candidate-intro-inner">
+    <span class="eyebrow" style="margin-bottom: 22px;">FOR VIETNAMESE WOMEN</span>
+    <h1 id="candidate-intro-heading">Meet a man who is serious about a lasting relationship</h1>
+    <p class="candidate-intro-text">
+      Heritage Union works with men from overseas who are looking for a long-term, committed relationship with a Vietnamese woman. Each of them is a paying client who has completed a background check and has asked Heritage Union to advise and support him in his search.
     </p>
+    <p class="candidate-intro-text">
+      Registering is free and entirely your choice. If a man would like to be introduced to you, you&rsquo;ll first receive his background information in Vietnamese, including his relationship history, and you decide whether to share your contact details. You never owe anyone money, and you can withdraw at any time.
+    </p>
+    <ul class="candidate-intro-points" role="list">
+      <li><svg class="icon icon--gold" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>Free and voluntary, 18 or over only</span></li>
+      <li><svg class="icon icon--gold" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span>You see his background first; you decide</span></li>
+      <li><svg class="icon icon--gold" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span><a href="/withdraw">Withdraw any time</a></span></li>
+    </ul>
+    <p class="candidate-intro-rights"><a href="/your-rights">Read about your safety and your rights</a> &rarr;</p>
     <div class="hero-ctas">
       <a class="btn btn--primary btn--lg" href="#register" data-scroll-to="register">Register your interest</a>
       <a class="hero-link" href="#what-to-expect" data-scroll-to="what-to-expect">How our process works</a>
     </div>
   </div>
-  <div class="hero-image" role="img" aria-label="Vietnam — riverside at Hoi An during golden hour" style="background-image: url('assets/images/lifestyle-05.webp');"></div>
 </section>
 
 <!-- ============================================================
-     WHO WE'RE LOOKING FOR
+     IS THIS RIGHT FOR YOU?
      ============================================================ -->
 <section id="who-we-look-for" class="process section-pad" aria-labelledby="who-heading">
   <div class="container">
     <div class="process-intro">
-      <span class="eyebrow" style="margin-bottom: 18px;">Who We're Looking For</span>
-      <h2 id="who-heading">Serious, grounded, ready for the real thing.</h2>
+      <span class="eyebrow" style="margin-bottom: 18px;">Before You Register</span>
+      <h2 id="who-heading">Is this right for you?</h2>
       <p class="process-lead">
         This is for you if these describe you — registering is always your own choice, never ours.
       </p>
@@ -293,7 +303,7 @@
         <svg class="icon icon--gold" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
         </svg>
-        <h3>Clients are reviewed too</h3>
+        <h3>Every client is background-checked</h3>
         <p>Every man is a paying client who has completed a background check. You see his disclosure before anything is shared.</p>
       </div>
       <div class="trust-item">
