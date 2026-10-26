@@ -290,7 +290,7 @@
           <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
         </svg>
         <h3>Complete confidentiality</h3>
-        <p>Your details are never published, shared publicly, or browsable. Everything you tell us stays private within Heritage Union, handled as set out in our <a href="/privacy">Privacy Policy</a>.</p>
+        <p>Your details are never published, shared publicly, or browsable. Your contact details always stay private within Heritage Union. Only if you tick the optional box when you register, clients may see a short profile: your first name, age, city/province and what you wrote about yourself. Everything is handled as set out in our <a href="/privacy">Privacy Policy</a>.</p>
       </div>
       <div class="trust-item">
         <svg class="icon icon--gold" viewBox="0 0 24 24" aria-hidden="true">
@@ -488,6 +488,11 @@
           <input type="checkbox" id="reg-consent-processing" name="consentProcessing" required style="margin-top: 4px;">
           <label class="form-label" for="reg-consent-processing" style="text-transform: none; letter-spacing: normal; font-size: 14px;">I agree to my information being processed as described in the <a href="/privacy">Privacy Policy</a>, including storage outside Vietnam.</label>
         </div>
+        <div class="form-field" style="flex-direction: row; align-items: flex-start; gap: 10px;">
+          <input type="checkbox" id="reg-consent-profile" name="consentProfileSharing" aria-describedby="reg-consent-profile-note" style="margin-top: 4px;">
+          <label class="form-label" for="reg-consent-profile" style="text-transform: none; letter-spacing: normal; font-size: 14px;"><strong>Optional:</strong> I agree that Heritage Union may show my profile to its clients: my first name, age, city/province and what I wrote about myself. Never my surname, date of birth, Zalo number or email. I can change my mind at any time.</label>
+        </div>
+        <p class="form-note" id="reg-consent-profile-note" style="margin: -6px 0 0 30px;">If you leave this unticked, we will not show your profile to clients, so you are unlikely to receive introductions. You can still register.</p>
         <div id="reg-turnstile"></div>
         <p class="fee-form-error" id="reg-error"></p>
         <button class="btn btn--primary btn--md" type="submit" id="reg-submit" style="justify-self: start;">Register</button>

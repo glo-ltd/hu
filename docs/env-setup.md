@@ -20,6 +20,8 @@ here is committed to the repo — these are secrets.
 
 1. Create a new Supabase project at [supabase.com](https://supabase.com), **region: Singapore**.
 2. In the SQL editor, run `supabase/schema.sql` from this repo once, against that project.
+   If the project was set up before the profile-sharing consent was added, also run the
+   `alter table ... consent_profile_sharing_at` line at the bottom of that file.
 3. In **Project Settings → API**, copy:
    - **Project URL** → set as `SUPABASE_URL`
    - **service_role key** (NOT the `anon` key — the service_role key bypasses Row Level Security and must never be exposed to the browser) → set as `SUPABASE_SERVICE_ROLE_KEY`

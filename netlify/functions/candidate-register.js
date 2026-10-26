@@ -6,7 +6,7 @@ const FROM_EMAIL = 'Heritage Union <team@heritage-union.com>';
 const INTERNAL_NOTIFY_EMAIL = 'james@heritage-union.com';
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ZALO_PHONE_PATTERN = /^(\+84|0)(3|5|7|8|9)[0-9]{8}$/;
-const CONSENT_TEXT_VERSION = 'vi-2026-10-v1';
+const CONSENT_TEXT_VERSION = 'vi-2026-10-v2';
 const MAX_NAME_LENGTH = 100;
 const MAX_CONTACT_LENGTH = 100;
 const MAX_ABOUT_LENGTH = 1500;
@@ -164,6 +164,8 @@ async function handleRegistration(supabase, data, ipHash, event) {
   var source = typeof data.source === 'string' ? data.source.trim() : '';
   var consentContact = !!data.consentContact;
   var consentProcessing = !!data.consentProcessing;
+  // Optional and separate: only if she ticks it can her profile be shown to clients.
+  var consentProfileSharing = data.consentProfileSharing === true;
   var turnstileToken = typeof data.turnstileToken === 'string' ? data.turnstileToken : '';
 
   if (!fullName || !dateOfBirth || !province || !zaloNumber || !preferredLanguage || !aboutText) {
@@ -219,6 +221,7 @@ async function handleRegistration(supabase, data, ipHash, event) {
       source: source || null,
       consent_contact_at: now,
       consent_processing_at: now,
+      consent_profile_sharing_at: consentProfileSharing ? now : null,
       consent_text_version: CONSENT_TEXT_VERSION,
       ip_hash: ipHash,
       status: 'new',

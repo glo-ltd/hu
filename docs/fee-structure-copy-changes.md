@@ -33,7 +33,7 @@ then regenerate both PDFs and replace the two files above.
 
 6. **Step 4 of the process** (replace the whole step, including its title)
    - Find: "Curated Shortlist — Our team reviews the search results and presents you with the 20 most suitable candidates. Working together, you and our team then select the 5 candidates you wish to pursue for introduction."
-   - Replace with: "Profile Review — You have the opportunity to review 20 profiles of women who have registered with Heritage Union and agreed to their profile being shown to clients. Profiles never include contact details. Working together, we then identify the five most suitable."
+   - Replace with: "Profile Review — You have the opportunity to review up to 20 profiles of women who have registered with Heritage Union and agreed to their profile being shown to clients. Profiles never include contact details. Working together, we then identify the five most suitable."
 
 7. **Step 5 of the process** (replace the whole step; this supersedes the sentence previously listed here)
    - Find: "Introductions — We facilitate a formal introduction between you and each of the 5 candidates, using your preferred channel — phone, social media, or another method of your choosing."
@@ -41,7 +41,7 @@ then regenerate both PDFs and replace the two files above.
 
 8. **Concierge fee — what's included, bullet list** (three bullets)
    - Find: "Comprehensive review of candidate profiles, narrowed to the 20 most suitable matches"
-   - Replace with: "The opportunity to review 20 profiles of women who have agreed to their profile being shown to clients"
+   - Replace with: "The opportunity to review up to 20 profiles of women who have agreed to their profile being shown to clients"
    - Find: "Your involvement in selecting the 5 candidates you wish to pursue from this shortlist"
    - Replace with: "The opportunity to be introduced to the five most suitable profiles, where each woman agrees"
    - Find: "Facilitated introductions between you and each of your 5 chosen candidates"
@@ -54,13 +54,9 @@ then regenerate both PDFs and replace the two files above.
 ## Outstanding
 
 - `TODO(James): attorney review of the honour-payment section before reissuing.`
-- `TODO(James): before the PDF promises clients 20 profiles, the candidate side must match.` Today
-  become-a-candidate says "Everything you tell us stays private within Heritage Union", and the
-  Privacy Policy only covers using her data "to consider possible introductions". Showing her
-  profile to clients needs (a) a separate, optional consent at registration ("I agree to my
-  profile, without contact details, being shown to Heritage Union clients"), (b) updated
-  candidate-page and Privacy Policy wording, and (c) counsel sign-off. Until then, only profiles
-  of women who have given that consent can be shown.
-- `TODO(James): confirm "20" can be guaranteed.` If fewer than 20 women have agreed to profile
-  sharing, consider "up to 20".
+- Profiles may only be shown for candidates whose `consent_profile_sharing_at` is set in
+  Supabase (the optional box on the registration form). A profile is first name, age,
+  city/province and her "about" text, never surname, date of birth or contact details.
+- `TODO(James): counsel to approve the profile-sharing consent wording (registration form,
+  Privacy Policy section 3, Your Rights) before the reissued PDF is sent to any client.`
 - `TODO(James): regenerate both PDFs` (`assets/documents/heritage-union-fee-structure.pdf` and `netlify/functions/assets/heritage-union-fee-structure.pdf`) once the Word source is updated, and commit the new files to this repo.

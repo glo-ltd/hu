@@ -330,6 +330,7 @@
         var source = el.source ? el.source.value : '';
         var consentContact = el.consentContact.checked;
         var consentProcessing = el.consentProcessing.checked;
+        var consentProfileSharing = el.consentProfileSharing ? el.consentProfileSharing.checked : false;
         var website = el.website ? el.website.value : '';
 
         if (!fullName || !dateOfBirth || !province || !zaloNumber || !preferredLanguage || !aboutText) {
@@ -369,6 +370,7 @@
             source: source,
             consentContact: consentContact,
             consentProcessing: consentProcessing,
+            consentProfileSharing: consentProfileSharing,
             turnstileToken: turnstileToken,
             website: website
           })
