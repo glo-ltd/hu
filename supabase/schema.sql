@@ -36,6 +36,11 @@ create table if not exists public.candidates (
   consent_contact_at timestamptz not null,
   consent_processing_at timestamptz not null,
   consent_text_version text not null,
+  -- Optional, separate consent to show a short profile (first name, age,
+  -- province, about text; never surname, DOB or contact details) to
+  -- clients. Null means she has not agreed: her profile must not be shown.
+  -- Set back to null if she changes her mind.
+  consent_profile_sharing_at timestamptz,
 
   -- Anti-abuse / provenance (never store a raw IP)
   ip_hash text not null,
@@ -95,3 +100,7 @@ create index if not exists candidate_waitlist_created_at_idx on public.candidate
 
 alter table public.candidate_waitlist enable row level security;
 -- No policies here either — service_role only.
+
+-- Migration for databases created before the profile-sharing consent was
+-- added (safe to run more than once).
+alter table public.candidates add column if not exists consent_profile_sharing_at timestamptz;

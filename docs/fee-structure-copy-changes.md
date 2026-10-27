@@ -27,10 +27,36 @@ then regenerate both PDFs and replace the two files above.
    - Find: "Heritage Union bears all costs associated with sourcing, vetting, and travelling to meet candidates on your behalf during the search process."
    - Replace with: "Heritage Union bears its own operating costs during the search process."
 
-5. **Add to Step 5** (introductions), as a new sentence:
-   - "Before any introduction, each candidate receives your background disclosure and decides whether to share her contact details."
+5. **Opening paragraph**
+   - Find: "we search, curate, and introduce"
+   - Replace with: "we search, advise, and introduce"
+
+6. **Step 4 of the process** (replace the whole step, including its title)
+   - Find: "Curated Shortlist — Our team reviews the search results and presents you with the 20 most suitable candidates. Working together, you and our team then select the 5 candidates you wish to pursue for introduction."
+   - Replace with: "Profile Review — You have the opportunity to review up to 20 profiles of women who have registered with Heritage Union and agreed to their profile being shown to clients. Profiles never include contact details. Working together, we then identify the five most suitable."
+
+7. **Step 5 of the process** (replace the whole step; this supersedes the sentence previously listed here)
+   - Find: "Introductions — We facilitate a formal introduction between you and each of the 5 candidates, using your preferred channel — phone, social media, or another method of your choosing."
+   - Replace with: "Introductions — You have the opportunity to be introduced to the five most suitable profiles. Before any introduction, each woman receives your background disclosure in Vietnamese and decides whether to share her contact details. For each woman who agrees, we facilitate a formal introduction using your preferred channel — phone, social media, or another method of your choosing."
+
+8. **Concierge fee — what's included, bullet list** (three bullets)
+   - Find: "Comprehensive review of candidate profiles, narrowed to the 20 most suitable matches"
+   - Replace with: "The opportunity to review up to 20 profiles of women who have agreed to their profile being shown to clients"
+   - Find: "Your involvement in selecting the 5 candidates you wish to pursue from this shortlist"
+   - Replace with: "The opportunity to be introduced to the five most suitable profiles, where each woman agrees"
+   - Find: "Facilitated introductions between you and each of your 5 chosen candidates"
+   - Replace with: "Facilitated introductions with each woman who agrees to be introduced"
+
+9. **12-month timeline paragraph**
+   - Find: "no agreement has been reached on proceeding with any of the five shortlisted candidates"
+   - Replace with: "no agreement has been reached on proceeding with any of the five introductions offered"
 
 ## Outstanding
 
 - `TODO(James): attorney review of the honour-payment section before reissuing.`
+- Profiles may only be shown for candidates whose `consent_profile_sharing_at` is set in
+  Supabase (the optional box on the registration form). A profile is first name, age,
+  city/province and her "about" text, never surname, date of birth or contact details.
+- `TODO(James): counsel to approve the profile-sharing consent wording (registration form,
+  Privacy Policy section 3, Your Rights) before the reissued PDF is sent to any client.`
 - `TODO(James): regenerate both PDFs` (`assets/documents/heritage-union-fee-structure.pdf` and `netlify/functions/assets/heritage-union-fee-structure.pdf`) once the Word source is updated, and commit the new files to this repo.
