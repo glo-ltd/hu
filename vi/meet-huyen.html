@@ -199,17 +199,10 @@
       <a class="hero-link" href="/vi/how-it-works">Quy trình hoạt động</a>
     </div>
   </div>
-  <!-- Photo placeholder — replace .hero-image--monogram with a portrait once available -->
-  <div class="hero-image hero-image--monogram" role="img" aria-label="Hình ảnh tạm thời cho Huyền — ảnh chân dung sẽ được cập nhật sau">
-    <div class="monogram-mark">
-      <svg width="88" height="60" viewBox="0 0 64 44" aria-hidden="true">
-        <circle cx="24" cy="22" r="18.5" stroke="#FBF7EF" stroke-width="1.6" fill="none"/>
-        <circle cx="40" cy="22" r="18.5" stroke="#CCB272" stroke-width="1.6" fill="none"/>
-      </svg>
-      <span class="monogram-initial">H</span>
-      <span class="monogram-caption">Ảnh chân dung sẽ được cập nhật</span>
-    </div>
-  </div>
+  <picture class="hero-image hero-image--founder">
+    <source type="image/webp" srcset="/assets/images/huyen-profile-400.webp 400w, /assets/images/huyen-profile-800.webp 800w, /assets/images/huyen-profile-1280.webp 1280w" sizes="(min-width: 900px) 50vw, 100vw">
+    <img src="/assets/images/huyen-profile-800.jpg" srcset="/assets/images/huyen-profile-400.jpg 400w, /assets/images/huyen-profile-800.jpg 800w, /assets/images/huyen-profile.jpg 1280w" sizes="(min-width: 900px) 50vw, 100vw" alt="Huyền, Quản lý Quan hệ &amp; Văn hóa Việt Nam tại Heritage Union" width="1280" height="1280" fetchpriority="high" style="aspect-ratio: 1122 / 1402; object-position: center 30%;">
+  </picture>
 </section>
 
 <!-- ============================================================
