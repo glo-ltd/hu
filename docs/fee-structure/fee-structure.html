@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Heritage Union — Service &amp; Investment Structure</title>
+<!--
+  SOURCE OF TRUTH for the fee structure PDF emailed by
+  netlify/functions/request-fee-structure.js.
+
+  Edit this file, then run `npm run build:fee-pdf` to regenerate both:
+    assets/documents/heritage-union-fee-structure.pdf
+    netlify/functions/assets/heritage-union-fee-structure.pdf
+
+  Fonts are bundled in ./fonts (SIL Open Font License) so the build is
+  offline and reproducible. Colours match assets/css/main.css.
+-->
+<style>
+  @font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 400; src: url('fonts/cormorant-garamond-400-latin.woff2') format('woff2'); }
+  @font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 500; src: url('fonts/cormorant-garamond-500-latin.woff2') format('woff2'); }
+  @font-face { font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 400; src: url('fonts/cormorant-garamond-400-italic-latin.woff2') format('woff2'); }
+  @font-face { font-family: 'Spectral'; font-style: normal; font-weight: 400; src: url('fonts/spectral-400-latin.woff2') format('woff2'); }
+  @font-face { font-family: 'Spectral'; font-style: italic; font-weight: 400; src: url('fonts/spectral-400-italic-latin.woff2') format('woff2'); }
+  @font-face { font-family: 'Spectral'; font-style: normal; font-weight: 500; src: url('fonts/spectral-500-latin.woff2') format('woff2'); }
+
+  :root {
+    --burgundy: #5E2A2E;
+    --gold: #C2A35A;
+    --gold-700: #9A7E3C;
+    --gold-300: #D8C088;
+    --cream: #F2EADA;
+    --cream-50: #FBF7EF;
+    --cream-300: #DDCFB2;
+    --ink: #16202E;
+    --ink-400: #6B7888;
+    --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    --font-text: 'Spectral', Georgia, 'Times New Roman', serif;
+    --font-symbol: 'DejaVu Sans', 'Segoe UI Symbol', 'Apple Symbols', sans-serif;
+  }
+
+  @page {
+    size: A4;
+    margin: 16mm 18mm 20mm;
+    background: #F2EADA;
+    @bottom-left {
+      content: "Heritage Union — Confidential. Prepared for prospective members upon request.";
+      font-family: 'Spectral', Georgia, serif;
+      font-size: 7.5pt;
+      color: #6B7888;
+      vertical-align: top;
+      padding-top: 5mm;
+      border-top: 0.5pt solid #DDCFB2;
+    }
+    @bottom-right {
+      content: "heritage-union.com";
+      font-family: 'Spectral', Georgia, serif;
+      font-size: 7.5pt;
+      color: #6B7888;
+      vertical-align: top;
+      padding-top: 5mm;
+      border-top: 0.5pt solid #DDCFB2;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { background: var(--cream); }
+  body {
+    margin: 0;
+    font-family: var(--font-text);
+    font-size: 9.6pt;
+    line-height: 1.56;
+    color: var(--ink);
+    background: var(--cream);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  p { margin: 0 0 9pt; }
+  strong { font-weight: 500; color: var(--burgundy); }
+
+  /* Masthead */
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10pt;
+    padding-bottom: 12pt;
+    margin-bottom: 16pt;
+    border-bottom: 0.75pt solid var(--cream-300);
+  }
+  .brand-name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 15pt;
+    letter-spacing: 0.16em;
+    color: var(--burgundy);
+  }
+  .eyebrow {
+    margin: 0 0 6pt;
+    font-size: 7.6pt;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-700);
+  }
+  h1 {
+    margin: 0 0 6pt;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 30pt;
+    line-height: 1.1;
+    color: var(--burgundy);
+  }
+  .standfirst { font-style: italic; color: var(--ink); margin-bottom: 14pt; }
+
+  /* $25,000 callout */
+  .callout {
+    display: flex;
+    align-items: center;
+    gap: 14pt;
+    margin: 16pt 0 14pt;
+    padding: 16pt 22pt;
+    background: var(--burgundy);
+    border-radius: 3pt;
+    break-inside: avoid;
+  }
+  .callout-amount {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 34pt;
+    line-height: 1;
+    color: var(--cream-50);
+    white-space: nowrap;
+  }
+  .callout-sep { font-family: var(--font-display); font-size: 22pt; line-height: 1; color: var(--gold); }
+  .callout-label {
+    font-size: 8.2pt;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-300);
+  }
+
+  /* Section headings */
+  h2 {
+    margin: 22pt 0 12pt;
+    padding-bottom: 7pt;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 19pt;
+    line-height: 1.15;
+    color: var(--burgundy);
+    border-bottom: 0.9pt solid var(--gold);
+    break-after: avoid;
+  }
+  /* Keep each heading with the start of its content */
+  section { break-before: auto; }
+  h2 + * { break-before: avoid; }
+
+  /* Process steps */
+  .steps { list-style: none; margin: 0; padding: 0; }
+  .steps p { margin: 0; }
+  .steps li {
+    display: grid;
+    grid-template-columns: 22pt 1fr;
+    gap: 10pt;
+    margin-bottom: 6pt;
+    break-inside: avoid;
+  }
+  .step-num {
+    width: 18pt;
+    height: 18pt;
+    border: 0.75pt solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 12pt;
+    line-height: 1;
+    color: var(--burgundy);
+    margin-top: 1pt;
+  }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; break-inside: avoid; font-size: 8.8pt; line-height: 1.5; }
+  th {
+    text-align: left;
+    font-weight: 400;
+    color: var(--cream-50);
+    background: var(--burgundy);
+    padding: 8pt 9pt;
+  }
+  td { padding: 8pt 9pt; border-bottom: 0.5pt solid var(--cream-300); vertical-align: top; }
+  tbody tr:nth-child(even) td { background: var(--cream-50); }
+  tr { break-inside: avoid; }
+  .fees td:first-child { color: var(--burgundy); }
+  .expenses th { background: var(--ink); }
+  .expenses th:not(:first-child), .expenses td:not(:first-child) { text-align: center; width: 23%; }
+  .expenses td:not(:first-child) { vertical-align: middle; }
+  .covered { font-weight: 500; color: var(--burgundy); white-space: nowrap; }
+  .tick { font-family: var(--font-symbol); font-size: 0.9em; color: var(--gold-700); }
+  .none { color: var(--ink-400); }
+  .note { font-style: italic; font-size: 8.4pt; color: var(--ink-400); margin-top: 8pt; }
+
+  /* Bullet list */
+  .includes { list-style: none; margin: 0; padding: 0; }
+  .includes li { position: relative; padding-left: 16pt; margin-bottom: 4pt; break-inside: avoid; }
+  .includes li::before {
+    content: '';
+    position: absolute;
+    left: 2pt;
+    top: 0.62em;
+    width: 4.5pt;
+    height: 4.5pt;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+
+  .keep { break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<header class="brand">
+  <svg width="30" height="21" viewBox="0 0 64 44" aria-hidden="true">
+    <circle cx="24" cy="22" r="18.5" stroke="#5E2A2E" stroke-width="2.6" fill="none"/>
+    <circle cx="40" cy="22" r="18.5" stroke="#C2A35A" stroke-width="2.6" fill="none"/>
+  </svg>
+  <p class="brand-name">HERITAGE UNION</p>
+</header>
+
+<p class="eyebrow">Service &amp; Investment Structure</p>
+<h1>A transparent look at our fees.</h1>
+<p class="standfirst">Prepared for prospective members considering our introduction and consultancy service.</p>
+
+<p>Heritage Union is a private introduction and consultancy service. This document outlines, in full transparency, how our engagement works, what is included at each stage, and how costs are structured and shared between Heritage Union and our clients.</p>
+
+<div class="callout">
+  <span class="callout-amount">$25,000</span>
+  <span class="callout-sep">—</span>
+  <span class="callout-label">Full service, delivered across two USD payments</span>
+</div>
+
+<p>This structure reflects our approach to the work itself: we advise, match, and introduce, but once an introduction is made, we operate on trust and do not interfere in or monitor the relationship between client and candidate.</p>
+
+<section>
+  <h2>Our Process</h2>
+  <ol class="steps">
+    <li><span class="step-num">1</span><p><strong>Introductory Consultation:</strong> A complimentary, no-obligation Zoom conversation between you and Heritage Union to understand your goals and answer your questions.</p></li>
+    <li><span class="step-num">2</span><p><strong>Concierge Initiation:</strong> Upon engagement, we begin in-depth consultations to build your profile, which you review and approve before anything moves forward.</p></li>
+    <li><span class="step-num">3</span><p><strong>Matching:</strong> We compare your approved profile with the women who have registered themselves with Heritage Union. We do not search for, approach or recruit women on your behalf. Every candidate chose to register on her own.</p></li>
+    <li><span class="step-num">4</span><p><strong>Profile Review:</strong> You have the opportunity to review up to 20 profiles of women who have registered with Heritage Union and agreed to their profile being shown to clients. Profiles never include contact details. Working together, we then identify the five most suitable.</p></li>
+    <li><span class="step-num">5</span><p><strong>Introductions:</strong> You have the opportunity to be introduced to the five most suitable profiles. Before any introduction, each woman receives your background disclosure in Vietnamese and decides whether to share her contact details. For each woman who agrees, we facilitate a formal introduction using your preferred channel: phone, social media, or another method of your choosing.</p></li>
+    <li><span class="step-num">6</span><p><strong>Organic Relationship Development:</strong> From the point of introduction, the relationship develops naturally between you and the candidate, at your own pace. We do not monitor or interfere, though we remain available to offer support if needed, particularly cultural guidance for both client and candidate.</p></li>
+  </ol>
+</section>
+
+<section class="keep">
+  <h2>Fee Structure &amp; Payment Schedule</h2>
+  <table class="fees">
+    <thead>
+      <tr><th>Stage</th><th>Investment</th><th>Due</th><th>Refund Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Introductory Consultation</td><td>Complimentary</td><td>N/A</td><td>N/A</td></tr>
+      <tr><td>Concierge Initiation</td><td>$15,000 USD</td><td>Upon engagement</td><td>Non-refundable</td></tr>
+      <tr><td>Success Recognition (Honour Payment)</td><td>$10,000 USD</td><td>Only upon a successful relationship outcome</td><td>Contingent — payable only if applicable</td></tr>
+    </tbody>
+  </table>
+  <p class="note">A limited founding-member option, offering a reduced initiation fee in exchange for feedback, may be available to early clients. Ask James about it during your consultation.</p>
+</section>
+
+<section class="keep">
+  <h2>What the Concierge Initiation Fee Includes</h2>
+  <ul class="includes">
+    <li>In-depth consultation to understand your background, preferences, and relationship goals</li>
+    <li>Full profile development, with your review and sign-off before proceeding</li>
+    <li>Matching of your profile against the women who have registered themselves with Heritage Union</li>
+    <li>The opportunity to review up to 20 profiles of women who have agreed to their profile being shown to clients</li>
+    <li>The opportunity to be introduced to the five most suitable profiles, where each woman agrees</li>
+    <li>Facilitated introductions with each woman who agrees to be introduced</li>
+    <li>Ongoing support as your relationship(s) develop organically</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Success Recognition — An Honour System</h2>
+  <p>Heritage Union's full service is valued at $25,000 USD. The $15,000 USD Concierge Initiation fee covers our consultation, matching, and introduction work. The remaining $10,000 USD operates on an honour system: once introductions are made, we step back and do not monitor, interfere in, or otherwise intrude upon the relationship between client and candidate.</p>
+  <p>Should the relationship develop into an outcome both parties consider successful (broadly understood as a relationship in which both individuals are committed, happy, and fulfilled), we trust our clients to honour our work by completing payment of the final $10,000 USD, bringing the total investment in our full service to $25,000 USD. This payment is never monitored for or chased; it reflects the trust-based relationship we aim to build with every client.</p>
+  <p>Throughout this stage, Heritage Union remains available to offer support if requested, particularly cultural guidance and understanding for both client and candidate, but we do not monitor or involve ourselves in how the relationship unfolds.</p>
+</section>
+
+<section class="keep">
+  <h2>Engagement Timeline</h2>
+  <p>We expect the full process, from initiation through introductions, to conclude within 12 months. If, after 12 months, no agreement has been reached on proceeding with any of the five introductions offered, Heritage Union and the client will part ways amicably, with no further payment due from either party.</p>
+</section>
+
+<section>
+  <div class="keep">
+    <h2>Expense Responsibility</h2>
+    <table class="expenses">
+      <thead>
+        <tr><th>Expense Category</th><th>Heritage Union</th><th>Client</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Heritage Union's own operating and travel costs</td><td class="covered"><span class="tick">✓</span> Covered</td><td class="none">—</td></tr>
+        <tr><td>Client's personal travel, accommodation, and expenses</td><td class="none">—</td><td class="covered"><span class="tick">✓</span> Covered</td></tr>
+        <tr><td>Candidate's personal travel, accommodation, and expenses</td><td class="none">—</td><td class="covered"><span class="tick">✓</span> Covered</td></tr>
+        <tr><td>Administrative coordination: travel bookings, hotel arrangements, restaurant reservations, and meeting logistics</td><td>Arranged by Heritage Union</td><td>Cost borne by client</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin-top: 12pt;">Heritage Union bears its own operating and travel costs throughout the process. Once an introduction is made, any personal travel, accommodation, or related expenses incurred by you or the candidate are your own responsibility. Should you wish for Heritage Union to coordinate travel bookings, accommodation, restaurant reservations, or meeting logistics on your behalf, we are pleased to provide this administrative support; the associated costs are borne by the client.</p>
+</section>
+
+</body>
+</html>
