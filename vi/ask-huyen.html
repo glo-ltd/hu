@@ -63,7 +63,7 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap"></noscript>
 
   <!-- Main stylesheet -->
-  <link rel="stylesheet" href="/assets/css/main.css?v=3">
+  <link rel="stylesheet" href="/assets/css/main.css?v=4">
 
   <!-- Favicon placeholder — replace with brand icon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 44'%3E%3Ccircle cx='26' cy='22' r='12' fill='none' stroke='%235E2A2E' stroke-width='2'/%3E%3Ccircle cx='38' cy='22' r='12' fill='none' stroke='%23C2A35A' stroke-width='2'/%3E%3C/svg%3E">
@@ -200,7 +200,12 @@
       <a class="hero-link" href="/vi/meet-huyen">Gặp gỡ Huyền</a>
     </div>
   </div>
-  <div class="hero-image" role="img" aria-label="Cặp đôi cùng nấu ăn ở nhà" style="background-image: url('/assets/images/lifestyle-06.webp');"></div>
+  <div class="hero-image hero-image--photo">
+    <picture>
+      <source type="image/webp" srcset="/assets/images/responsive/lifestyle-06-640.webp 640w, /assets/images/responsive/lifestyle-06-1024.webp 1024w, /assets/images/responsive/lifestyle-06-1200.webp 1200w" sizes="(min-width: 900px) 50vw, 100vw">
+      <img src="/assets/images/responsive/lifestyle-06-1024.jpg" srcset="/assets/images/responsive/lifestyle-06-640.jpg 640w, /assets/images/responsive/lifestyle-06-1024.jpg 1024w, /assets/images/responsive/lifestyle-06-1200.jpg 1200w" sizes="(min-width: 900px) 50vw, 100vw" alt="Cặp đôi cười đùa khi cùng nấu ăn ở nhà" width="1200" height="1600" fetchpriority="high" style="object-position: center 45%;">
+    </picture>
+  </div>
 </section>
 
 <!-- ============================================================
