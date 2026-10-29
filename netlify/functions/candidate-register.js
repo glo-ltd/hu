@@ -283,12 +283,12 @@ async function handleRegistration(supabase, data, ipHash, event) {
 function buildAutoReply(language, fullName) {
   if (language === 'vi') {
     return {
-      subject: 'Heritage Union — Đã nhận được đăng ký của bạn',
+      subject: 'Heritage Union — Chúng tôi đã nhận được đăng ký của bạn',
       html:
         '<p>Chào ' + escapeHtml(fullName) + ',</p>' +
         '<p>Cảm ơn bạn đã đăng ký với Heritage Union. Chúng tôi đã nhận được thông tin của bạn.</p>' +
-        '<p>Bước tiếp theo: chúng tôi sẽ gửi một tin nhắn ngắn để bạn xác nhận thông tin liên hệ và hoàn thiện hồ sơ của mình. Việc đăng ký là hoàn toàn miễn phí và tự nguyện — bạn có thể rút lại bất cứ lúc nào.</p>' +
-        '<p>Nếu bạn muốn rút đăng ký, vui lòng truy cập <a href="https://heritage-union.com/vi/withdraw">heritage-union.com/vi/withdraw</a>.</p>' +
+        '<p>Bước tiếp theo: chúng tôi sẽ gửi thêm một tin nhắn ngắn để bạn xác nhận thông tin liên lạc và tự hoàn thiện hồ sơ của mình. Đăng ký hoàn toàn miễn phí và tự nguyện — bạn có thể rút lại bất cứ lúc nào.</p>' +
+        '<p>Nếu muốn rút đăng ký, bạn chỉ cần vào trang <a href="https://heritage-union.com/vi/withdraw">heritage-union.com/vi/withdraw</a>.</p>' +
         '<p>Trân trọng,<br>Đội ngũ Heritage Union</p>',
     };
   }
