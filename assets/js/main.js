@@ -273,7 +273,7 @@
           return;
         }
         if (!consentNotify) {
-          showWlError(isViPage ? 'Vui lòng đồng ý để được liên hệ.' : 'Please confirm you agree to be contacted.');
+          showWlError(isViPage ? 'Vui lòng xác nhận bạn đồng ý để chúng tôi liên hệ.' : 'Please confirm you agree to be contacted.');
           return;
         }
 
@@ -334,7 +334,7 @@
         var website = el.website ? el.website.value : '';
 
         if (!fullName || !dateOfBirth || !province || !zaloNumber || !preferredLanguage || !aboutText) {
-          showRegError(isViPage ? 'Vui lòng điền đầy đủ các trường bắt buộc.' : 'Please complete all required fields.');
+          showRegError(isViPage ? 'Vui lòng điền đầy đủ các mục bắt buộc.' : 'Please complete all required fields.');
           return;
         }
         if (!ageDeclared) {
@@ -342,13 +342,13 @@
           return;
         }
         if (!consentContact || !consentProcessing) {
-          showRegError(isViPage ? 'Vui lòng đồng ý với cả hai điều khoản để tiếp tục.' : 'Please agree to both consent statements to continue.');
+          showRegError(isViPage ? 'Vui lòng đánh dấu đồng ý cả hai mục bắt buộc để tiếp tục.' : 'Please agree to both consent statements to continue.');
           return;
         }
 
         var turnstileToken = window.turnstile && turnstileWidgetId !== null ? window.turnstile.getResponse(turnstileWidgetId) : '';
         if (!turnstileToken) {
-          showRegError(isViPage ? 'Vui lòng hoàn thành xác minh để tiếp tục.' : 'Please complete the verification to continue.');
+          showRegError(isViPage ? 'Vui lòng hoàn tất bước xác minh để tiếp tục.' : 'Please complete the verification to continue.');
           return;
         }
 
