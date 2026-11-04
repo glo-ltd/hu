@@ -91,24 +91,6 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/meet-huyen"/>
   </url>
   <url>
-    <loc>https://heritage-union.com/success-stories</loc>
-    <lastmod>2026-10-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/success-stories"/>
-    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/success-stories"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/success-stories"/>
-  </url>
-  <url>
-    <loc>https://heritage-union.com/vi/success-stories</loc>
-    <lastmod>2026-10-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://heritage-union.com/success-stories"/>
-    <xhtml:link rel="alternate" hreflang="vi" href="https://heritage-union.com/vi/success-stories"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://heritage-union.com/success-stories"/>
-  </url>
-  <url>
     <loc>https://heritage-union.com/faq</loc>
     <lastmod>2026-10-03</lastmod>
     <changefreq>monthly</changefreq>
