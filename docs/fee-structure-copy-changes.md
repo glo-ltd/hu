@@ -37,12 +37,8 @@ Before committing, open the PDF and check page breaks. Also make sure none of th
 words have crept back in: network, source/sourcing, vet/vetting, curate/curated,
 shortlist, searches, engaged.
 
-## Outstanding
+## Profile sharing
 
-- `TODO(James): attorney review of the honour-payment section`. In particular, check
-  that the $10,000 payment can't be read as a fee due on marriage.
-- `TODO(James): counsel to approve the profile-sharing consent wording` (registration
-  form, Privacy Policy section 3, Your Rights) before the PDF is relied on.
 - Profiles may only be shown for candidates whose `consent_profile_sharing_at` is set
   in Supabase (the optional box on the registration form). A profile is first name,
   age, city/province and her "about" text, never surname, date of birth or contact
