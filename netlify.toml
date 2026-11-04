@@ -40,3 +40,29 @@
   to = "/vi/"
   status = 301
   force = true
+
+# TODO(James): remove these four redirects when signed consent from John and
+# Adam is held. Success Stories is hidden until then; the page files are unchanged.
+[[redirects]]
+  from = "/success-stories"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/success-stories.html"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/vi/success-stories"
+  to = "/vi/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/vi/success-stories.html"
+  to = "/vi/"
+  status = 302
+  force = true

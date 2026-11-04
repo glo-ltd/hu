@@ -14,6 +14,17 @@ const RATE_LIMIT_PER_HOUR = 5;
 
 const VALID_SOURCES = ['facebook_group', 'friend', 'search', 'other'];
 const VALID_LANGUAGES = ['vi', 'en'];
+// The 34 provincial-level units in force since 1 July 2025 (Resolution
+// 202/2025/QH15), in Vietnamese alphabetical order. Must match the
+// province <option> values on /become-a-candidate and /vi/become-a-candidate.
+const VALID_PROVINCES = [
+  'An Giang', 'Bắc Ninh', 'Cà Mau', 'Cao Bằng', 'Cần Thơ', 'Đà Nẵng', 'Đắk Lắk',
+  'Điện Biên', 'Đồng Nai', 'Đồng Tháp', 'Gia Lai', 'Hà Nội', 'Hà Tĩnh', 'Hải Phòng',
+  'TP. Hồ Chí Minh', 'Huế', 'Hưng Yên', 'Khánh Hòa', 'Lai Châu', 'Lạng Sơn', 'Lào Cai',
+  'Lâm Đồng', 'Nghệ An', 'Ninh Bình', 'Phú Thọ', 'Quảng Ngãi', 'Quảng Ninh', 'Quảng Trị',
+  'Sơn La', 'Tây Ninh', 'Thái Nguyên', 'Thanh Hóa', 'Tuyên Quang', 'Vĩnh Long',
+  'Khác', 'Other',
+];
 
 function jsonResponse(statusCode, body) {
   return {
@@ -156,7 +167,7 @@ async function handleRegistration(supabase, data, ipHash, event) {
   var fullName = typeof data.fullName === 'string' ? data.fullName.trim().slice(0, MAX_NAME_LENGTH) : '';
   var dateOfBirth = typeof data.dateOfBirth === 'string' ? data.dateOfBirth.trim() : '';
   var ageDeclared = !!data.ageDeclared;
-  var province = typeof data.province === 'string' ? data.province.trim().slice(0, MAX_NAME_LENGTH) : '';
+  var province = typeof data.province === 'string' ? data.province.normalize('NFC').trim().slice(0, MAX_NAME_LENGTH) : '';
   var zaloNumber = typeof data.zaloNumber === 'string' ? data.zaloNumber.trim().slice(0, 20) : '';
   var email = typeof data.email === 'string' ? data.email.trim().slice(0, MAX_CONTACT_LENGTH) : '';
   var preferredLanguage = typeof data.preferredLanguage === 'string' ? data.preferredLanguage.trim() : '';
@@ -173,6 +184,9 @@ async function handleRegistration(supabase, data, ipHash, event) {
   }
   if (VALID_LANGUAGES.indexOf(preferredLanguage) === -1) {
     return jsonResponse(400, { error: 'Please select a valid language.' });
+  }
+  if (VALID_PROVINCES.indexOf(province) === -1) {
+    return jsonResponse(400, { error: 'Please select a valid province.' });
   }
   if (source && VALID_SOURCES.indexOf(source) === -1) {
     source = 'other';
