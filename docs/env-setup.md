@@ -60,3 +60,10 @@ TURNSTILE_SECRET=
 
 After setting these, trigger a new deploy (environment variable changes
 don't apply to already-built deploys).
+
+## 6. Analytics (not set up yet)
+
+No analytics script is loaded on any page.
+
+`TODO(James): create a Plausible account for heritage-union.com and add its
+script tag to every page, or switch on Netlify Analytics (no script tag needed).`
