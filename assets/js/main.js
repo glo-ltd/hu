@@ -197,6 +197,49 @@
     var turnstileWidgetId = null;
 
     var genericError = isViPage ? 'Đã có lỗi xảy ra. Vui lòng thử lại.' : 'Something went wrong. Please try again.';
+    var pageLang = isViPage ? 'vi' : 'en';
+
+    /* Same rules as the server (netlify/shared/candidate-common.js), so she
+       sees a clear message before submitting rather than after. */
+    function normaliseZalo(raw) {
+      var digits = String(raw || '').replace(/[\s\-.()]/g, '');
+      if (digits.indexOf('+84') === 0) digits = '0' + digits.slice(3);
+      else if (/^84\d{9}$/.test(digits)) digits = '0' + digits.slice(2);
+      return digits;
+    }
+    function isValidZalo(raw) {
+      return /^0(3|5|7|8|9)\d{8}$/.test(normaliseZalo(raw));
+    }
+    function isAdult(dateString) {
+      var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateString || '');
+      if (!m) return false;
+      var y = +m[1], mo = +m[2], d = +m[3];
+      if (y < 1900) return false;
+      var now = new Date();
+      var age = now.getFullYear() - y;
+      if (now.getMonth() + 1 < mo || (now.getMonth() + 1 === mo && now.getDate() < d)) age--;
+      return age >= 18;
+    }
+
+    /* Stop the date picker offering dates that make her under 18. */
+    var dobField = registerForm && registerForm.elements.dateOfBirth;
+    if (dobField) {
+      var maxDob = new Date();
+      maxDob.setFullYear(maxDob.getFullYear() - 18);
+      var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+      dobField.max = maxDob.getFullYear() + '-' + pad(maxDob.getMonth() + 1) + '-' + pad(maxDob.getDate());
+      dobField.min = '1900-01-01';
+    }
+
+    function showTurnstileError(message) {
+      var el = document.getElementById('reg-error');
+      if (!el) return;
+      el.textContent = message;
+      el.classList.add('visible');
+    }
+    var turnstileLoadError = isViPage
+      ? 'Không tải được bước xác minh. Vui lòng tải lại trang, hoặc thử trình duyệt khác.'
+      : 'The verification step could not load. Please reload the page or try another browser.';
 
     /* Prefill "source" from ?src= query param */
     var validSources = ['facebook_group', 'friend', 'search', 'other'];
@@ -218,7 +261,11 @@
       if (!siteKey || !turnstileContainer) return;
       function render() {
         if (window.turnstile && turnstileContainer && turnstileWidgetId === null) {
-          turnstileWidgetId = window.turnstile.render(turnstileContainer, { sitekey: siteKey });
+          turnstileWidgetId = window.turnstile.render(turnstileContainer, {
+            sitekey: siteKey,
+            language: pageLang,
+            'error-callback': function () { showTurnstileError(turnstileLoadError); }
+          });
         }
       }
       if (window.turnstile) {
@@ -229,6 +276,7 @@
         s.async = true;
         s.defer = true;
         s.addEventListener('load', render);
+        s.addEventListener('error', function () { showTurnstileError(turnstileLoadError); });
         document.body.appendChild(s);
       }
     }
@@ -283,7 +331,7 @@
         fetch('/.netlify/functions/candidate-register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: name, contact: contact, consentNotify: consentNotify, website: website })
+          body: JSON.stringify({ name: name, contact: contact, consentNotify: consentNotify, website: website, lang: pageLang })
         })
           .then(function (response) {
             return response.json().catch(function () { return {}; }).then(function (data) {
@@ -337,8 +385,20 @@
           showRegError(isViPage ? 'Vui lòng điền đầy đủ các mục bắt buộc.' : 'Please complete all required fields.');
           return;
         }
+        if (!isAdult(dateOfBirth)) {
+          showRegError(isViPage ? 'Bạn cần từ 18 tuổi trở lên để đăng ký.' : 'You must be 18 or over to register.');
+          return;
+        }
         if (!ageDeclared) {
-          showRegError(isViPage ? 'Vui lòng xác nhận bạn từ 18 tuổi trở lên.' : 'You must confirm you are 18 or over.');
+          showRegError(isViPage ? 'Vui lòng xác nhận bạn từ 18 tuổi trở lên.' : 'Please confirm you are 18 or over.');
+          return;
+        }
+        if (!isValidZalo(zaloNumber)) {
+          showRegError(isViPage ? 'Vui lòng kiểm tra lại số Zalo. Số cần là số di động Việt Nam, ví dụ: 0901234567.' : 'Please check your Zalo number. It should be a Vietnamese mobile number, for example 0901234567.');
+          return;
+        }
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          showRegError(isViPage ? 'Vui lòng kiểm tra lại địa chỉ email, hoặc để trống mục này.' : 'Please check your email address, or leave it blank.');
           return;
         }
         if (!consentContact || !consentProcessing) {
@@ -372,7 +432,8 @@
             consentProcessing: consentProcessing,
             consentProfileSharing: consentProfileSharing,
             turnstileToken: turnstileToken,
-            website: website
+            website: website,
+            lang: pageLang
           })
         })
           .then(function (response) {
@@ -425,7 +486,7 @@
       fetch('/.netlify/functions/withdraw-candidate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contact: contact, website: website })
+        body: JSON.stringify({ contact: contact, website: website, lang: isViPageWithdraw ? 'vi' : 'en' })
       })
         .then(function (response) {
           return response.json().catch(function () { return {}; }).then(function (data) {

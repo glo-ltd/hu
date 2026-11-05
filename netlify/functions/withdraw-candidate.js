@@ -23,17 +23,26 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
+const { normaliseZalo, pickLang, msg } = require('../shared/candidate-common');
+
+// Escape the wildcard characters ilike understands, so an email is matched
+// literally (case-insensitively) and never as a pattern.
+function escapeLike(str) {
+  return String(str).replace(/[\\%_]/g, function (c) { return '\\' + c; });
+}
+
 exports.handler = async function (event) {
   if (event.httpMethod !== 'POST') {
-    return jsonResponse(405, { error: 'Method not allowed.' });
+    return jsonResponse(405, { error: msg('method', 'en') });
   }
 
   let data;
   try {
     data = JSON.parse(event.body || '{}');
   } catch (err) {
-    return jsonResponse(400, { error: 'Invalid request.' });
+    return jsonResponse(400, { error: msg('invalid', 'en') });
   }
+  var lang = pickLang(data);
 
   var website = data.website;
   if (website) {
@@ -43,12 +52,12 @@ exports.handler = async function (event) {
 
   var contact = typeof data.contact === 'string' ? data.contact.trim().slice(0, MAX_CONTACT_LENGTH) : '';
   if (!contact) {
-    return jsonResponse(400, { error: 'Please provide the Zalo number or email you registered with.' });
+    return jsonResponse(400, { error: msg('withdrawContact', lang) });
   }
 
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     console.error('Supabase is not configured.');
-    return jsonResponse(500, { error: 'This form is not yet configured. Please try again later.' });
+    return jsonResponse(500, { error: msg('notConfigured', lang) });
   }
 
   var supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
@@ -63,7 +72,9 @@ exports.handler = async function (event) {
     var byZalo = await supabase
       .from('candidates')
       .update({ status: 'withdrawn' })
-      .eq('zalo_number', contact)
+      // Match the canonical form (how registrations are now saved) and the
+      // exact text typed, so older rows saved before normalisation still match.
+      .in('zalo_number', Array.from(new Set([normaliseZalo(contact), contact])))
       .neq('status', 'withdrawn')
       .select('id');
     if (byZalo.error) {
@@ -76,7 +87,7 @@ exports.handler = async function (event) {
       var byEmail = await supabase
         .from('candidates')
         .update({ status: 'withdrawn' })
-        .eq('email', contact)
+        .ilike('email', escapeLike(contact))
         .neq('status', 'withdrawn')
         .select('id');
       if (byEmail.error) {
