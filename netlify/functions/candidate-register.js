@@ -1,16 +1,19 @@
 const crypto = require('crypto');
 const { Resend } = require('resend');
 const { createClient } = require('@supabase/supabase-js');
+const { normaliseZalo, isValidZalo, signupsOpen, pickLang, msg } = require('../shared/candidate-common');
 
 const FROM_EMAIL = 'Heritage Union <team@heritage-union.com>';
 const INTERNAL_NOTIFY_EMAIL = 'james@heritage-union.com';
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const ZALO_PHONE_PATTERN = /^(\+84|0)(3|5|7|8|9)[0-9]{8}$/;
 const CONSENT_TEXT_VERSION = 'vi-2026-10-v2';
 const MAX_NAME_LENGTH = 100;
 const MAX_CONTACT_LENGTH = 100;
 const MAX_ABOUT_LENGTH = 1500;
-const RATE_LIMIT_PER_HOUR = 5;
+// Generous on purpose: Vietnamese mobile networks put many phones behind one
+// shared IP address, so a low limit would turn away genuine women after a
+// group post. Turnstile is the main bot defence; this only stops floods.
+const RATE_LIMIT_PER_HOUR = 30;
 
 const VALID_SOURCES = ['facebook_group', 'friend', 'search', 'other'];
 const VALID_LANGUAGES = ['vi', 'en'];
@@ -88,17 +91,18 @@ async function verifyTurnstile(token, remoteIp) {
 
 exports.handler = async function (event) {
   if (event.httpMethod !== 'POST') {
-    return jsonResponse(405, { error: 'Method not allowed.' });
+    return jsonResponse(405, { error: msg('method', 'en') });
   }
 
-  var signupsOpen = process.env.CANDIDATE_SIGNUPS_OPEN === 'true';
+  var open = signupsOpen();
 
   let data;
   try {
     data = JSON.parse(event.body || '{}');
   } catch (err) {
-    return jsonResponse(400, { error: 'Invalid request.' });
+    return jsonResponse(400, { error: msg('invalid', 'en') });
   }
+  var lang = pickLang(data);
 
   var website = data.website;
   if (website) {
@@ -108,7 +112,7 @@ exports.handler = async function (event) {
 
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     console.error('Supabase is not configured.');
-    return jsonResponse(500, { error: 'This form is not yet configured. Please try again later.' });
+    return jsonResponse(500, { error: msg('notConfigured', lang) });
   }
 
   var supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
@@ -116,10 +120,10 @@ exports.handler = async function (event) {
   });
   var ipHash = clientIpHash(event);
 
-  if (!signupsOpen) {
-    return handleWaitlist(supabase, data, ipHash);
+  if (!open) {
+    return handleWaitlist(supabase, data, ipHash, lang);
   }
-  return handleRegistration(supabase, data, ipHash, event);
+  return handleRegistration(supabase, data, ipHash, event, lang);
 };
 
 async function isRateLimited(supabase, table, ipHash) {
@@ -132,20 +136,20 @@ async function isRateLimited(supabase, table, ipHash) {
   return result.count !== null && result.count >= RATE_LIMIT_PER_HOUR;
 }
 
-async function handleWaitlist(supabase, data, ipHash) {
+async function handleWaitlist(supabase, data, ipHash, lang) {
   var name = typeof data.name === 'string' ? data.name.trim().slice(0, MAX_NAME_LENGTH) : '';
   var contact = typeof data.contact === 'string' ? data.contact.trim().slice(0, MAX_CONTACT_LENGTH) : '';
   var consentNotify = !!data.consentNotify;
 
   if (!name || !contact) {
-    return jsonResponse(400, { error: 'Please complete all fields.' });
+    return jsonResponse(400, { error: msg('waitlistRequired', lang) });
   }
   if (!consentNotify) {
-    return jsonResponse(400, { error: 'Please confirm you agree to be contacted.' });
+    return jsonResponse(400, { error: msg('waitlistConsent', lang) });
   }
 
   if (await isRateLimited(supabase, 'candidate_waitlist', ipHash)) {
-    return jsonResponse(429, { error: 'Too many submissions. Please try again later.' });
+    return jsonResponse(429, { error: msg('rateLimited', lang) });
   }
 
   var insertResult = await supabase.from('candidate_waitlist').insert({
@@ -157,19 +161,19 @@ async function handleWaitlist(supabase, data, ipHash) {
 
   if (insertResult.error) {
     console.error('Supabase waitlist insert failed:', insertResult.error);
-    return jsonResponse(502, { error: 'We could not save your details right now. Please try again shortly.' });
+    return jsonResponse(502, { error: msg('saveFailed', lang) });
   }
 
   return jsonResponse(200, { ok: true, mode: 'waitlist' });
 }
 
-async function handleRegistration(supabase, data, ipHash, event) {
+async function handleRegistration(supabase, data, ipHash, event, lang) {
   var fullName = typeof data.fullName === 'string' ? data.fullName.trim().slice(0, MAX_NAME_LENGTH) : '';
   var dateOfBirth = typeof data.dateOfBirth === 'string' ? data.dateOfBirth.trim() : '';
   var ageDeclared = !!data.ageDeclared;
   var province = typeof data.province === 'string' ? data.province.normalize('NFC').trim().slice(0, MAX_NAME_LENGTH) : '';
-  var zaloNumber = typeof data.zaloNumber === 'string' ? data.zaloNumber.trim().slice(0, 20) : '';
-  var email = typeof data.email === 'string' ? data.email.trim().slice(0, MAX_CONTACT_LENGTH) : '';
+  var zaloNumber = typeof data.zaloNumber === 'string' ? normaliseZalo(data.zaloNumber.trim().slice(0, 30)) : '';
+  var email = typeof data.email === 'string' ? data.email.trim().toLowerCase().slice(0, MAX_CONTACT_LENGTH) : '';
   var preferredLanguage = typeof data.preferredLanguage === 'string' ? data.preferredLanguage.trim() : '';
   var aboutText = typeof data.aboutText === 'string' ? data.aboutText.trim().slice(0, MAX_ABOUT_LENGTH) : '';
   var source = typeof data.source === 'string' ? data.source.trim() : '';
@@ -180,43 +184,43 @@ async function handleRegistration(supabase, data, ipHash, event) {
   var turnstileToken = typeof data.turnstileToken === 'string' ? data.turnstileToken : '';
 
   if (!fullName || !dateOfBirth || !province || !zaloNumber || !preferredLanguage || !aboutText) {
-    return jsonResponse(400, { error: 'Please complete all required fields.' });
+    return jsonResponse(400, { error: msg('required', lang) });
   }
   if (VALID_LANGUAGES.indexOf(preferredLanguage) === -1) {
-    return jsonResponse(400, { error: 'Please select a valid language.' });
+    return jsonResponse(400, { error: msg('language', lang) });
   }
   if (VALID_PROVINCES.indexOf(province) === -1) {
-    return jsonResponse(400, { error: 'Please select a valid province.' });
+    return jsonResponse(400, { error: msg('province', lang) });
   }
   if (source && VALID_SOURCES.indexOf(source) === -1) {
     source = 'other';
   }
-  if (!ZALO_PHONE_PATTERN.test(zaloNumber.replace(/[\s-]/g, ''))) {
-    return jsonResponse(400, { error: 'Please provide a valid Vietnamese phone number.' });
+  if (!isValidZalo(zaloNumber)) {
+    return jsonResponse(400, { error: msg('phone', lang) });
   }
   if (email && !EMAIL_PATTERN.test(email)) {
-    return jsonResponse(400, { error: 'Please provide a valid email address.' });
+    return jsonResponse(400, { error: msg('email', lang) });
   }
   if (!ageDeclared) {
-    return jsonResponse(400, { error: 'You must confirm you are 18 or over.' });
+    return jsonResponse(400, { error: msg('ageConfirm', lang) });
   }
   // Server-side age check — never trust the client-side one alone.
   if (!isAdultBirthDate(dateOfBirth)) {
-    return jsonResponse(400, { error: 'You must be 18 or over to register.' });
+    return jsonResponse(400, { error: msg('age', lang) });
   }
   if (!consentContact || !consentProcessing) {
-    return jsonResponse(400, { error: 'Please agree to both consent statements to continue.' });
+    return jsonResponse(400, { error: msg('consents', lang) });
   }
 
   var remoteIp =
     (event.headers && (event.headers['x-nf-client-connection-ip'] || event.headers['client-ip'])) || '';
   var turnstileOk = await verifyTurnstile(turnstileToken, remoteIp);
   if (!turnstileOk) {
-    return jsonResponse(400, { error: 'We could not verify you are human. Please try again.' });
+    return jsonResponse(400, { error: msg('human', lang) });
   }
 
   if (await isRateLimited(supabase, 'candidates', ipHash)) {
-    return jsonResponse(429, { error: 'Too many submissions. Please try again later.' });
+    return jsonResponse(429, { error: msg('rateLimited', lang) });
   }
 
   var now = new Date().toISOString();
@@ -246,7 +250,7 @@ async function handleRegistration(supabase, data, ipHash, event) {
 
   if (insertResult.error) {
     console.error('Supabase candidate insert failed:', insertResult.error);
-    return jsonResponse(502, { error: 'We could not save your registration right now. Please try again shortly.' });
+    return jsonResponse(502, { error: msg('saveFailed', lang) });
   }
 
   var candidateId = insertResult.data.id;

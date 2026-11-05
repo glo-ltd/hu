@@ -14,7 +14,7 @@ here is committed to the repo — these are secrets.
 
 | Variable | Value | Notes |
 | --- | --- | --- |
-| `CANDIDATE_SIGNUPS_OPEN` | `false` (default) or `true` | Keep this `false` until legal sign-off is confirmed. While `false`, the register page shows a waitlist form instead of the full registration form, and the function stores only name + contact + consent to be notified. Set to `true` only when told to by James. |
+| `CANDIDATE_SIGNUPS_OPEN` | `false` (default) or `true` | Keep this `false` until legal sign-off is confirmed. While `false`, the register page shows a waitlist form instead of the full registration form, and the function stores only name + contact + consent to be notified. Set to `true` only when told to by James. The full form only appears when this is `true` **and** both `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET` are set; if either key is missing, the page keeps showing the waitlist so women never meet a form they can't submit. |
 
 ## 3. Supabase (candidate data storage)
 
