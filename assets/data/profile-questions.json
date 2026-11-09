@@ -781,13 +781,13 @@
       ]
     },
     {
-      "id": "open_to_us",
+      "id": "open_to_abroad",
       "step": 3,
       "type": "single",
       "required": true,
       "label": {
-        "vi": "Bạn có sẵn sàng sống ở Hoa Kỳ không?",
-        "en": "Open to living in the United States?"
+        "vi": "Bạn có sẵn sàng sống ở nước ngoài không?",
+        "en": "Open to living abroad?"
       },
       "options": [
         {
@@ -809,6 +809,94 @@
           "label": {
             "vi": "Tôi muốn ở lại Việt Nam",
             "en": "Prefers to stay in Vietnam"
+          }
+        }
+      ]
+    },
+    {
+      "id": "household_finances",
+      "step": 3,
+      "type": "single",
+      "required": true,
+      "label": {
+        "vi": "Trong cuộc sống chung, bạn hình dung việc tài chính gia đình sẽ như thế nào?",
+        "en": "How she imagines household finances in a shared life"
+      },
+      "help": {
+        "vi": "Không có câu trả lời đúng hay sai. Câu trả lời giúp hai bên hiểu nhau ngay từ đầu.",
+        "en": "There is no right or wrong answer; it helps both sides understand each other from the start."
+      },
+      "options": [
+        {
+          "value": "both_contribute",
+          "label": {
+            "vi": "Cả hai cùng đóng góp",
+            "en": "Both contribute"
+          }
+        },
+        {
+          "value": "partner_main",
+          "label": {
+            "vi": "Tôi mong người bạn đời là trụ cột tài chính chính",
+            "en": "She hopes her partner will be the main provider"
+          }
+        },
+        {
+          "value": "own_independence",
+          "label": {
+            "vi": "Tôi muốn tự chủ về tài chính",
+            "en": "She wants financial independence"
+          }
+        },
+        {
+          "value": "decide_together",
+          "label": {
+            "vi": "Hai người cùng bàn bạc và quyết định",
+            "en": "Discuss and decide together"
+          }
+        }
+      ]
+    },
+    {
+      "id": "supports_family",
+      "step": 3,
+      "type": "single",
+      "required": false,
+      "label": {
+        "vi": "Bạn có đang hỗ trợ tài chính cho cha mẹ hoặc người thân không?",
+        "en": "Does she support parents or relatives financially?"
+      },
+      "help": {
+        "vi": "Chăm lo cho gia đình là điều bình thường. Chia sẻ điều này giúp người bạn đời tương lai hiểu bạn hơn.",
+        "en": "Optional. Caring for family is normal; sharing this helps a future partner understand her."
+      },
+      "options": [
+        {
+          "value": "regularly",
+          "label": {
+            "vi": "Có, thường xuyên",
+            "en": "Yes, regularly"
+          }
+        },
+        {
+          "value": "sometimes",
+          "label": {
+            "vi": "Có, thỉnh thoảng",
+            "en": "Yes, sometimes"
+          }
+        },
+        {
+          "value": "no",
+          "label": {
+            "vi": "Không",
+            "en": "No"
+          }
+        },
+        {
+          "value": "prefer_not",
+          "label": {
+            "vi": "Không muốn trả lời",
+            "en": "Prefer not to say"
           }
         }
       ]

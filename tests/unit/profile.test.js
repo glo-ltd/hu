@@ -276,3 +276,33 @@ test('question set: province list matches registration; nothing sensitive asked'
     (q.options || []).forEach((o) => assert.ok(o.label.vi && o.label.en, q.id + ':' + o.value));
   }
 });
+
+test('finance questions: Q15 required, Q16 optional, choices only (no amounts)', async () => {
+  const q15 = P.QUESTION_BY_ID.household_finances, q16 = P.QUESTION_BY_ID.supports_family;
+  assert.equal(q15.required, true); assert.equal(q16.required, false);
+  assert.equal(q15.type, 'single'); assert.equal(q16.type, 'single');
+  assert.equal(P.QUESTION_BY_ID.open_to_us, undefined);
+  assert.equal(P.QUESTION_BY_ID.open_to_abroad.label.vi, 'Bạn có sẵn sàng sống ở nước ngoài không?');
+  const order = P.QUESTIONS.questions.filter((q) => q.step === 3).map((q) => q.id);
+  assert.deepEqual(order.slice(0, 3), ['open_to_abroad', 'household_finances', 'supports_family']);
+  const c = seedCandidate();
+  const noQ15 = Object.assign({}, FULL_ANSWERS); delete noQ15.household_finances;
+  await call('profile-save', { token: c.token, answers: noQ15 });
+  let r = await call('profile-submit', { token: c.token, consents: { confirmTrue: true } });
+  assert.equal(r.status, 400); assert.equal(r.body.field, 'household_finances');
+  r = await call('profile-save', { token: c.token, answers: { supports_family: '5 triệu/tháng' } });
+  assert.equal(r.status, 400);
+  await call('profile-save', { token: c.token, answers: { household_finances: 'both_contribute' } });
+  r = await call('profile-submit', { token: c.token, consents: { confirmTrue: true } });
+  assert.equal(r.status, 200, 'Q16 may be left blank');
+});
+
+test('candidate-facing text never mentions the United States', () => {
+  const fs = require('fs');
+  const files = ['assets/data/profile-questions.json', 'vi/ho-so.html', 'assets/js/profile.js', 'netlify/shared/candidate-common.js',
+    'netlify/functions/admin-link.js', 'netlify/functions/candidate-register.js', 'vi/thank-you-registration.html', 'thank-you-registration.html'];
+  for (const f of files) {
+    const s = fs.readFileSync(require('path').join(__dirname, '..', '..', f), 'utf8');
+    for (const w of ['Hoa Kỳ', 'nước Mỹ', 'United States', ' USA', 'Mỹ ']) assert.ok(!s.includes(w), f + ' mentions ' + w);
+  }
+});
