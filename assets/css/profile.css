@@ -10,6 +10,8 @@ html { background: var(--cream-100); }
 }
 .pf-logo { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 15px; letter-spacing: 0.14em; color: var(--burgundy-700); font-weight: 500; }
 .pf-header-title { font-size: 14px; color: var(--ink-600); }
+.pf-header-right { display: inline-flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
+.pf-lang { font-size: 14px; color: var(--burgundy-700); text-decoration: underline; text-underline-offset: 3px; padding: 6px 0; }
 
 .pf-main { flex: 1; width: 100%; max-width: 640px; margin: 0 auto; padding: 16px 16px 32px; }
 
@@ -144,3 +146,6 @@ html { background: var(--cream-100); }
 }
 
 [hidden] { display: none !important; }
+@media (max-width: 480px) {
+  .pf-header-title { display: none; }
+}

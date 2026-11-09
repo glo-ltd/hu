@@ -1,9 +1,28 @@
 // "Copy Zalo message": makes a fresh private link (the old one stops
-// working) and returns a ready-to-paste Vietnamese message. POST { id }.
+// working) and returns a ready-to-paste message in her language (Vietnamese,
+// or English if she chose English when registering). POST { id }.
 const P = require('../shared/profile-common');
 const { requireAdmin, logAction, isUuid } = require('../shared/admin-auth');
 
-function zaloMessage(name, link) {
+function zaloMessage(name, link, lang) {
+  if (lang === 'en') {
+    return [
+      'Hello ' + name + ',',
+      '',
+      'Thank you for registering with Heritage Union. Please reply to this message to confirm this is your Zalo.',
+      '',
+      'Here is your private link to complete your profile (about 10 minutes):',
+      link,
+      'This link is just for you, so please don\'t share it with anyone.',
+      '',
+      'Registering is completely free, and you will never be asked to pay anything.',
+      '',
+      'If you would like to withdraw, just reply "WITHDRAW" or visit heritage-union.com/withdraw.',
+      '',
+      'Warm regards,',
+      'Heritage Union',
+    ].join('\n');
+  }
   return [
     'Chào ' + name + ',',
     '',
@@ -28,7 +47,7 @@ exports.handler = async function (event) {
   var id = ctx.data.id;
   if (!isUuid(id)) return P.json(400, { error: 'Invalid id.' });
   try {
-    var c = await ctx.supabase.from('candidates').select('id, full_name, status').eq('id', id).maybeSingle();
+    var c = await ctx.supabase.from('candidates').select('id, full_name, status, preferred_language').eq('id', id).maybeSingle();
     if (c.error) throw c.error;
     if (!c.data || c.data.status === 'deleted') return P.json(404, { error: 'Not found.' });
     if (c.data.status === 'withdrawn') return P.json(409, { error: 'She has withdrawn. Do not send her a link.' });
@@ -43,8 +62,9 @@ exports.handler = async function (event) {
       .eq('id', id);
     if (upd.error) throw upd.error;
     logAction(ctx.email, 'new_profile_link', id);
-    var link = P.profileLink(t.token);
-    return P.json(200, { ok: true, message: zaloMessage(name, link), link: link, expiresAt: t.expiresAt, sentAt: now });
+    var lang = c.data.preferred_language === 'en' ? 'en' : 'vi';
+    var link = P.profileLink(t.token, lang);
+    return P.json(200, { ok: true, message: zaloMessage(name, link, lang), lang: lang, link: link, expiresAt: t.expiresAt, sentAt: now });
   } catch (err) {
     console.error('admin-link failed:', err);
     return P.json(502, { error: 'Could not create a link.' });

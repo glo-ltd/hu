@@ -19,6 +19,7 @@ const TOKEN_TTL_DAYS = 60;
 const SIGNED_URL_SECONDS = 600; // 10 minutes
 const MAX_PHOTOS = QUESTIONS.photos.max;
 const CONSENT_PROFILE_TEXT_VERSION = 'vi-2026-11-profile-v1';
+const CONSENT_PROFILE_TEXT_VERSION_EN = 'en-2026-11-profile-v1';
 const SITE_URL = 'https://heritage-union.com';
 const FROM_EMAIL = 'Heritage Union <team@heritage-union.com>';
 const INTERNAL_NOTIFY_EMAIL = 'james@heritage-union.com';
@@ -36,7 +37,8 @@ function json(statusCode, body) {
 }
 
 function viError(statusCode, key, extra) {
-  return json(statusCode, Object.assign({ error: msg(key, 'vi'), code: key }, extra || {}));
+  // Both languages: the page shows error_en on /my-profile, error on /vi/ho-so.
+  return json(statusCode, Object.assign({ error: msg(key, 'vi'), error_en: msg(key, 'en'), code: key }, extra || {}));
 }
 
 function parseBody(event) {
@@ -78,8 +80,9 @@ function newProfileToken(now) {
   return { token: token, hash: hashToken(token), expiresAt: expires.toISOString() };
 }
 
-function profileLink(token) {
-  return SITE_URL + '/vi/ho-so#t=' + token;
+// English form at /my-profile, Vietnamese at /vi/ho-so. Same token either way.
+function profileLink(token, lang) {
+  return SITE_URL + (lang === 'en' ? '/my-profile#t=' : '/vi/ho-so#t=') + token;
 }
 
 var TOKEN_PATTERN = /^[A-Za-z0-9_-]{43}$/;
@@ -403,6 +406,7 @@ module.exports = {
   MAX_PHOTOS,
   SIGNED_URL_SECONDS,
   CONSENT_PROFILE_TEXT_VERSION,
+  CONSENT_PROFILE_TEXT_VERSION_EN,
   SITE_URL,
   FROM_EMAIL,
   INTERNAL_NOTIFY_EMAIL,

@@ -1,5 +1,5 @@
 {
-  "version": "2026-11-v1",
+  "version": "2026-11-v2",
   "steps": [
     {
       "step": 1,
@@ -19,7 +19,7 @@
       "step": 3,
       "title": {
         "vi": "Tương lai",
-        "en": "The future"
+        "en": "Your future"
       }
     },
     {
@@ -54,11 +54,12 @@
       "storage": "column",
       "label": {
         "vi": "Tên bạn muốn hiển thị",
-        "en": "Name she would like shown"
+        "en": "The name you'd like shown",
+        "team": "Name to show"
       },
       "help": {
         "vi": "Chỉ tên gọi, không cần họ. Ví dụ: Lan.",
-        "en": "First name only, no surname."
+        "en": "Your first name only, no surname. For example: Lan."
       }
     },
     {
@@ -69,11 +70,12 @@
       "required": true,
       "label": {
         "vi": "Bạn đang sống ở thành phố / tỉnh nào?",
-        "en": "City or province she lives in"
+        "en": "Which city or province do you live in?",
+        "team": "City / province"
       },
       "help": {
         "vi": "Theo địa giới hành chính mới (từ 01/07/2025).",
-        "en": "Provinces as reorganised on 1 July 2025."
+        "en": "Using the new provinces from 1 July 2025."
       },
       "options": [
         {
@@ -331,11 +333,12 @@
       "max": 100,
       "label": {
         "vi": "Công việc hiện tại của bạn",
-        "en": "Occupation"
+        "en": "What do you do for work?",
+        "team": "Occupation"
       },
       "help": {
         "vi": "Ví dụ: giáo viên, kế toán, tự kinh doanh.",
-        "en": ""
+        "en": "For example: teacher, accountant, or running your own business."
       }
     },
     {
@@ -345,7 +348,8 @@
       "required": true,
       "label": {
         "vi": "Trình độ học vấn",
-        "en": "Education"
+        "en": "Your highest level of education",
+        "team": "Education"
       },
       "options": [
         {
@@ -380,7 +384,7 @@
           "value": "postgraduate",
           "label": {
             "vi": "Sau đại học",
-            "en": "Postgraduate"
+            "en": "Postgraduate (Master's or above)"
           }
         }
       ]
@@ -392,39 +396,40 @@
       "required": true,
       "label": {
         "vi": "Trình độ tiếng Anh của bạn",
-        "en": "English level"
+        "en": "How well do you speak English?",
+        "team": "English level"
       },
       "help": {
         "vi": "Không sao nếu bạn chưa biết tiếng Anh. Huyền luôn có thể hỗ trợ dịch.",
-        "en": "It is fine not to speak English; Huyen can translate."
+        "en": "It's fine if you're still learning. Huyen can always help translate."
       },
       "options": [
         {
           "value": "none",
           "label": {
             "vi": "Chưa biết",
-            "en": "None"
+            "en": "Not yet"
           }
         },
         {
           "value": "basic",
           "label": {
             "vi": "Cơ bản",
-            "en": "Basic"
+            "en": "A little"
           }
         },
         {
           "value": "conversational",
           "label": {
             "vi": "Giao tiếp được",
-            "en": "Conversational"
+            "en": "Well enough to hold a conversation"
           }
         },
         {
           "value": "fluent",
           "label": {
             "vi": "Thành thạo",
-            "en": "Fluent"
+            "en": "Fluently"
           }
         }
       ]
@@ -436,28 +441,29 @@
       "required": true,
       "label": {
         "vi": "Tình trạng hôn nhân trước đây",
-        "en": "Marital history"
+        "en": "Have you been married before?",
+        "team": "Marital history"
       },
       "options": [
         {
           "value": "never_married",
           "label": {
             "vi": "Chưa kết hôn",
-            "en": "Never married"
+            "en": "No, never married"
           }
         },
         {
           "value": "divorced",
           "label": {
             "vi": "Đã ly hôn",
-            "en": "Divorced"
+            "en": "Yes, I'm divorced"
           }
         },
         {
           "value": "widowed",
           "label": {
             "vi": "Góa chồng",
-            "en": "Widowed"
+            "en": "Yes, I'm widowed"
           }
         }
       ]
@@ -471,11 +477,12 @@
       "max": 6,
       "label": {
         "vi": "Bạn có bao nhiêu con?",
-        "en": "Number of children"
+        "en": "How many children do you have?",
+        "team": "Children"
       },
       "help": {
         "vi": "Nhập 0 nếu bạn chưa có con.",
-        "en": ""
+        "en": "Enter 0 if you don't have children."
       }
     },
     {
@@ -489,7 +496,8 @@
       },
       "label": {
         "vi": "Các con có đang sống cùng bạn không?",
-        "en": "Do her children live with her?"
+        "en": "Do your children live with you?",
+        "team": "Children live with her"
       },
       "options": [
         {
@@ -503,7 +511,7 @@
           "value": "some",
           "label": {
             "vi": "Một số con sống cùng tôi",
-            "en": "Some of them"
+            "en": "Some of them do"
           }
         },
         {
@@ -522,7 +530,8 @@
       "required": true,
       "label": {
         "vi": "Bạn có muốn có (thêm) con không?",
-        "en": "Would she like (more) children?"
+        "en": "Would you like to have children, or more children?",
+        "team": "Wants (more) children"
       },
       "options": [
         {
@@ -543,14 +552,14 @@
           "value": "open",
           "label": {
             "vi": "Tùy duyên, tôi cởi mở",
-            "en": "Open to it"
+            "en": "I'm open to it"
           }
         },
         {
           "value": "unsure",
           "label": {
             "vi": "Tôi chưa chắc",
-            "en": "Unsure"
+            "en": "I'm not sure yet"
           }
         }
       ]
@@ -562,11 +571,12 @@
       "required": false,
       "label": {
         "vi": "Tôn giáo hoặc tín ngưỡng",
-        "en": "Religion or belief"
+        "en": "Your religion or beliefs",
+        "team": "Religion"
       },
       "help": {
         "vi": "Không bắt buộc. Bạn có thể bỏ qua câu này hoặc chọn “Không muốn trả lời”.",
-        "en": "Optional. She may skip this or choose “prefer not to say”."
+        "en": "Optional. You can skip this question or choose “Prefer not to say”."
       },
       "options": [
         {
@@ -601,14 +611,14 @@
           "value": "caodai_hoahao",
           "label": {
             "vi": "Cao Đài / Hòa Hảo",
-            "en": "Cao Đài / Hòa Hảo"
+            "en": "Cao Đài or Hòa Hảo"
           }
         },
         {
           "value": "ancestral",
           "label": {
             "vi": "Thờ cúng tổ tiên",
-            "en": "Ancestor veneration"
+            "en": "Ancestor worship"
           }
         },
         {
@@ -634,7 +644,8 @@
       "required": true,
       "label": {
         "vi": "Bạn có hút thuốc không?",
-        "en": "Smoking"
+        "en": "Do you smoke?",
+        "team": "Smoking"
       },
       "options": [
         {
@@ -667,7 +678,8 @@
       "required": true,
       "label": {
         "vi": "Bạn có uống rượu bia không?",
-        "en": "Drinking"
+        "en": "Do you drink alcohol?",
+        "team": "Drinking"
       },
       "options": [
         {
@@ -681,7 +693,7 @@
           "value": "socially",
           "label": {
             "vi": "Thỉnh thoảng, khi gặp gỡ bạn bè",
-            "en": "Socially"
+            "en": "Socially, with friends"
           }
         },
         {
@@ -701,11 +713,12 @@
       "max": 3,
       "label": {
         "vi": "Điều gì quan trọng nhất với bạn?",
-        "en": "Values that matter most to her"
+        "en": "What matters most to you?",
+        "team": "Top values"
       },
       "help": {
         "vi": "Chọn tối đa 3 điều.",
-        "en": "Up to 3."
+        "en": "Choose up to 3."
       },
       "options": [
         {
@@ -787,7 +800,8 @@
       "required": true,
       "label": {
         "vi": "Bạn có sẵn sàng sống ở nước ngoài không?",
-        "en": "Open to living abroad?"
+        "en": "Would you be open to living abroad?",
+        "team": "Open to living abroad"
       },
       "options": [
         {
@@ -801,14 +815,14 @@
           "value": "maybe",
           "label": {
             "vi": "Có thể, cần trao đổi thêm",
-            "en": "Maybe, to discuss"
+            "en": "Maybe, I'd like to talk about it"
           }
         },
         {
           "value": "prefer_vietnam",
           "label": {
             "vi": "Tôi muốn ở lại Việt Nam",
-            "en": "Prefers to stay in Vietnam"
+            "en": "I'd prefer to stay in Vietnam"
           }
         }
       ]
@@ -820,39 +834,40 @@
       "required": true,
       "label": {
         "vi": "Trong cuộc sống chung, bạn hình dung việc tài chính gia đình sẽ như thế nào?",
-        "en": "How she imagines household finances in a shared life"
+        "en": "In a life together, how do you picture handling household money?",
+        "team": "Household finances"
       },
       "help": {
         "vi": "Không có câu trả lời đúng hay sai. Câu trả lời giúp hai bên hiểu nhau ngay từ đầu.",
-        "en": "There is no right or wrong answer; it helps both sides understand each other from the start."
+        "en": "There's no right or wrong answer. It helps you both understand each other from the start."
       },
       "options": [
         {
           "value": "both_contribute",
           "label": {
             "vi": "Cả hai cùng đóng góp",
-            "en": "Both contribute"
+            "en": "We both contribute"
           }
         },
         {
           "value": "partner_main",
           "label": {
             "vi": "Tôi mong người bạn đời là trụ cột tài chính chính",
-            "en": "She hopes her partner will be the main provider"
+            "en": "I'd hope my partner would be the main provider"
           }
         },
         {
           "value": "own_independence",
           "label": {
             "vi": "Tôi muốn tự chủ về tài chính",
-            "en": "She wants financial independence"
+            "en": "I want to be financially independent"
           }
         },
         {
           "value": "decide_together",
           "label": {
             "vi": "Hai người cùng bàn bạc và quyết định",
-            "en": "Discuss and decide together"
+            "en": "We'd talk it through and decide together"
           }
         }
       ]
@@ -864,11 +879,12 @@
       "required": false,
       "label": {
         "vi": "Bạn có đang hỗ trợ tài chính cho cha mẹ hoặc người thân không?",
-        "en": "Does she support parents or relatives financially?"
+        "en": "Do you help support your parents or relatives financially?",
+        "team": "Supports family financially"
       },
       "help": {
         "vi": "Chăm lo cho gia đình là điều bình thường. Chia sẻ điều này giúp người bạn đời tương lai hiểu bạn hơn.",
-        "en": "Optional. Caring for family is normal; sharing this helps a future partner understand her."
+        "en": "Looking after your family is normal. Sharing this helps a future partner understand you."
       },
       "options": [
         {
@@ -910,11 +926,12 @@
       "max": 80,
       "label": {
         "vi": "Độ tuổi của người bạn đời mà bạn sẵn sàng tìm hiểu",
-        "en": "Partner age range she is open to"
+        "en": "What age range would you be open to in a partner?",
+        "team": "Partner age range"
       },
       "help": {
         "vi": "Nhập tuổi nhỏ nhất và lớn nhất mà bạn thấy phù hợp.",
-        "en": "Youngest and oldest age she is open to."
+        "en": "Enter the youngest and oldest ages you'd consider."
       }
     },
     {
@@ -925,11 +942,12 @@
       "max": 600,
       "label": {
         "vi": "Điều gì quan trọng nhất với bạn ở một người bạn đời?",
-        "en": "What matters most to her in a partner"
+        "en": "What matters most to you in a partner?",
+        "team": "What matters in a partner"
       },
       "help": {
         "vi": "Hãy viết bằng lời của bạn, tiếng Việt là tốt nhất.",
-        "en": ""
+        "en": "In your own words."
       }
     },
     {
@@ -941,11 +959,12 @@
       "prefill": "about_text",
       "label": {
         "vi": "Giới thiệu về bản thân bạn",
-        "en": "About her"
+        "en": "Tell us about yourself",
+        "team": "About her"
       },
       "help": {
         "vi": "Chúng tôi đã điền sẵn những gì bạn viết khi đăng ký. Bạn có thể sửa hoặc viết thêm.",
-        "en": "Prefilled from what she wrote at registration; she can edit it."
+        "en": "We've filled in what you wrote when you registered. You can change it or add more."
       }
     },
     {
@@ -956,7 +975,8 @@
       "max": 500,
       "label": {
         "vi": "Một ngày cuối tuần bình thường của bạn",
-        "en": "A usual weekend"
+        "en": "What does a usual weekend look like for you?",
+        "team": "A usual weekend"
       },
       "help": {
         "vi": "Không bắt buộc.",
@@ -971,7 +991,8 @@
       "max": 500,
       "label": {
         "vi": "Lời nhắn gửi người bạn đời tương lai",
-        "en": "A message to a future partner"
+        "en": "A message to your future partner",
+        "team": "Message to a future partner"
       },
       "help": {
         "vi": "Không bắt buộc.",

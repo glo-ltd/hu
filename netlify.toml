@@ -29,6 +29,12 @@
     Referrer-Policy = "no-referrer"
 
 [[headers]]
+  for = "/my-profile*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Referrer-Policy = "no-referrer"
+
+[[headers]]
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=3600, must-revalidate"

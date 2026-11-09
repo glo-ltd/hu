@@ -40,10 +40,13 @@ test('registration creates a profile token (hash only, 60 days), returns it once
 });
 
 test('English email carries the link too; no email means no profile_link_sent_at', async () => {
-  let r = await register({ preferredLanguage: 'en' });
+  let r = await register({ preferredLanguage: 'en', lang: 'en' });
   const mail = sentEmails.find((m) => m.to === 'hoa@example.com');
-  assert.ok(mail.html.includes('/vi/ho-so#t=' + r.body.profileToken));
+  // She chose English, so her link opens the English form.
+  assert.ok(mail.html.includes('https://heritage-union.com/my-profile#t=' + r.body.profileToken));
+  assert.ok(!mail.html.includes('in Vietnamese'));
   assert.match(mail.html, /private to you/);
+  assert.equal(r.body.profileLang, 'en');
   fake.reset(); sentEmails.length = 0;
   r = await register({ email: '' });
   assert.ok(r.body.profileToken);
@@ -75,4 +78,11 @@ test('withdraw page: clears link and both consents, deletes photos now, keeps th
   assert.equal(fake.hasObject(p), false);
   assert.equal(row.full_name, 'Nguyễn Thị Lan', 'row kept until the team deletes it');
   assert.equal((await call('profile-get', { token: c.token })).status, 401);
+});
+
+test('Vietnamese registration gets the Vietnamese form link and profileLang vi', async () => {
+  const r = await register();
+  assert.equal(r.body.profileLang, 'vi');
+  const mail = sentEmails.find((m) => m.to === 'hoa@example.com');
+  assert.ok(mail.html.includes('https://heritage-union.com/vi/ho-so#t=' + r.body.profileToken));
 });

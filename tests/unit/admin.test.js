@@ -62,7 +62,7 @@ test('admin-candidate: detail with questions and signed photos; never returns to
   assert.equal(r.status, 200);
   assert.equal(r.body.candidate.full_name, 'Nguyễn Thị Lan');
   assert.equal(r.body.profile.answers.occupation, 'Giáo viên');
-  assert.equal(r.body.questions.version, '2026-11-v1');
+  assert.equal(r.body.questions.version, '2026-11-v2');
   assert.ok(!r.raw.includes(c.row.profile_token_hash));
   assert.ok(!r.raw.includes('iphash'));
 });
@@ -99,6 +99,16 @@ test('admin-link: replaces the old link, sets profile_link_sent_at, Vietnamese m
   for (const s of ['xác nhận đây đúng là Zalo', 'khoảng 10 phút', 'miễn phí', 'RÚT', 'heritage-union.com/vi/withdraw', 'https://heritage-union.com/vi/ho-so#t=']) assert.ok(r.body.message.includes(s), s);
   assert.equal((await call('profile-get', { token: c.token })).status, 401, 'old link stops working');
   assert.equal((await call('profile-get', { token: tok })).status, 200);
+});
+
+test('admin-link: a woman who chose English gets an English message and the English form link', async () => {
+  const c = seedCandidate({ preferred_language: 'en' });
+  const r = await call('admin-link', { id: c.id }, { headers: adminToken('james@heritage-union.com') });
+  assert.equal(r.status, 200);
+  assert.equal(r.body.lang, 'en');
+  assert.match(r.body.message, /^Hello Lan,/);
+  for (const s of ['confirm this is your Zalo', 'about 10 minutes', 'completely free', 'WITHDRAW', 'heritage-union.com/withdraw', 'https://heritage-union.com/my-profile#t=']) assert.ok(r.body.message.includes(s), s);
+  assert.ok(!/[ăâđêôơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ]/.test(r.body.message), 'no Vietnamese in the English message');
 });
 
 test('admin-status: zalo confirm/undo; withdraw clears link, consents, photos; withdrawn rows locked', async () => {

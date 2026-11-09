@@ -317,7 +317,7 @@
           var v = q.id === 'display_name' ? p.display_name : answers[q.id];
           var txt = answerText(q, v);
           var block = el('div', { class: 'ad-answer' }, [
-            el('span', { class: 'ad-q', text: q.label.en }),
+            el('span', { class: 'ad-q', text: (q.label.team || q.label.en) }),
             el('span', { class: 'ad-a' + (txt ? '' : ' ad-empty'), lang: txt ? 'vi' : null, text: txt || 'No answer' }),
           ]);
           if (txt && (q.type === 'textarea' || (q.type === 'text' && q.id !== 'display_name'))) block.appendChild(translateBox(c.id, q, translations, p));
@@ -492,7 +492,7 @@
       if (q.step > 4 || q.id === 'display_name' || q.id === 'province' || !isShown(q, answers)) return;
       var txt = answerText(q, answers[q.id]);
       if (!txt) return;
-      var parts = [el('span', { class: 'ad-q', text: q.label.en }), el('span', { class: 'ad-a', lang: 'vi', text: txt })];
+      var parts = [el('span', { class: 'ad-q', text: (q.label.team || q.label.en) }), el('span', { class: 'ad-a', lang: 'vi', text: txt })];
       if (translations[q.id]) parts.push(el('span', { class: 'ad-a', text: 'EN: ' + translations[q.id] }));
       else if (q.type === 'textarea' || q.type === 'text') parts.push(el('span', { class: 'ad-empty', text: 'No English translation yet.' }));
       cardBox.appendChild(el('div', { class: 'ad-answer' }, parts));

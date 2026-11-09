@@ -28,6 +28,9 @@ page is for us only.
    paste it into Zalo to her number (shown under *Registration details*).
    If the copy doesn't work on your phone, the message is shown in a box:
    press and hold, select all, copy.
+   The message is in her language: English if she chose English when she
+   registered, otherwise Vietnamese. Its link opens the profile form in that
+   language (/my-profile or /vi/ho-so), and she can switch at any time.
 3. When she replies on Zalo, open her card and tap **Mark Zalo confirmed**.
    Tapped it by mistake? Tap **Undo Zalo confirmed**.
 4. Look at **Withdrawn** (see below).
@@ -61,10 +64,10 @@ when. Translate faithfully, without improving or softening what she wrote.
 
 ## Withdrawals and the 30-day promise
 
-A woman can withdraw on the website (/vi/withdraw) or by replying
-**"RÚT"** on Zalo.
+A woman can withdraw on the website (/vi/withdraw or /withdraw) or by
+replying **"RÚT"** (or **"WITHDRAW"** in English) on Zalo.
 
-- If she writes "RÚT" on Zalo: open her card and tap **Mark withdrawn**.
+- If she writes "RÚT" or "WITHDRAW" on Zalo: open her card and tap **Mark withdrawn**.
   Her link stops working, her sharing choices are cleared and her photos
   are deleted straight away. (The website form does the same thing.)
 - We promise to delete everything within **30 days**. The **Withdrawn**

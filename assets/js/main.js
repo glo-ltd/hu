@@ -446,7 +446,7 @@
             // Her private profile token travels only in the URL fragment,
             // which browsers never send to a server or in a Referer header.
             var hash = data && typeof data.profileToken === 'string' && /^[A-Za-z0-9_-]{43}$/.test(data.profileToken)
-              ? '#t=' + data.profileToken : '';
+              ? '#t=' + data.profileToken + (data.profileLang === 'en' ? '&l=en' : '&l=vi') : '';
             window.location.href = (isViPage ? '/vi/thank-you-registration' : '/thank-you-registration') + hash;
           })
           .catch(function (err) {

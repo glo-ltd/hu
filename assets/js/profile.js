@@ -22,6 +22,137 @@
   var MAX_UPLOAD_BYTES = 3 * 1024 * 1024;
 
   var $ = function (id) { return document.getElementById(id); };
+
+  // ------------------------------------------------------------------ language
+  // One form, two languages: /vi/ho-so (lang="vi") and /my-profile (lang="en").
+  // Answers are stored as the same values whichever language she uses.
+  var LANG = String(document.documentElement.lang || 'vi').slice(0, 2) === 'en' ? 'en' : 'vi';
+  var TX = {
+    vi: {
+      genericError: 'Đã có lỗi xảy ra. Bạn vui lòng thử lại nhé.',
+      offline: 'Không kết nối được. Bạn kiểm tra mạng rồi thử lại nhé.',
+      range: function (a, b) { return 'Từ ' + a + ' đến ' + b + ' tuổi'; },
+      saving: 'Đang lưu…', saved: 'Đã lưu',
+      required: 'Bạn vui lòng trả lời câu này.',
+      requiredMulti: 'Bạn vui lòng chọn ít nhất một điều.',
+      tooLong: function (max) { return 'Câu trả lời dài quá ' + max + ' ký tự. Bạn vui lòng rút gọn lại nhé.'; },
+      number: function (q) { return 'Bạn vui lòng nhập một số từ ' + q.min + ' đến ' + q.max + '.'; },
+      rangeErr: function (q) { return 'Bạn vui lòng chọn độ tuổi từ ' + q.min + ' đến ' + q.max + ', số đầu nhỏ hơn hoặc bằng số sau.'; },
+      optional: '(không bắt buộc)',
+      chars: function (n, max) { return n + '/' + max + ' ký tự'; },
+      choose: 'Chọn…',
+      chosen: function (n, max) { return 'Đã chọn ' + n + '/' + max; },
+      minus: 'Bớt 1', plus: 'Thêm 1',
+      fromAge: 'Từ (tuổi)', toAge: 'Đến (tuổi)', from: 'Từ', to: 'đến', years: 'tuổi',
+      intro1: 'Những thông tin cơ bản về bạn. Bạn có thể sửa lại bất cứ lúc nào.',
+      intro4: 'Hãy viết bằng lời của chính bạn. Viết bằng tiếng Việt là tốt nhất, Huyền sẽ giúp dịch.',
+      intro5: 'Ảnh là không bắt buộc. Bạn có thể bỏ qua bước này.',
+      intro6: 'Bạn xem lại các câu trả lời. Bấm “Sửa” nếu muốn thay đổi điều gì.',
+      stepCount: function (n, t) { return 'Bước ' + n + '/' + t; },
+      saveChanges: 'Lưu thay đổi', submit: 'Gửi hồ sơ', next: 'Tiếp tục',
+      checkMarked: 'Bạn vui lòng xem lại những câu được đánh dấu bên trên.',
+      waitPhoto: 'Bạn vui lòng đợi ảnh tải lên xong nhé.',
+      g1: 'Ảnh chụp gần đây.', g2: 'Thấy rõ khuôn mặt của bạn.', g3: 'Chỉ có một mình bạn trong ảnh.',
+      g4: 'Không có trẻ em trong bất kỳ ảnh nào.', g5: 'Không chụp giấy tờ tuỳ thân (CCCD, hộ chiếu…).',
+      photoHelp: 'Bạn có thể thêm tối đa 3 ảnh. Ảnh đầu tiên là ảnh chính. Trước khi tải lên, ảnh được thu nhỏ ngay trên điện thoại của bạn và mọi thông tin ẩn trong ảnh (như vị trí chụp) đều được xoá. Ảnh được lưu riêng tư, không ai xem được nếu bạn không đồng ý ở bước cuối.',
+      addPhoto: 'Thêm ảnh', addPhotoBtn: '+ Thêm ảnh',
+      photoAlt: function (i, main) { return 'Ảnh ' + i + (main ? ' (ảnh chính)' : ''); },
+      mainPhoto: 'Ảnh chính',
+      moveEarlier: function (i) { return 'Đưa ảnh ' + i + ' lên trước'; },
+      moveLater: function (i) { return 'Đưa ảnh ' + i + ' ra sau'; },
+      del: 'Xoá',
+      maxPhotos: 'Bạn đã có đủ 3 ảnh.',
+      notImage: 'Tệp này không phải là ảnh. Bạn vui lòng chọn một tấm ảnh nhé.',
+      processing: 'Đang xử lý ảnh…', uploading: 'Đang tải ảnh lên…',
+      uploadFailed: 'Chưa tải được ảnh lên. Bạn vui lòng thử lại nhé.',
+      added: 'Đã thêm ảnh.', addFailed: 'Chưa thêm được ảnh. Bạn vui lòng thử lại nhé.',
+      confirmDelete: 'Xoá ảnh này?', deleting: 'Đang xoá ảnh…', deleted: 'Đã xoá ảnh.',
+      mainChanged: 'Đã đổi ảnh chính.', orderChanged: 'Đã đổi thứ tự ảnh.',
+      unreadable: 'Không đọc được ảnh này. Bạn vui lòng chọn một ảnh khác (JPG hoặc PNG).',
+      unreadable2: 'Không đọc được ảnh này. Bạn vui lòng chọn một ảnh khác.',
+      tooBig: 'Ảnh này quá lớn. Bạn vui lòng chọn một ảnh khác.',
+      notAnswered: 'Chưa trả lời', noAnswer: 'Không trả lời', noPhotos: 'Không có ảnh',
+      photoN: function (i) { return 'Ảnh ' + i; },
+      edit: 'Sửa', editStep: function (t) { return 'Sửa: ' + t; },
+      yourConsent: 'Sự đồng ý của bạn',
+      photoWarn: 'Bạn chưa đồng ý cho khách hàng xem ảnh. Khi bạn gửi hồ sơ, ảnh của bạn sẽ bị xoá. Nếu muốn giữ ảnh, bạn hãy đánh dấu ô đồng ý về ảnh ở trên.',
+      noShare: 'Nếu bạn không đánh dấu ô thứ hai, chúng tôi sẽ không cho khách hàng xem hồ sơ của bạn, vì vậy bạn khó có thể nhận được lời giới thiệu. Bạn vẫn có thể gửi hồ sơ.',
+      answerRequired: 'Bạn vui lòng trả lời đủ các câu bắt buộc ở bước này trước khi gửi.',
+      confirmRequired: 'Bạn vui lòng đánh dấu ô xác nhận thông tin là đúng sự thật và do chính bạn viết.',
+      photosWillGo: 'Ảnh của bạn sẽ bị xoá vì bạn chưa đồng ý cho khách hàng xem ảnh. Tiếp tục gửi?',
+      notSaved: 'Chưa lưu được câu trả lời. Bạn vui lòng bấm “Thử lại” ở trên rồi gửi lại nhé.',
+      openFailed: 'Chưa mở được hồ sơ. Bạn kiểm tra mạng rồi thử lại nhé.',
+      retry: 'Thử lại',
+      // TODO(James): counsel to approve these three consent texts (version vi-2026-11-profile-v1).
+      confirmTrue: 'Tôi xác nhận những thông tin trên là đúng sự thật và do chính tôi viết.',
+      profileSharing: 'Không bắt buộc: Tôi đồng ý để Heritage Union cho khách hàng đã hoàn thành bản khai lý lịch xem hồ sơ của tôi, gồm tên hiển thị, tuổi, thành phố/tỉnh và các câu trả lời ở trên. Không bao giờ kèm họ, ngày sinh, số Zalo hay email của tôi. Tôi có thể thay đổi ý định bất cứ lúc nào.',
+      photoSharing: 'Không bắt buộc: Tôi đồng ý để những khách hàng nói trên xem ảnh của tôi.',
+    },
+    en: {
+      genericError: 'Something went wrong. Please try again.',
+      offline: "We couldn't connect. Please check your internet connection and try again.",
+      range: function (a, b) { return a + ' to ' + b + ' years old'; },
+      saving: 'Saving…', saved: 'Saved',
+      required: 'Please answer this question.',
+      requiredMulti: 'Please choose at least one.',
+      tooLong: function (max) { return 'Please keep your answer under ' + max + ' characters.'; },
+      number: function (q) { return 'Please enter a number from ' + q.min + ' to ' + q.max + '.'; },
+      rangeErr: function (q) { return 'Please choose ages between ' + q.min + ' and ' + q.max + ', with the first number no higher than the second.'; },
+      optional: '(optional)',
+      chars: function (n, max) { return n + '/' + max + ' characters'; },
+      choose: 'Choose…',
+      chosen: function (n, max) { return n + ' of ' + max + ' chosen'; },
+      minus: 'One fewer', plus: 'One more',
+      fromAge: 'From (age)', toAge: 'To (age)', from: 'From', to: 'to', years: 'years',
+      intro1: 'The basics about you. You can change any answer later.',
+      intro4: 'Write in your own words, in whichever language feels most natural to you.',
+      intro5: 'Photos are optional. You can skip this step.',
+      intro6: 'Check your answers. Tap “Edit” to change anything.',
+      stepCount: function (n, t) { return 'Step ' + n + ' of ' + t; },
+      saveChanges: 'Save changes', submit: 'Send my profile', next: 'Continue',
+      checkMarked: 'Please check the questions marked above.',
+      waitPhoto: 'Please wait for your photo to finish uploading.',
+      g1: 'A recent photo.', g2: 'Your face clearly visible.', g3: 'Only you in the photo.',
+      g4: 'No children in any photo.', g5: 'No ID documents (ID card, passport…).',
+      photoHelp: 'You can add up to 3 photos. The first one is your main photo. Before uploading, each photo is made smaller on your phone and any hidden information in it, such as where it was taken, is removed. Your photos are kept private, and nobody else sees them unless you agree in the last step.',
+      addPhoto: 'Add a photo', addPhotoBtn: '+ Add a photo',
+      photoAlt: function (i, main) { return 'Photo ' + i + (main ? ' (main photo)' : ''); },
+      mainPhoto: 'Main photo',
+      moveEarlier: function (i) { return 'Move photo ' + i + ' earlier'; },
+      moveLater: function (i) { return 'Move photo ' + i + ' later'; },
+      del: 'Delete',
+      maxPhotos: 'You already have 3 photos.',
+      notImage: "That file isn't a photo. Please choose a photo.",
+      processing: 'Preparing your photo…', uploading: 'Uploading your photo…',
+      uploadFailed: "Your photo didn't upload. Please try again.",
+      added: 'Photo added.', addFailed: "Your photo wasn't added. Please try again.",
+      confirmDelete: 'Delete this photo?', deleting: 'Deleting photo…', deleted: 'Photo deleted.',
+      mainChanged: 'Main photo changed.', orderChanged: 'Photo order changed.',
+      unreadable: "We couldn't read this photo. Please choose another one (JPG or PNG).",
+      unreadable2: "We couldn't read this photo. Please choose another one.",
+      tooBig: 'This photo is too large. Please choose another one.',
+      notAnswered: 'Not answered yet', noAnswer: 'No answer', noPhotos: 'No photos',
+      photoN: function (i) { return 'Photo ' + i; },
+      edit: 'Edit', editStep: function (t) { return 'Edit: ' + t; },
+      yourConsent: 'Your consent',
+      photoWarn: "You haven't agreed to clients seeing your photos, so your photos will be deleted when you send your profile. To keep them, tick the photo box above.",
+      noShare: "If you don't tick the second box, we won't show your profile to clients, so you're unlikely to receive an introduction. You can still send your profile.",
+      answerRequired: 'Please answer all the required questions on this step before sending.',
+      confirmRequired: 'Please tick the box confirming your information is true and written by you.',
+      photosWillGo: "Your photos will be deleted because you haven't agreed to clients seeing them. Send anyway?",
+      notSaved: "Your answers haven't saved yet. Please tap “Try again” above, then send again.",
+      openFailed: "We couldn't open your profile. Please check your internet connection and try again.",
+      retry: 'Try again',
+      // TODO(James): counsel to approve these three consent texts (version en-2026-11-profile-v1).
+      confirmTrue: 'I confirm the information above is true and written by me.',
+      profileSharing: 'Optional: I agree that Heritage Union may show my profile, meaning my display name, age, city or province and my answers above, to clients who have completed their background disclosure. My surname, date of birth, Zalo number and email are never shown. I can change my mind at any time.',
+      photoSharing: 'Optional: I agree that those clients may also see my photos.',
+    },
+  };
+  function t(key) {
+    var v = TX[LANG][key];
+    return typeof v === 'function' ? v.apply(null, Array.prototype.slice.call(arguments, 1)) : v;
+  }
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ------------------------------------------------------------------ token
@@ -37,6 +168,13 @@
     try { return sessionStorage.getItem(TOKEN_KEY); } catch (e) { return null; }
   }
   var token = readToken();
+
+  // The language switch keeps her private link, so it works even where
+  // sessionStorage is blocked. Her answers are the same in both languages.
+  (function () {
+    var sw = document.getElementById('pf-lang-switch');
+    if (sw && token) sw.setAttribute('href', sw.getAttribute('href').split('#')[0] + '#t=' + token);
+  })();
 
   // ------------------------------------------------------------------ state
 
@@ -59,21 +197,27 @@
     return fetch(API + name, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(Object.assign({ token: token }, body || {})),
+      body: JSON.stringify(Object.assign({ token: token, lang: LANG }, body || {})),
       signal: controller ? controller.signal : undefined,
       credentials: 'omit',
       referrerPolicy: 'no-referrer',
     }).then(function (res) {
       if (timer) clearTimeout(timer);
       return res.json().catch(function () { return {}; }).then(function (data) {
-        if (res.status === 401) { showNoLink(data.error); throw Object.assign(new Error(data.error || ''), { fatal: true }); }
-        if (!res.ok) { var err = new Error(data.error || 'Đã có lỗi xảy ra. Bạn vui lòng thử lại nhé.'); err.data = data; throw err; }
+        if (res.status === 401) { showNoLink(serverError(data)); throw Object.assign(new Error(serverError(data) || ''), { fatal: true }); }
+        if (!res.ok) { var err = new Error(serverError(data) || t('genericError')); err.data = data; throw err; }
         return data;
       });
     }, function (err) {
       if (timer) clearTimeout(timer);
-      throw new Error('Không kết nối được. Bạn kiểm tra mạng rồi thử lại nhé.');
+      throw new Error(t('offline'));
     });
+  }
+
+  // Server messages come in both languages; show hers.
+  function serverError(data) {
+    if (!data) return '';
+    return (LANG === 'en' && data.error_en) ? data.error_en : (data.error || '');
   }
 
   // ------------------------------------------------------------------ screens
@@ -109,14 +253,14 @@
     return e;
   }
   function optionLabel(q, value) {
-    for (var i = 0; i < (q.options || []).length; i++) if (q.options[i].value === value) return q.options[i].label.vi;
+    for (var i = 0; i < (q.options || []).length; i++) if (q.options[i].value === value) return q.options[i].label[LANG];
     return value;
   }
   function formatAnswer(q, v) {
     if (isEmpty(v)) return null;
     if (q.type === 'single') return optionLabel(q, v);
     if (q.type === 'multi') return v.map(function (x) { return optionLabel(q, x); }).join(', ');
-    if (q.type === 'range') return 'Từ ' + v[0] + ' đến ' + v[1] + ' tuổi';
+    if (q.type === 'range') return t('range', v[0], v[1]);
     return String(v);
   }
   function setAnswer(id, value) {
@@ -132,7 +276,7 @@
   function setStatus(kind) {
     var s = $('pf-save-status');
     s.className = 'pf-save-status' + (kind === 'saved' ? ' is-saved' : '');
-    s.textContent = kind === 'saving' ? 'Đang lưu…' : kind === 'saved' ? 'Đã lưu' : '';
+    s.textContent = kind === 'saving' ? t('saving') : kind === 'saved' ? t('saved') : '';
   }
 
   function payloadFromDirty() {
@@ -185,11 +329,11 @@
   // ------------------------------------------------------------------ validation
 
   var MESSAGES = {
-    required: 'Bạn vui lòng trả lời câu này.',
-    requiredMulti: 'Bạn vui lòng chọn ít nhất một điều.',
-    tooLong: function (max) { return 'Câu trả lời dài quá ' + max + ' ký tự. Bạn vui lòng rút gọn lại nhé.'; },
-    number: function (q) { return 'Bạn vui lòng nhập một số từ ' + q.min + ' đến ' + q.max + '.'; },
-    range: function (q) { return 'Bạn vui lòng chọn độ tuổi từ ' + q.min + ' đến ' + q.max + ', số đầu nhỏ hơn hoặc bằng số sau.'; },
+    required: t('required'),
+    requiredMulti: t('requiredMulti'),
+    tooLong: TX[LANG].tooLong,
+    number: TX[LANG].number,
+    range: TX[LANG].rangeErr,
   };
 
   function validate(q) {
@@ -247,17 +391,17 @@
     var errId = 'q-' + q.id + '-err';
     var label = el(q.type === 'single' && q.widget !== 'select' || q.type === 'multi' || q.type === 'range' ? 'span' : 'label',
       { class: 'pf-q-label', id: labelId, for: q.type === 'text' || q.type === 'textarea' || q.type === 'number' || q.widget === 'select' ? 'q-' + q.id : null },
-      [q.label.vi, q.required ? el('span', { class: 'pf-req', 'aria-hidden': 'true', text: '*' }) : el('span', { class: 'pf-opt', text: '(không bắt buộc)' })]);
+      [q.label[LANG], q.required ? el('span', { class: 'pf-req', 'aria-hidden': 'true', text: '*' }) : el('span', { class: 'pf-opt', text: t('optional') })]);
     return el('div', { class: 'pf-q', 'data-q': q.id }, [
       label,
-      q.help && q.help.vi ? el('p', { class: 'pf-help', id: helpId, text: q.help.vi }) : null,
+      q.help && q.help[LANG] ? el('p', { class: 'pf-help', id: helpId, text: q.help[LANG] }) : null,
       control,
       el('p', { class: 'pf-error', id: errId, 'aria-live': 'polite' }),
     ]);
   }
 
   function describedBy(q) {
-    return (q.help && q.help.vi ? 'q-' + q.id + '-help ' : '') + 'q-' + q.id + '-err';
+    return (q.help && q.help[LANG] ? 'q-' + q.id + '-help ' : '') + 'q-' + q.id + '-err';
   }
 
   function renderText(q) {
@@ -279,7 +423,7 @@
     ta.value = answers[q.id] || '';
     function count() {
       var n = ta.value.length;
-      counter.textContent = n + '/' + q.max + ' ký tự';
+      counter.textContent = t('chars', n, q.max);
       counter.classList.toggle('is-over', n > q.max);
     }
     ta.addEventListener('input', function () { setAnswer(q.id, ta.value); showFieldError(q.id, ''); count(); scheduleAutosave(); });
@@ -290,9 +434,9 @@
 
   function renderSelect(q) {
     var sel = el('select', { class: 'form-input', id: 'q-' + q.id, 'aria-required': q.required ? 'true' : null, 'aria-describedby': describedBy(q) });
-    sel.appendChild(el('option', { value: '', text: 'Chọn…' }));
+    sel.appendChild(el('option', { value: '', text: t('choose') }));
     q.options.forEach(function (o) {
-      var opt = el('option', { value: o.value, text: o.label.vi });
+      var opt = el('option', { value: o.value, text: o.label[LANG] });
       if (answers[q.id] === o.value) opt.selected = true;
       sel.appendChild(opt);
     });
@@ -307,7 +451,7 @@
       'aria-labelledby': 'q-' + q.id + '-label', 'aria-describedby': describedBy(q), 'aria-required': q.required ? 'true' : null,
     });
     var buttons = q.options.map(function (o) {
-      var b = el('button', { type: 'button', class: 'pf-chip', role: 'radio', 'aria-checked': answers[q.id] === o.value ? 'true' : 'false', 'data-value': o.value, text: o.label.vi });
+      var b = el('button', { type: 'button', class: 'pf-chip', role: 'radio', 'aria-checked': answers[q.id] === o.value ? 'true' : 'false', 'data-value': o.value, text: o.label[LANG] });
       b.addEventListener('click', function () {
         // Tapping the selected chip of an optional question clears it.
         var next = answers[q.id] === o.value && !q.required ? null : o.value;
@@ -333,7 +477,7 @@
     var note = el('p', { class: 'pf-help', 'aria-live': 'polite' });
     var group = el('div', { class: 'pf-chips', role: 'group', 'aria-labelledby': 'q-' + q.id + '-label', 'aria-describedby': describedBy(q) });
     var buttons = q.options.map(function (o) {
-      var b = el('button', { type: 'button', class: 'pf-chip', 'aria-pressed': chosen.indexOf(o.value) !== -1 ? 'true' : 'false', 'data-value': o.value, text: o.label.vi });
+      var b = el('button', { type: 'button', class: 'pf-chip', 'aria-pressed': chosen.indexOf(o.value) !== -1 ? 'true' : 'false', 'data-value': o.value, text: o.label[LANG] });
       b.addEventListener('click', function () {
         var i = chosen.indexOf(o.value);
         if (i !== -1) chosen.splice(i, 1);
@@ -350,7 +494,7 @@
         b.setAttribute('aria-pressed', on ? 'true' : 'false');
         b.disabled = !on && chosen.length >= q.max;
       });
-      note.textContent = 'Đã chọn ' + chosen.length + '/' + q.max;
+      note.textContent = t('chosen', chosen.length, q.max);
     }
     buttons.forEach(function (b) { group.appendChild(b); });
     sync();
@@ -377,16 +521,16 @@
       commit(String(n));
     }
     return el('div', { class: 'pf-stepper' }, [
-      el('button', { type: 'button', class: 'pf-step-btn', 'aria-label': 'Bớt 1', onclick: function () { bump(-1); } }, ['−']),
+      el('button', { type: 'button', class: 'pf-step-btn', 'aria-label': t('minus'), onclick: function () { bump(-1); } }, ['−']),
       input,
-      el('button', { type: 'button', class: 'pf-step-btn', 'aria-label': 'Thêm 1', onclick: function () { bump(1); } }, ['+']),
+      el('button', { type: 'button', class: 'pf-step-btn', 'aria-label': t('plus'), onclick: function () { bump(1); } }, ['+']),
     ]);
   }
 
   function renderRange(q) {
     var v = answers[q.id] || [];
-    var lo = el('input', { class: 'form-input', type: 'number', inputmode: 'numeric', min: q.min, max: q.max, 'aria-label': 'Từ (tuổi)', id: 'q-' + q.id, 'aria-describedby': describedBy(q) });
-    var hi = el('input', { class: 'form-input', type: 'number', inputmode: 'numeric', min: q.min, max: q.max, 'aria-label': 'Đến (tuổi)', 'aria-describedby': describedBy(q) });
+    var lo = el('input', { class: 'form-input', type: 'number', inputmode: 'numeric', min: q.min, max: q.max, 'aria-label': t('fromAge'), id: 'q-' + q.id, 'aria-describedby': describedBy(q) });
+    var hi = el('input', { class: 'form-input', type: 'number', inputmode: 'numeric', min: q.min, max: q.max, 'aria-label': t('toAge'), 'aria-describedby': describedBy(q) });
     if (v.length === 2) { lo.value = v[0]; hi.value = v[1]; }
     function commit() {
       var a = lo.value === '' ? null : Number(lo.value);
@@ -396,7 +540,7 @@
     }
     lo.addEventListener('input', commit);
     hi.addEventListener('input', commit);
-    return el('div', { class: 'pf-range', role: 'group', 'aria-labelledby': 'q-' + q.id + '-label' }, ['Từ', lo, 'đến', hi, 'tuổi']);
+    return el('div', { class: 'pf-range', role: 'group', 'aria-labelledby': 'q-' + q.id + '-label' }, [t('from'), lo, t('to'), hi, t('years')]);
   }
 
   function renderQuestion(q) {
@@ -424,29 +568,29 @@
   // ------------------------------------------------------------------ steps
 
   var INTROS = {
-    1: 'Những thông tin cơ bản về bạn. Bạn có thể sửa lại bất cứ lúc nào.',
+    1: t('intro1'),
     2: '',
     3: '',
-    4: 'Hãy viết bằng lời của chính bạn. Viết bằng tiếng Việt là tốt nhất, Huyền sẽ giúp dịch.',
-    5: 'Ảnh là không bắt buộc. Bạn có thể bỏ qua bước này.',
-    6: 'Bạn xem lại các câu trả lời. Bấm “Sửa” nếu muốn thay đổi điều gì.',
+    4: t('intro4'),
+    5: t('intro5'),
+    6: t('intro6'),
   };
 
   function stepTitle(n) {
-    for (var i = 0; i < Q.steps.length; i++) if (Q.steps[i].step === n) return Q.steps[i].title.vi;
+    for (var i = 0; i < Q.steps.length; i++) if (Q.steps[i].step === n) return Q.steps[i].title[LANG];
     return '';
   }
 
   function goTo(n, focusTitle) {
     step = Math.max(1, Math.min(TOTAL_STEPS, n));
     furthestStep = Math.max(furthestStep, step);
-    $('pf-step-count').textContent = 'Bước ' + step + '/' + TOTAL_STEPS;
+    $('pf-step-count').textContent = t('stepCount', step, TOTAL_STEPS);
     $('pf-progress-bar').style.width = Math.round((step / TOTAL_STEPS) * 100) + '%';
     $('pf-step-title').textContent = stepTitle(step);
     $('pf-step-intro').textContent = INTROS[step] || '';
     $('pf-form-error').hidden = true;
     $('pf-back').hidden = step === 1;
-    $('pf-next').textContent = step === TOTAL_STEPS ? (S.submittedAt ? 'Lưu thay đổi' : 'Gửi hồ sơ') : 'Tiếp tục';
+    $('pf-next').textContent = step === TOTAL_STEPS ? (S.submittedAt ? t('saveChanges') : t('submit')) : t('next');
     var body = $('pf-step-body');
     body.innerHTML = '';
     if (step <= 4) qsForStep(step).forEach(function (q) { body.appendChild(renderQuestion(q)); });
@@ -465,7 +609,7 @@
   $('pf-form').addEventListener('submit', function (e) {
     e.preventDefault();
     if (step <= 4) {
-      if (!validateStep(step)) { formError('Bạn vui lòng xem lại những câu được đánh dấu bên trên.'); return; }
+      if (!validateStep(step)) { formError(t('checkMarked')); return; }
       var next = $('pf-next');
       next.disabled = true;
       save().then(function () {
@@ -475,7 +619,7 @@
         goTo(step + 1, true);
       });
     } else if (step === 5) {
-      if (photoBusy) { formError('Bạn vui lòng đợi ảnh tải lên xong nhé.'); return; }
+      if (photoBusy) { formError(t('waitPhoto')); return; }
       goTo(6, true);
     } else {
       submit();
@@ -493,19 +637,19 @@
 
   function renderPhotos(body) {
     body.appendChild(el('ul', { class: 'pf-guidance' }, [
-      el('li', { text: 'Ảnh chụp gần đây.' }),
-      el('li', { text: 'Thấy rõ khuôn mặt của bạn.' }),
-      el('li', { text: 'Chỉ có một mình bạn trong ảnh.' }),
-      el('li', { text: 'Không có trẻ em trong bất kỳ ảnh nào.' }),
-      el('li', { text: 'Không chụp giấy tờ tuỳ thân (CCCD, hộ chiếu…).' }),
+      el('li', { text: t('g1') }),
+      el('li', { text: t('g2') }),
+      el('li', { text: t('g3') }),
+      el('li', { text: t('g4') }),
+      el('li', { text: t('g5') }),
     ]));
-    body.appendChild(el('p', { class: 'pf-help', text: 'Bạn có thể thêm tối đa 3 ảnh. Ảnh đầu tiên là ảnh chính. Trước khi tải lên, ảnh được thu nhỏ ngay trên điện thoại của bạn và mọi thông tin ẩn trong ảnh (như vị trí chụp) đều được xoá. Ảnh được lưu riêng tư, không ai xem được nếu bạn không đồng ý ở bước cuối.' }));
+    body.appendChild(el('p', { class: 'pf-help', text: t('photoHelp') }));
     var grid = el('div', { class: 'pf-photos', id: 'pf-photos' });
     body.appendChild(grid);
     var status = el('p', { class: 'pf-photo-status', id: 'pf-photo-status', role: 'status', 'aria-live': 'polite' });
-    var input = el('input', { type: 'file', accept: 'image/*', id: 'pf-photo-input', 'aria-label': 'Thêm ảnh' });
+    var input = el('input', { type: 'file', accept: 'image/*', id: 'pf-photo-input', 'aria-label': t('addPhoto') });
     var add = el('div', { class: 'pf-add-photo' }, [
-      el('span', { class: 'btn btn--secondary btn--md pf-btn', 'aria-hidden': 'true', text: '+ Thêm ảnh' }),
+      el('span', { class: 'btn btn--secondary btn--md pf-btn', 'aria-hidden': 'true', text: t('addPhotoBtn') }),
       input,
     ]);
     input.addEventListener('change', function () {
@@ -524,14 +668,14 @@
     grid.innerHTML = '';
     var photos = S.photos || [];
     photos.forEach(function (p, i) {
-      var img = el('img', { alt: 'Ảnh ' + (i + 1) + (i === 0 ? ' (ảnh chính)' : ''), src: p.url || '', loading: 'lazy' });
+      var img = el('img', { alt: t('photoAlt', i + 1, i === 0), src: p.url || '', loading: 'lazy' });
       grid.appendChild(el('div', { class: 'pf-photo' }, [
         img,
-        i === 0 ? el('span', { class: 'pf-photo-main', text: 'Ảnh chính' }) : null,
+        i === 0 ? el('span', { class: 'pf-photo-main', text: t('mainPhoto') }) : null,
         el('div', { class: 'pf-photo-actions' }, [
-          el('button', { type: 'button', 'aria-label': 'Đưa ảnh ' + (i + 1) + ' lên trước', disabled: i === 0, onclick: function () { movePhoto(i, -1); } }, ['←']),
-          el('button', { type: 'button', 'aria-label': 'Đưa ảnh ' + (i + 1) + ' ra sau', disabled: i === photos.length - 1, onclick: function () { movePhoto(i, 1); } }, ['→']),
-          el('button', { type: 'button', onclick: function () { deletePhoto(p.path); } }, ['Xoá']),
+          el('button', { type: 'button', 'aria-label': t('moveEarlier', i + 1), disabled: i === 0, onclick: function () { movePhoto(i, -1); } }, ['←']),
+          el('button', { type: 'button', 'aria-label': t('moveLater', i + 1), disabled: i === photos.length - 1, onclick: function () { movePhoto(i, 1); } }, ['→']),
+          el('button', { type: 'button', onclick: function () { deletePhoto(p.path); } }, [t('del')]),
         ]),
       ]));
     });
@@ -548,14 +692,14 @@
   }
 
   function addPhoto(file) {
-    if ((S.photos || []).length >= 3) { photoStatus('Bạn đã có đủ 3 ảnh.'); return; }
-    if (file.type && file.type.indexOf('image/') !== 0) { photoStatus('Tệp này không phải là ảnh. Bạn vui lòng chọn một tấm ảnh nhé.'); return; }
+    if ((S.photos || []).length >= 3) { photoStatus(t('maxPhotos')); return; }
+    if (file.type && file.type.indexOf('image/') !== 0) { photoStatus(t('notImage')); return; }
     photoBusy = true;
     drawPhotos();
-    photoStatus('Đang xử lý ảnh…');
+    photoStatus(t('processing'));
     var path;
     processPhoto(file).then(function (blob) {
-      photoStatus('Đang tải ảnh lên…');
+      photoStatus(t('uploading'));
       return api('profile-photo-upload-url').then(function (r) {
         path = r.path;
         return fetch(r.signedUrl, {
@@ -566,14 +710,14 @@
           referrerPolicy: 'no-referrer',
         });
       }).then(function (res) {
-        if (!res.ok) throw new Error('Chưa tải được ảnh lên. Bạn vui lòng thử lại nhé.');
+        if (!res.ok) throw new Error(t('uploadFailed'));
         return api('profile-photo-confirm', { path: path });
       });
     }).then(function (data) {
       setPhotoState(data);
-      photoStatus('Đã thêm ảnh.');
+      photoStatus(t('added'));
     }, function (err) {
-      photoStatus(err.message || 'Chưa thêm được ảnh. Bạn vui lòng thử lại nhé.');
+      photoStatus(err.message || t('addFailed'));
     }).then(function () {
       photoBusy = false;
       drawPhotos();
@@ -582,12 +726,12 @@
 
   function deletePhoto(path) {
     if (photoBusy) return;
-    if (!window.confirm('Xoá ảnh này?')) return;
+    if (!window.confirm(t('confirmDelete'))) return;
     photoBusy = true;
-    photoStatus('Đang xoá ảnh…');
+    photoStatus(t('deleting'));
     api('profile-photo-delete', { path: path }).then(function (data) {
       setPhotoState(data);
-      photoStatus('Đã xoá ảnh.');
+      photoStatus(t('deleted'));
     }, function (err) { photoStatus(err.message); }).then(function () { photoBusy = false; drawPhotos(); });
   }
 
@@ -596,11 +740,11 @@
     var paths = (S.photos || []).map(function (p) { return p.path; });
     var j = i + d;
     if (j < 0 || j >= paths.length) return;
-    var t = paths[i]; paths[i] = paths[j]; paths[j] = t;
+    var tmp = paths[i]; paths[i] = paths[j]; paths[j] = tmp;
     photoBusy = true;
     api('profile-photo-order', { paths: paths }).then(function (data) {
       setPhotoState(data);
-      photoStatus(j === 0 ? 'Đã đổi ảnh chính.' : 'Đã đổi thứ tự ảnh.');
+      photoStatus(j === 0 ? t('mainChanged') : t('orderChanged'));
     }, function (err) { photoStatus(err.message); }).then(function () { photoBusy = false; drawPhotos(); });
   }
 
@@ -637,7 +781,7 @@
     return new Promise(function (resolve, reject) {
       var img = new Image();
       img.onload = function () { resolve(img); };
-      img.onerror = function () { reject(new Error('Không đọc được ảnh này. Bạn vui lòng chọn một ảnh khác (JPG hoặc PNG).')); };
+      img.onerror = function () { reject(new Error(t('unreadable'))); };
       img.src = src;
     });
   }
@@ -690,7 +834,7 @@
       var img = r[1];
       var o = r[2] ? 1 : readOrientation(r[0]);
       var w = img.naturalWidth, h = img.naturalHeight;
-      if (!w || !h) throw new Error('Không đọc được ảnh này. Bạn vui lòng chọn một ảnh khác.');
+      if (!w || !h) throw new Error(t('unreadable2'));
       var swap = o >= 5 && o <= 8;
       var ow = swap ? h : w, oh = swap ? w : h;
       var scale = Math.min(1, MAX_EDGE / Math.max(ow, oh));
@@ -700,9 +844,9 @@
       var ctx = canvas.getContext('2d');
       ctx.fillStyle = '#fff';
       ctx.fillRect(0, 0, cw, ch);
-      var t = { 2: [-1, 0, 0, 1, cw, 0], 3: [-1, 0, 0, -1, cw, ch], 4: [1, 0, 0, -1, 0, ch], 5: [0, 1, 1, 0, 0, 0],
+      var xf = { 2: [-1, 0, 0, 1, cw, 0], 3: [-1, 0, 0, -1, cw, ch], 4: [1, 0, 0, -1, 0, ch], 5: [0, 1, 1, 0, 0, 0],
         6: [0, 1, -1, 0, cw, 0], 7: [0, -1, -1, 0, cw, ch], 8: [0, -1, 1, 0, 0, ch] }[o];
-      if (t) ctx.setTransform(t[0], t[1], t[2], t[3], t[4], t[5]);
+      if (xf) ctx.setTransform(xf[0], xf[1], xf[2], xf[3], xf[4], xf[5]);
       ctx.imageSmoothingEnabled = true;
       if ('imageSmoothingQuality' in ctx) ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(img, 0, 0, swap ? ch : cw, swap ? cw : ch);
@@ -714,18 +858,18 @@
       URL.revokeObjectURL(url);
       throw err;
     }).then(function (blob) {
-      if (!blob || blob.size > MAX_UPLOAD_BYTES) throw new Error('Ảnh này quá lớn. Bạn vui lòng chọn một ảnh khác.');
+      if (!blob || blob.size > MAX_UPLOAD_BYTES) throw new Error(t('tooBig'));
       return blob;
     });
   }
 
   // ------------------------------------------------------------------ review & consent
 
-  // TODO(James): counsel to approve these three consent texts (version vi-2026-11-profile-v1).
+  // Consent texts live in TX above, one version per language (counsel to approve).
   var CONSENT_TEXT = {
-    confirmTrue: 'Tôi xác nhận những thông tin trên là đúng sự thật và do chính tôi viết.',
-    profileSharing: 'Không bắt buộc: Tôi đồng ý để Heritage Union cho khách hàng đã hoàn thành bản khai lý lịch xem hồ sơ của tôi, gồm tên hiển thị, tuổi, thành phố/tỉnh và các câu trả lời ở trên. Không bao giờ kèm họ, ngày sinh, số Zalo hay email của tôi. Tôi có thể thay đổi ý định bất cứ lúc nào.',
-    photoSharing: 'Không bắt buộc: Tôi đồng ý để những khách hàng nói trên xem ảnh của tôi.',
+    confirmTrue: t('confirmTrue'),
+    profileSharing: t('profileSharing'),
+    photoSharing: t('photoSharing'),
   };
   var consentState = null;
 
@@ -744,21 +888,21 @@
           qsForStep(n).forEach(function (q) {
             if (!isShown(q)) return;
             var txt = formatAnswer(q, answers[q.id]);
-            list.appendChild(el('dt', { text: q.label.vi }));
-            list.appendChild(el('dd', { class: txt ? '' : 'pf-review-empty', text: txt || (q.required ? 'Chưa trả lời' : 'Không trả lời') }));
+            list.appendChild(el('dt', { text: q.label[LANG] }));
+            list.appendChild(el('dd', { class: txt ? '' : 'pf-review-empty', text: txt || (q.required ? t('notAnswered') : t('noAnswer')) }));
           });
         } else {
           var photos = S.photos || [];
           if (photos.length) {
-            list.appendChild(el('dd', { class: 'pf-review-thumbs' }, photos.map(function (p, i) { return el('img', { src: p.url || '', alt: 'Ảnh ' + (i + 1) }); })));
+            list.appendChild(el('dd', { class: 'pf-review-thumbs' }, photos.map(function (p, i) { return el('img', { src: p.url || '', alt: t('photoN', i + 1) }); })));
           } else {
-            list.appendChild(el('dd', { class: 'pf-review-empty', text: 'Không có ảnh' }));
+            list.appendChild(el('dd', { class: 'pf-review-empty', text: t('noPhotos') }));
           }
         }
         body.appendChild(el('section', { class: 'pf-review-step', 'aria-label': stepTitle(n) }, [
           el('div', { class: 'pf-review-head' }, [
             el('h2', { text: stepTitle(n) }),
-            el('button', { type: 'button', class: 'pf-link-btn', 'aria-label': 'Sửa: ' + stepTitle(n), onclick: function () { goTo(n, true); } }, ['Sửa']),
+            el('button', { type: 'button', class: 'pf-link-btn', 'aria-label': t('editStep', stepTitle(n)), onclick: function () { goTo(n, true); } }, [t('edit')]),
           ]),
           list,
         ]));
@@ -767,7 +911,7 @@
 
     var hasPhotos = (S.photos || []).length > 0;
     var consents = el('div', { class: 'pf-consents' });
-    consents.appendChild(el('h2', { text: 'Sự đồng ý của bạn', style: 'font-size:22px' }));
+    consents.appendChild(el('h2', { text: t('yourConsent'), style: 'font-size:22px' }));
     function box(key, required) {
       var id = 'consent-' + key;
       var input = el('input', { type: 'checkbox', id: id, 'aria-required': required ? 'true' : null });
@@ -788,9 +932,9 @@
     box('profileSharing', false);
     if (hasPhotos) box('photoSharing', false);
     var warn = el('p', { class: 'pf-warning', id: 'pf-photo-warning', role: 'note', hidden: true,
-      text: 'Bạn chưa đồng ý cho khách hàng xem ảnh. Khi bạn gửi hồ sơ, ảnh của bạn sẽ bị xoá. Nếu muốn giữ ảnh, bạn hãy đánh dấu ô đồng ý về ảnh ở trên.' });
+      text: t('photoWarn') });
     var noShare = el('p', { class: 'form-note', id: 'pf-share-note', hidden: true,
-      text: 'Nếu bạn không đánh dấu ô thứ hai, chúng tôi sẽ không cho khách hàng xem hồ sơ của bạn, vì vậy bạn khó có thể nhận được lời giới thiệu. Bạn vẫn có thể gửi hồ sơ.' });
+      text: t('noShare') });
     consents.appendChild(noShare);
     consents.appendChild(warn);
     body.appendChild(consents);
@@ -806,23 +950,23 @@
     if (missingStep) {
       goTo(missingStep, true);
       validateStep(missingStep);
-      formError('Bạn vui lòng trả lời đủ các câu bắt buộc ở bước này trước khi gửi.');
+      formError(t('answerRequired'));
       return;
     }
     if (!consentState || !consentState.confirmTrue) {
-      formError('Bạn vui lòng đánh dấu ô xác nhận thông tin là đúng sự thật và do chính bạn viết.');
+      formError(t('confirmRequired'));
       var c = $('consent-confirmTrue');
       if (c) c.focus();
       return;
     }
     var hasPhotos = (S.photos || []).length > 0;
     var photosWillGo = hasPhotos && !consentState.photoSharing;
-    if (photosWillGo && !window.confirm('Ảnh của bạn sẽ bị xoá vì bạn chưa đồng ý cho khách hàng xem ảnh. Tiếp tục gửi?')) return;
+    if (photosWillGo && !window.confirm(t('photosWillGo'))) return;
     var btn = $('pf-next');
     btn.disabled = true;
     formError('');
     save().then(function (ok) {
-      if (!ok) throw new Error('Chưa lưu được câu trả lời. Bạn vui lòng bấm “Thử lại” ở trên rồi gửi lại nhé.');
+      if (!ok) throw new Error(t('notSaved'));
       return api('profile-submit', { consents: {
         confirmTrue: true,
         profileSharing: !!consentState.profileSharing,
@@ -881,8 +1025,8 @@
     }, function (err) {
       if (err && err.fatal) return;
       $('pf-loading').innerHTML = '';
-      $('pf-loading').appendChild(el('p', { text: 'Chưa mở được hồ sơ. Bạn kiểm tra mạng rồi thử lại nhé.' }));
-      $('pf-loading').appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--md pf-btn', text: 'Thử lại', onclick: function () { window.location.reload(); } }));
+      $('pf-loading').appendChild(el('p', { text: t('openFailed') }));
+      $('pf-loading').appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--md pf-btn', text: t('retry'), onclick: function () { window.location.reload(); } }));
     });
   }
 
@@ -892,7 +1036,7 @@
     var body = payloadFromDirty();
     if (!Object.keys(body).length) return;
     try {
-      navigator.sendBeacon(API + 'profile-save', new Blob([JSON.stringify({ token: token, answers: body })], { type: 'application/json' }));
+      navigator.sendBeacon(API + 'profile-save', new Blob([JSON.stringify({ token: token, lang: LANG, answers: body })], { type: 'application/json' }));
     } catch (e) {}
   }
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flushOnLeave(); });

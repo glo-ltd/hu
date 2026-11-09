@@ -1,5 +1,6 @@
 // Final step. POST { token, consents: { confirmTrue, profileSharing, photoSharing } }.
-// TODO(James): counsel to approve the consent texts on /vi/ho-so (version vi-2026-11-profile-v1).
+// TODO(James): counsel to approve the consent texts on /vi/ho-so (vi-2026-11-profile-v1)
+// and /my-profile (en-2026-11-profile-v1).
 const { Resend } = require('resend');
 const P = require('../shared/profile-common');
 const { profileState } = require('../shared/profile-state');
@@ -31,7 +32,7 @@ exports.handler = async function (event) {
       display_name: recheck.displayName,
       questions_version: P.QUESTIONS.version,
       confirmed_true_at: now,
-      consent_profile_text_version: P.CONSENT_PROFILE_TEXT_VERSION,
+      consent_profile_text_version: ctx.data.lang === 'en' ? P.CONSENT_PROFILE_TEXT_VERSION_EN : P.CONSENT_PROFILE_TEXT_VERSION,
       consent_photo_sharing_at: photoConsent ? profile.consent_photo_sharing_at || now : null,
       submitted_at: now,
     };

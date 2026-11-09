@@ -255,7 +255,8 @@ async function handleRegistration(supabase, data, ipHash, event, lang) {
 
   var candidateId = insertResult.data.id;
 
-  // Her private profile link (/vi/ho-so#t=...). Only the sha256 is stored.
+  // Her private profile link: /my-profile#t=... if she chose English as her
+  // language, otherwise /vi/ho-so#t=... Only the sha256 is stored.
   // Saved in a separate update so that, if this ever fails, the registration
   // itself is still kept and she simply gets her link later on Zalo.
   var profileToken = null;
@@ -275,7 +276,7 @@ async function handleRegistration(supabase, data, ipHash, event, lang) {
 
     if (email) {
       try {
-        var autoReply = buildAutoReply(preferredLanguage, fullName, profileToken ? profileLink(profileToken) : null);
+        var autoReply = buildAutoReply(preferredLanguage, fullName, profileToken ? profileLink(profileToken, preferredLanguage) : null);
         var visitorResult = await resend.emails.send({
           from: FROM_EMAIL,
           to: email,
@@ -319,7 +320,7 @@ async function handleRegistration(supabase, data, ipHash, event, lang) {
 
   // The token goes back only to the browser that just registered, which puts
   // it in the thank-you page's URL fragment (never sent to any server).
-  return jsonResponse(200, { ok: true, mode: 'registered', profileToken: profileToken });
+  return jsonResponse(200, { ok: true, mode: 'registered', profileToken: profileToken, profileLang: preferredLanguage === 'en' ? 'en' : 'vi' });
 }
 
 function buildAutoReply(language, fullName, link) {
@@ -345,7 +346,7 @@ function buildAutoReply(language, fullName, link) {
       '<p>Dear ' + escapeHtml(fullName) + ',</p>' +
       '<p>Thank you for registering with Heritage Union. We have received your details.</p>' +
       (link
-        ? '<p>What happens next: you can complete your own profile (about 10 minutes) with this private link. The profile form is in Vietnamese:<br>' +
+        ? '<p>What happens next: you can complete your own profile (about 10 minutes) with this private link:<br>' +
           '<a href="' + escapeHtml(link) + '">Complete my profile</a></p>' +
           '<p>This link is private to you and works for 60 days. Please do not share it with anyone. We will also message you on Zalo to confirm your contact details.</p>'
         : '<p>What happens next: we will send a short follow-up so you can verify your contact information and complete your own profile.</p>') +

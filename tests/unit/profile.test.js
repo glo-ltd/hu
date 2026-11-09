@@ -66,7 +66,7 @@ test('profile-save: saves answers, moves new -> profile_in_progress, display_nam
   assert.equal(prof.display_name, 'Lan');
   assert.equal(prof.answers.display_name, undefined);
   assert.equal(prof.answers.occupation, 'Giáo viên');
-  assert.equal(prof.questions_version, '2026-11-v1');
+  assert.equal(prof.questions_version, '2026-11-v2');
   assert.equal(fake.tables.candidates[0].status, 'profile_in_progress');
   // children -> 0 drops the follow-up question
   await call('profile-save', { token: c.token, answers: { children: 0 } });
@@ -269,7 +269,7 @@ test('question set: province list matches registration; nothing sensitive asked'
   for (const banned of ['income', 'salary', 'health', 'ethnic', 'politic', 'weight', 'height', 'measure', 'id_number', 'cccd', 'sex']) {
     assert.ok(!ids.includes(banned), banned);
   }
-  assert.equal(P.QUESTIONS.version, '2026-11-v1');
+  assert.equal(P.QUESTIONS.version, '2026-11-v2');
   for (const q of P.QUESTIONS.questions) {
     assert.ok(q.label.vi && q.label.en, q.id);
     assert.ok(['text', 'textarea', 'single', 'multi', 'number', 'range'].includes(q.type));
@@ -304,5 +304,31 @@ test('candidate-facing text never mentions the United States', () => {
   for (const f of files) {
     const s = fs.readFileSync(require('path').join(__dirname, '..', '..', f), 'utf8');
     for (const w of ['Hoa Kỳ', 'nước Mỹ', 'United States', ' USA', 'Mỹ ']) assert.ok(!s.includes(w), f + ' mentions ' + w);
+  }
+});
+
+test('English form: submit records the English consent version; errors come in both languages', async () => {
+  const c = seedCandidate();
+  await call('profile-save', { token: c.token, lang: 'en', answers: FULL_ANSWERS });
+  let r = await call('profile-submit', { token: c.token, lang: 'en', consents: { confirmTrue: false } });
+  assert.equal(r.status, 400);
+  assert.ok(r.body.error && r.body.error_en, 'both languages returned');
+  assert.ok(!/[ăâđêôơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ]/.test(r.body.error_en), 'error_en is English');
+  r = await call('profile-submit', { token: c.token, lang: 'en', consents: { confirmTrue: true, profileSharing: true } });
+  assert.equal(r.status, 200, r.raw);
+  assert.equal(fake.tables.candidate_profiles[0].consent_profile_text_version, 'en-2026-11-profile-v1');
+});
+
+test('question set: every question, option and step has natural English for the candidate and a short team label', () => {
+  const VI = /[ăâđêôơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ]/;
+  for (const st of P.QUESTIONS.steps) assert.ok(st.title.en && st.title.vi, 'step ' + st.step);
+  for (const q of P.QUESTIONS.questions) {
+    assert.ok(q.label.en && q.label.team, q.id + ' labels');
+    assert.ok(!/\b(she|her)\b/i.test(q.label.en), q.id + ': candidate English speaks to her, not about her');
+    if (q.help && q.help.vi) assert.ok(q.help.en, q.id + ' help.en');
+    for (const o of q.options || []) {
+      assert.ok(o.label.en, q.id + '/' + o.value);
+      if (q.id !== 'province' && o.value !== 'caodai_hoahao') assert.ok(!VI.test(o.label.en), q.id + '/' + o.value + ' English');
+    }
   }
 });
