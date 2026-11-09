@@ -1759,3 +1759,20 @@ select.form-input { cursor: pointer; }
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ============================================================
+   THANK-YOU: COMPLETE YOUR PROFILE
+   ============================================================ */
+.ty-profile-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 24px;
+  padding: 24px;
+  background: var(--white);
+  border: 1px solid var(--gold-300);
+  border-radius: var(--radius-sm);
+}
+.ty-profile-cta[hidden] { display: none; }
+.ty-profile-cta .btn { width: 100%; max-width: 420px; text-transform: none; letter-spacing: 0.01em; }

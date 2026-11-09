@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your profile — Heritage Union</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/assets/css/main.css?v=5">
+  <link rel="stylesheet" href="/assets/css/profile.css?v=3">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 44'%3E%3Ccircle cx='26' cy='22' r='12' fill='none' stroke='%235E2A2E' stroke-width='2'/%3E%3Ccircle cx='38' cy='22' r='12' fill='none' stroke='%23C2A35A' stroke-width='2'/%3E%3C/svg%3E">
+</head>
+<body class="pf-body">
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<header class="pf-header">
+  <a class="pf-logo" href="/" aria-label="Heritage Union — home">
+    <svg width="40" height="28" viewBox="0 0 52 36" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="18" cy="18" r="12.5" stroke="#5E2A2E" stroke-width="1.8" fill="none"/>
+      <circle cx="34" cy="18" r="12.5" stroke="#C2A35A" stroke-width="1.8" fill="none"/>
+    </svg>
+    <span>HERITAGE UNION</span>
+  </a>
+  <span class="pf-header-right"><span class="pf-header-title">Your profile</span> <a id="pf-lang-switch" class="pf-lang" href="/vi/ho-so" lang="vi" hreflang="vi">Tiếng Việt</a></span>
+</header>
+
+<main id="main-content" class="pf-main">
+
+  <!-- Loading -->
+  <section id="pf-loading" class="pf-panel pf-center" aria-live="polite">
+    <p>Opening your profile…</p>
+  </section>
+
+  <!-- No link / expired / unknown: a kind message, never a form -->
+  <section id="pf-nolink" class="pf-panel" hidden aria-labelledby="pf-nolink-title">
+    <span class="eyebrow">Your profile</span>
+    <h1 id="pf-nolink-title">We couldn't open your profile</h1>
+    <p id="pf-nolink-message">This page only opens with the private link Heritage Union sent you.</p>
+    <p>To get a new link, just message Heritage Union on Zalo (reply to our earlier message), or <a href="/contact">contact us</a>.</p>
+    <p class="form-note">If you want to withdraw, you can do it at any time on the <a href="/withdraw">withdraw page</a>.</p>
+  </section>
+
+  <!-- The questionnaire -->
+  <section id="pf-app" class="pf-app" hidden>
+    <div class="pf-progress" aria-hidden="false">
+      <div class="pf-progress-top">
+        <span id="pf-step-count" class="pf-step-count">Step 1 of 6</span>
+        <span id="pf-save-status" class="pf-save-status" role="status" aria-live="polite"></span>
+      </div>
+      <div class="pf-progress-track"><div id="pf-progress-bar" class="pf-progress-bar"></div></div>
+    </div>
+
+    <div id="pf-save-error" class="pf-save-error" role="alert" hidden>
+      <span>Not saved yet. Your answers are still safe on your phone.</span>
+      <button type="button" id="pf-retry" class="pf-link-btn">Try again</button>
+    </div>
+
+    <form id="pf-form" class="pf-panel" novalidate>
+      <h1 id="pf-step-title" class="pf-step-title" tabindex="-1"></h1>
+      <p id="pf-step-intro" class="pf-step-intro"></p>
+      <div id="pf-step-body"></div>
+      <p id="pf-form-error" class="pf-form-error" role="alert" hidden></p>
+      <div class="pf-nav">
+        <button type="button" id="pf-back" class="btn btn--secondary btn--md pf-btn">Back</button>
+        <button type="submit" id="pf-next" class="btn btn--primary btn--md pf-btn">Continue</button>
+      </div>
+    </form>
+    <p class="pf-footnote">Each step saves when you tap “Continue”. You can stop and come back later with the same link.</p>
+  </section>
+
+  <!-- After submitting -->
+  <section id="pf-done" class="pf-panel" hidden aria-labelledby="pf-done-title">
+    <span class="eyebrow">Profile sent</span>
+    <h1 id="pf-done-title" tabindex="-1">Thank you.</h1>
+    <p>Heritage Union has received your profile.</p>
+    <p>You can come back with the same link at any time to change your answers, change your consent, or <a href="/withdraw">withdraw</a>.</p>
+    <p id="pf-done-photos" class="form-note" hidden>Your photos have been deleted because you didn't agree to clients seeing them.</p>
+    <p class="form-note">Registering is completely free. Heritage Union will never ask you to pay anything.</p>
+    <div class="pf-nav">
+      <button type="button" id="pf-edit-again" class="btn btn--secondary btn--md pf-btn">Review my profile</button>
+      <a class="btn btn--primary btn--md pf-btn" href="/">Back to the home page</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pf-footer">
+  <a href="/privacy">Privacy</a> &middot; <a href="/your-rights">Your rights</a> &middot; <a href="/withdraw">Withdraw</a> &middot; <a href="/contact">Contact</a>
+</footer>
+
+<script src="/assets/js/profile.js?v=3" defer></script>
+</body>
+</html>

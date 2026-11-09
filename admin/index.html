@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team tool — Heritage Union</title>
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="no-referrer">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/assets/css/main.css?v=5">
+  <link rel="stylesheet" href="/admin/admin.css?v=2">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 44'%3E%3Ccircle cx='26' cy='22' r='12' fill='none' stroke='%235E2A2E' stroke-width='2'/%3E%3Ccircle cx='38' cy='22' r='12' fill='none' stroke='%23C2A35A' stroke-width='2'/%3E%3C/svg%3E">
+  <!-- supabase-js pinned to an exact version; integrity hash computed from the npm package of the same version. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous" defer></script>
+  <script src="/admin/admin.js?v=1" defer></script>
+</head>
+<body class="ad-body">
+<header class="ad-header">
+  <span class="ad-brand">
+    <svg width="34" height="24" viewBox="0 0 52 36" fill="none" aria-hidden="true"><circle cx="18" cy="18" r="12.5" stroke="#5E2A2E" stroke-width="1.8"/><circle cx="34" cy="18" r="12.5" stroke="#C2A35A" stroke-width="1.8"/></svg>
+    Team tool
+  </span>
+  <span class="ad-me"><span id="ad-me"></span> <button type="button" id="ad-signout" class="ad-link" hidden>Sign out</button></span>
+</header>
+
+<main class="ad-main">
+  <p id="ad-flash" class="ad-flash" role="status" aria-live="polite" hidden></p>
+
+  <section id="ad-signin" class="ad-panel" hidden>
+    <h1>Sign in</h1>
+    <p>Enter your Heritage Union email. We'll send you a sign-in link. Only invited team members can sign in.</p>
+    <form id="ad-signin-form" class="ad-form">
+      <label class="form-label" for="ad-email">Email</label>
+      <input class="form-input" type="email" id="ad-email" autocomplete="email" required>
+      <button class="btn btn--primary btn--md" type="submit">Email me a sign-in link</button>
+    </form>
+    <p id="ad-signin-msg" class="form-note" role="status"></p>
+  </section>
+
+  <section id="ad-list" hidden>
+    <div class="ad-toolbar">
+      <div class="ad-filters" role="group" aria-label="Filter">
+        <button type="button" class="ad-filter" data-filter="followup" aria-pressed="true">Needs follow-up</button>
+        <button type="button" class="ad-filter" data-filter="in_progress" aria-pressed="false">Profile in progress</button>
+        <button type="button" class="ad-filter" data-filter="complete" aria-pressed="false">Profile complete</button>
+        <button type="button" class="ad-filter" data-filter="withdrawn" aria-pressed="false">Withdrawn</button>
+        <button type="button" class="ad-filter" data-filter="all" aria-pressed="false">All</button>
+      </div>
+      <input class="form-input ad-search" type="search" id="ad-search" placeholder="Search name or Zalo number" aria-label="Search by name or Zalo number">
+    </div>
+    <p id="ad-count" class="form-note"></p>
+    <div id="ad-cards" class="ad-cards"></div>
+  </section>
+
+  <section id="ad-detail" hidden></section>
+</main>
+
+<div id="ad-modal" class="ad-modal" hidden>
+  <div class="ad-modal-box" role="dialog" aria-modal="true" aria-labelledby="ad-modal-title">
+    <h2 id="ad-modal-title"></h2>
+    <div id="ad-modal-body"></div>
+  </div>
+</div>
+</body>
+</html>

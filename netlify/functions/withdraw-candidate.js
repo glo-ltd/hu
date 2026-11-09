@@ -2,7 +2,6 @@ const { Resend } = require('resend');
 const { createClient } = require('@supabase/supabase-js');
 
 const FROM_EMAIL = 'Heritage Union <team@heritage-union.com>';
-const INTERNAL_NOTIFY_EMAIL = 'james@heritage-union.com';
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_CONTACT_LENGTH = 100;
 
@@ -23,7 +22,8 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
-const { normaliseZalo, pickLang, msg } = require('../shared/candidate-common');
+const { normaliseZalo, pickLang, msg, teamNotifyEmails } = require('../shared/candidate-common');
+const { applyWithdrawal } = require('../shared/profile-common');
 
 // Escape the wildcard characters ilike understands, so an email is matched
 // literally (case-insensitively) and never as a pattern.
@@ -102,15 +102,27 @@ exports.handler = async function (event) {
     // we never reveal via the response whether a contact was registered.
   }
 
+  // Straight away, for each withdrawn registration: her private profile link
+  // stops working, both sharing consents are cleared and her photos are
+  // deleted from Storage. The rest of the row stays until the team deletes
+  // it (within 30 days, as promised).
+  for (var i = 0; i < matchedIds.length; i++) {
+    try {
+      await applyWithdrawal(supabase, matchedIds[i]);
+    } catch (err) {
+      console.error('Withdrawal clean-up threw for', matchedIds[i], err);
+    }
+  }
+
   if (process.env.RESEND_API_KEY && matchedIds.length > 0) {
     try {
       var resend = new Resend(process.env.RESEND_API_KEY);
       var idList = matchedIds.map(function (id) { return escapeHtml(id); }).join(', ');
       var internalResult = await resend.emails.send({
         from: FROM_EMAIL,
-        to: INTERNAL_NOTIFY_EMAIL,
+        to: teamNotifyEmails(),
         subject: 'Candidate withdrawal request',
-        html: '<p>Withdrawal processed for candidate ID(s): ' + idList + ' — view in Supabase.</p>',
+        html: '<p>Withdrawal processed for candidate ID(s): ' + idList + ' — view in the team tool: https://heritage-union.com/admin/</p>',
       });
       if (internalResult.error) {
         console.error('Resend send to james@ failed:', internalResult.error);

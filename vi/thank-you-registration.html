@@ -24,7 +24,7 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap"></noscript>
 
   <!-- Main stylesheet -->
-  <link rel="stylesheet" href="/assets/css/main.css?v=4">
+  <link rel="stylesheet" href="/assets/css/main.css?v=5">
 
   <!-- Favicon placeholder — replace with brand icon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 44'%3E%3Ccircle cx='26' cy='22' r='12' fill='none' stroke='%235E2A2E' stroke-width='2'/%3E%3Ccircle cx='38' cy='22' r='12' fill='none' stroke='%23C2A35A' stroke-width='2'/%3E%3C/svg%3E">
@@ -144,13 +144,17 @@
     <span class="eyebrow" style="margin-bottom: 26px;">ĐÃ NHẬN ĐĂNG KÝ</span>
     <h1>Cảm ơn bạn.</h1>
     <p class="hero-standfirst">
-      Heritage Union đã nhận được đăng ký của bạn. Chúng tôi sẽ gửi thêm một tin nhắn ngắn để bạn xác nhận thông tin liên lạc và tự hoàn thiện hồ sơ của mình. Đăng ký hoàn toàn miễn phí và tự nguyện, và bạn có thể rút lại bất cứ lúc nào.
+      Heritage Union đã nhận được đăng ký của bạn. Bước tiếp theo là bạn tự hoàn thiện hồ sơ của mình, bằng một đường link riêng chỉ dành cho bạn. Chúng tôi cũng sẽ nhắn cho bạn qua Zalo để xác nhận thông tin liên lạc và gửi lại đường link này. Đăng ký hoàn toàn miễn phí và tự nguyện, và bạn có thể rút lại bất cứ lúc nào.
     </p>
+    <div id="profile-cta" class="ty-profile-cta" hidden>
+      <a class="btn btn--primary btn--lg" id="profile-cta-link" href="/vi/ho-so">Hoàn thiện hồ sơ ngay (khoảng 10 phút)</a>
+      <p class="form-note">Biểu mẫu có cả tiếng Việt và tiếng Anh, bạn có thể chuyển đổi bất cứ lúc nào. Bạn cũng có thể làm việc này sau, bằng đường link mà Heritage Union sẽ gửi cho bạn. Đường link chỉ dành riêng cho bạn, vui lòng không chia sẻ cho người khác.</p>
+    </div>
     <p class="hero-standfirst">
       Nếu muốn rút đăng ký, bạn có thể làm việc này bất cứ lúc nào tại <a href="/vi/withdraw">trang rút đăng ký</a>. Để hiểu rõ quyền của bạn khi đăng ký, mời bạn xem trang <a href="/vi/your-rights">an toàn và quyền của bạn</a>.
     </p>
     <div class="hero-ctas" style="justify-content: center;">
-      <a class="btn btn--primary btn--lg" href="/vi/">Về trang chủ</a>
+      <a class="btn btn--secondary btn--lg" href="/vi/">Về trang chủ</a>
     </div>
   </div>
 </section>
@@ -229,6 +233,7 @@
      SCRIPTS
      ============================================================ -->
 <script src="/assets/js/main.js?v=2" defer></script>
+<script src="/assets/js/thank-you.js?v=1" defer></script>
 
 </body>
 </html>

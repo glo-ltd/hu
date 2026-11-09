@@ -2,7 +2,7 @@
   "name": "heritage-union-website",
   "private": true,
   "version": "1.0.0",
-  "description": "Heritage Union static site — Netlify Functions dependencies for the fee structure request form.",
+  "description": "Heritage Union static site \u2014 Netlify Functions dependencies for the fee structure request form.",
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",
     "resend": "^4.0.1"
@@ -11,6 +11,8 @@
     "playwright": "1.63.0"
   },
   "scripts": {
-    "build:fee-pdf": "node scripts/build-fee-pdf.js"
+    "build:fee-pdf": "node scripts/build-fee-pdf.js",
+    "test": "node --test tests/unit/*.test.js",
+    "test:e2e": "node tests/e2e/journey.js"
   }
 }

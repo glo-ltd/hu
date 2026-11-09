@@ -34,8 +34,38 @@ here is committed to the repo — these are secrets.
 The `candidates` and `candidate_waitlist` tables have Row Level Security
 enabled with no policies for the public `anon` key, so even if that key
 leaked it couldn't read or write candidate data. Only the service_role key,
-used exclusively inside the two Netlify Functions above, can touch this
-table.
+used exclusively inside Netlify Functions, can touch these tables. Candidate
+photos are in the private `candidate-photos` bucket with no storage
+policies; every upload and view uses a short-lived signed URL made by a
+function.
+
+### 3a. Candidate profiles migration
+
+Production already has this (applied 2026-11-09); nothing to run there.
+For a **new** project, `supabase/schema.sql` now includes it at the bottom,
+so running that file once is enough. For a project created before
+November 2026, paste `supabase/migrations/2026-11-candidate-profiles.sql`
+into the SQL editor and run it. It is safe to run more than once. It adds
+the `profile_in_progress` status, the private-link and Zalo columns on
+`candidates`, the `candidate_profiles` table (RLS on, no policies) and the
+private `candidate-photos` Storage bucket.
+
+### 3b. Team tool (/admin/) sign-in
+
+The team tool signs in with Supabase Auth email links. Two more variables:
+
+| Variable | Value |
+| --- | --- |
+| `SUPABASE_ANON_KEY` | The **publishable** (anon) key from Project Settings → API. It is public by design: it only starts the sign-in. Every table has RLS on with no policies, so this key alone can read nothing. |
+| `ADMIN_EMAILS` | Comma-separated emails allowed to use `/admin/`, e.g. `james@heritage-union.com,huyen@heritage-union.com`. Case doesn't matter. Anyone not on this list is refused even if they can sign in. Everyone on this list also gets the team emails about candidates (new registration, profile submitted, withdrawal); if it is empty, they go to james@ only. Fee-structure requests still go to james@ only. |
+
+Supabase Auth settings (Authentication in the Supabase dashboard). James
+does these by hand:
+
+1. **Sign In / Providers → Email**: keep Email enabled; **turn off "Allow new users to sign up"**, so nobody can create an account.
+2. **URL Configuration**: Site URL `https://heritage-union.com`. Redirect URLs: `https://heritage-union.com/admin/` and `https://*--hu.netlify.app/admin/` (deploy previews).
+3. **SMTP Settings**: turn on custom SMTP and use Resend (host `smtp.resend.com`, port `465`, user `resend`, password = a Resend API key, sender `team@heritage-union.com`). Without this, Supabase's built-in email is heavily rate-limited.
+4. **Users → Invite user**: invite James and Huyen by email. They follow the invite once; after that they sign in from `/admin/` with "Email me a sign-in link".
 
 ## 4. Cloudflare Turnstile (spam protection on the registration form)
 
@@ -54,6 +84,8 @@ RESEND_API_KEY=            (existing)
 CANDIDATE_SIGNUPS_OPEN=false
 SUPABASE_URL=
 SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_ANON_KEY=         (new: publishable key, for /admin/ sign-in)
+ADMIN_EMAILS=              (new: e.g. james@heritage-union.com,huyen@heritage-union.com)
 TURNSTILE_SITE_KEY=
 TURNSTILE_SECRET=
 ```

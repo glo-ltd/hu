@@ -1,10 +1,10 @@
 const crypto = require('crypto');
 const { Resend } = require('resend');
 const { createClient } = require('@supabase/supabase-js');
-const { normaliseZalo, isValidZalo, signupsOpen, pickLang, msg } = require('../shared/candidate-common');
+const { normaliseZalo, isValidZalo, signupsOpen, pickLang, msg, teamNotifyEmails } = require('../shared/candidate-common');
+const { newProfileToken, profileLink } = require('../shared/profile-common');
 
 const FROM_EMAIL = 'Heritage Union <team@heritage-union.com>';
-const INTERNAL_NOTIFY_EMAIL = 'james@heritage-union.com';
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const CONSENT_TEXT_VERSION = 'vi-2026-10-v2';
 const MAX_NAME_LENGTH = 100;
@@ -255,12 +255,28 @@ async function handleRegistration(supabase, data, ipHash, event, lang) {
 
   var candidateId = insertResult.data.id;
 
+  // Her private profile link: /my-profile#t=... if she chose English as her
+  // language, otherwise /vi/ho-so#t=... Only the sha256 is stored.
+  // Saved in a separate update so that, if this ever fails, the registration
+  // itself is still kept and she simply gets her link later on Zalo.
+  var profileToken = null;
+  var t = newProfileToken();
+  var tokenResult = await supabase
+    .from('candidates')
+    .update({ profile_token_hash: t.hash, profile_token_expires_at: t.expiresAt })
+    .eq('id', candidateId);
+  if (tokenResult.error) {
+    console.error('Saving profile token failed:', tokenResult.error);
+  } else {
+    profileToken = t.token;
+  }
+
   if (process.env.RESEND_API_KEY) {
     var resend = new Resend(process.env.RESEND_API_KEY);
 
     if (email) {
       try {
-        var autoReply = buildAutoReply(preferredLanguage, fullName);
+        var autoReply = buildAutoReply(preferredLanguage, fullName, profileToken ? profileLink(profileToken, preferredLanguage) : null);
         var visitorResult = await resend.emails.send({
           from: FROM_EMAIL,
           to: email,
@@ -269,6 +285,12 @@ async function handleRegistration(supabase, data, ipHash, event, lang) {
         });
         if (visitorResult.error) {
           console.error('Resend send to candidate failed:', visitorResult.error);
+        } else if (profileToken) {
+          var sentResult = await supabase
+            .from('candidates')
+            .update({ profile_link_sent_at: new Date().toISOString() })
+            .eq('id', candidateId);
+          if (sentResult.error) console.error('Saving profile_link_sent_at failed:', sentResult.error);
         }
       } catch (err) {
         console.error('Resend send to candidate threw:', err);
@@ -281,9 +303,10 @@ async function handleRegistration(supabase, data, ipHash, event, lang) {
       // notification emails.
       var internalResult = await resend.emails.send({
         from: FROM_EMAIL,
-        to: INTERNAL_NOTIFY_EMAIL,
+        to: teamNotifyEmails(),
         subject: 'New candidate registration',
-        html: '<p>New candidate registration (#' + escapeHtml(candidateId) + ') — view in Supabase.</p>',
+        html: '<p>New candidate registration (#' + escapeHtml(candidateId) + ').</p>' +
+          '<p><a href="https://heritage-union.com/admin/#' + escapeHtml(candidateId) + '">Open in the team tool</a></p>',
       });
       if (internalResult.error) {
         console.error('Resend send to james@ failed:', internalResult.error);
@@ -295,17 +318,24 @@ async function handleRegistration(supabase, data, ipHash, event, lang) {
     console.error('RESEND_API_KEY is not configured — skipping confirmation/notification emails.');
   }
 
-  return jsonResponse(200, { ok: true, mode: 'registered' });
+  // The token goes back only to the browser that just registered, which puts
+  // it in the thank-you page's URL fragment (never sent to any server).
+  return jsonResponse(200, { ok: true, mode: 'registered', profileToken: profileToken, profileLang: preferredLanguage === 'en' ? 'en' : 'vi' });
 }
 
-function buildAutoReply(language, fullName) {
+function buildAutoReply(language, fullName, link) {
   if (language === 'vi') {
     return {
       subject: 'Heritage Union — Chúng tôi đã nhận được đăng ký của bạn',
       html:
         '<p>Chào ' + escapeHtml(fullName) + ',</p>' +
         '<p>Cảm ơn bạn đã đăng ký với Heritage Union. Chúng tôi đã nhận được thông tin của bạn.</p>' +
-        '<p>Bước tiếp theo: chúng tôi sẽ gửi thêm một tin nhắn ngắn để bạn xác nhận thông tin liên lạc và tự hoàn thiện hồ sơ của mình. Đăng ký hoàn toàn miễn phí và tự nguyện — bạn có thể rút lại bất cứ lúc nào.</p>' +
+        (link
+          ? '<p>Bước tiếp theo: bạn có thể tự hoàn thiện hồ sơ của mình (khoảng 10 phút) bằng đường link riêng này:<br>' +
+            '<a href="' + escapeHtml(link) + '">Hoàn thiện hồ sơ của tôi</a></p>' +
+            '<p>Đường link này chỉ dành riêng cho bạn và dùng được trong 60 ngày. Bạn vui lòng không chia sẻ nó cho người khác. Chúng tôi cũng sẽ nhắn cho bạn qua Zalo để xác nhận thông tin liên lạc.</p>'
+          : '<p>Bước tiếp theo: chúng tôi sẽ gửi thêm một tin nhắn ngắn để bạn xác nhận thông tin liên lạc và tự hoàn thiện hồ sơ của mình.</p>') +
+        '<p>Đăng ký hoàn toàn miễn phí và tự nguyện — bạn có thể rút lại bất cứ lúc nào.</p>' +
         '<p>Nếu muốn rút đăng ký, bạn chỉ cần vào trang <a href="https://heritage-union.com/vi/withdraw">heritage-union.com/vi/withdraw</a>.</p>' +
         '<p>Trân trọng,<br>Đội ngũ Heritage Union</p>',
     };
@@ -315,7 +345,12 @@ function buildAutoReply(language, fullName) {
     html:
       '<p>Dear ' + escapeHtml(fullName) + ',</p>' +
       '<p>Thank you for registering with Heritage Union. We have received your details.</p>' +
-      '<p>What happens next: we will send a short follow-up so you can verify your contact information and complete your own profile. Registration is entirely free and voluntary — you can withdraw at any time.</p>' +
+      (link
+        ? '<p>What happens next: you can complete your own profile (about 10 minutes) with this private link:<br>' +
+          '<a href="' + escapeHtml(link) + '">Complete my profile</a></p>' +
+          '<p>This link is private to you and works for 60 days. Please do not share it with anyone. We will also message you on Zalo to confirm your contact details.</p>'
+        : '<p>What happens next: we will send a short follow-up so you can verify your contact information and complete your own profile.</p>') +
+      '<p>Registration is entirely free and voluntary — you can withdraw at any time.</p>' +
       '<p>If you would like to withdraw your registration, please visit <a href="https://heritage-union.com/withdraw">heritage-union.com/withdraw</a>.</p>' +
       '<p>Warm regards,<br>The Heritage Union Team</p>',
   };
