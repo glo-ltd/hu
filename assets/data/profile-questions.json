@@ -1,0 +1,900 @@
+{
+  "version": "2026-11-v1",
+  "steps": [
+    {
+      "step": 1,
+      "title": {
+        "vi": "Về bạn",
+        "en": "About you"
+      }
+    },
+    {
+      "step": 2,
+      "title": {
+        "vi": "Gia đình & giá trị",
+        "en": "Family & values"
+      }
+    },
+    {
+      "step": 3,
+      "title": {
+        "vi": "Tương lai",
+        "en": "The future"
+      }
+    },
+    {
+      "step": 4,
+      "title": {
+        "vi": "Bằng lời của bạn",
+        "en": "In your own words"
+      }
+    },
+    {
+      "step": 5,
+      "title": {
+        "vi": "Ảnh (không bắt buộc)",
+        "en": "Photos (optional)"
+      }
+    },
+    {
+      "step": 6,
+      "title": {
+        "vi": "Xem lại & đồng ý",
+        "en": "Review & consent"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "display_name",
+      "step": 1,
+      "type": "text",
+      "required": true,
+      "max": 40,
+      "storage": "column",
+      "label": {
+        "vi": "Tên bạn muốn hiển thị",
+        "en": "Name she would like shown"
+      },
+      "help": {
+        "vi": "Chỉ tên gọi, không cần họ. Ví dụ: Lan.",
+        "en": "First name only, no surname."
+      }
+    },
+    {
+      "id": "province",
+      "step": 1,
+      "type": "single",
+      "widget": "select",
+      "required": true,
+      "label": {
+        "vi": "Bạn đang sống ở thành phố / tỉnh nào?",
+        "en": "City or province she lives in"
+      },
+      "help": {
+        "vi": "Theo địa giới hành chính mới (từ 01/07/2025).",
+        "en": "Provinces as reorganised on 1 July 2025."
+      },
+      "options": [
+        {
+          "value": "An Giang",
+          "label": {
+            "vi": "An Giang",
+            "en": "An Giang"
+          }
+        },
+        {
+          "value": "Bắc Ninh",
+          "label": {
+            "vi": "Bắc Ninh",
+            "en": "Bắc Ninh"
+          }
+        },
+        {
+          "value": "Cà Mau",
+          "label": {
+            "vi": "Cà Mau",
+            "en": "Cà Mau"
+          }
+        },
+        {
+          "value": "Cao Bằng",
+          "label": {
+            "vi": "Cao Bằng",
+            "en": "Cao Bằng"
+          }
+        },
+        {
+          "value": "Cần Thơ",
+          "label": {
+            "vi": "Cần Thơ",
+            "en": "Cần Thơ"
+          }
+        },
+        {
+          "value": "Đà Nẵng",
+          "label": {
+            "vi": "Đà Nẵng",
+            "en": "Đà Nẵng"
+          }
+        },
+        {
+          "value": "Đắk Lắk",
+          "label": {
+            "vi": "Đắk Lắk",
+            "en": "Đắk Lắk"
+          }
+        },
+        {
+          "value": "Điện Biên",
+          "label": {
+            "vi": "Điện Biên",
+            "en": "Điện Biên"
+          }
+        },
+        {
+          "value": "Đồng Nai",
+          "label": {
+            "vi": "Đồng Nai",
+            "en": "Đồng Nai"
+          }
+        },
+        {
+          "value": "Đồng Tháp",
+          "label": {
+            "vi": "Đồng Tháp",
+            "en": "Đồng Tháp"
+          }
+        },
+        {
+          "value": "Gia Lai",
+          "label": {
+            "vi": "Gia Lai",
+            "en": "Gia Lai"
+          }
+        },
+        {
+          "value": "Hà Nội",
+          "label": {
+            "vi": "Hà Nội",
+            "en": "Hà Nội"
+          }
+        },
+        {
+          "value": "Hà Tĩnh",
+          "label": {
+            "vi": "Hà Tĩnh",
+            "en": "Hà Tĩnh"
+          }
+        },
+        {
+          "value": "Hải Phòng",
+          "label": {
+            "vi": "Hải Phòng",
+            "en": "Hải Phòng"
+          }
+        },
+        {
+          "value": "TP. Hồ Chí Minh",
+          "label": {
+            "vi": "TP. Hồ Chí Minh",
+            "en": "TP. Hồ Chí Minh"
+          }
+        },
+        {
+          "value": "Huế",
+          "label": {
+            "vi": "Huế",
+            "en": "Huế"
+          }
+        },
+        {
+          "value": "Hưng Yên",
+          "label": {
+            "vi": "Hưng Yên",
+            "en": "Hưng Yên"
+          }
+        },
+        {
+          "value": "Khánh Hòa",
+          "label": {
+            "vi": "Khánh Hòa",
+            "en": "Khánh Hòa"
+          }
+        },
+        {
+          "value": "Lai Châu",
+          "label": {
+            "vi": "Lai Châu",
+            "en": "Lai Châu"
+          }
+        },
+        {
+          "value": "Lạng Sơn",
+          "label": {
+            "vi": "Lạng Sơn",
+            "en": "Lạng Sơn"
+          }
+        },
+        {
+          "value": "Lào Cai",
+          "label": {
+            "vi": "Lào Cai",
+            "en": "Lào Cai"
+          }
+        },
+        {
+          "value": "Lâm Đồng",
+          "label": {
+            "vi": "Lâm Đồng",
+            "en": "Lâm Đồng"
+          }
+        },
+        {
+          "value": "Nghệ An",
+          "label": {
+            "vi": "Nghệ An",
+            "en": "Nghệ An"
+          }
+        },
+        {
+          "value": "Ninh Bình",
+          "label": {
+            "vi": "Ninh Bình",
+            "en": "Ninh Bình"
+          }
+        },
+        {
+          "value": "Phú Thọ",
+          "label": {
+            "vi": "Phú Thọ",
+            "en": "Phú Thọ"
+          }
+        },
+        {
+          "value": "Quảng Ngãi",
+          "label": {
+            "vi": "Quảng Ngãi",
+            "en": "Quảng Ngãi"
+          }
+        },
+        {
+          "value": "Quảng Ninh",
+          "label": {
+            "vi": "Quảng Ninh",
+            "en": "Quảng Ninh"
+          }
+        },
+        {
+          "value": "Quảng Trị",
+          "label": {
+            "vi": "Quảng Trị",
+            "en": "Quảng Trị"
+          }
+        },
+        {
+          "value": "Sơn La",
+          "label": {
+            "vi": "Sơn La",
+            "en": "Sơn La"
+          }
+        },
+        {
+          "value": "Tây Ninh",
+          "label": {
+            "vi": "Tây Ninh",
+            "en": "Tây Ninh"
+          }
+        },
+        {
+          "value": "Thái Nguyên",
+          "label": {
+            "vi": "Thái Nguyên",
+            "en": "Thái Nguyên"
+          }
+        },
+        {
+          "value": "Thanh Hóa",
+          "label": {
+            "vi": "Thanh Hóa",
+            "en": "Thanh Hóa"
+          }
+        },
+        {
+          "value": "Tuyên Quang",
+          "label": {
+            "vi": "Tuyên Quang",
+            "en": "Tuyên Quang"
+          }
+        },
+        {
+          "value": "Vĩnh Long",
+          "label": {
+            "vi": "Vĩnh Long",
+            "en": "Vĩnh Long"
+          }
+        },
+        {
+          "value": "Khác",
+          "label": {
+            "vi": "Khác",
+            "en": "Other"
+          }
+        }
+      ]
+    },
+    {
+      "id": "occupation",
+      "step": 1,
+      "type": "text",
+      "required": true,
+      "max": 100,
+      "label": {
+        "vi": "Công việc hiện tại của bạn",
+        "en": "Occupation"
+      },
+      "help": {
+        "vi": "Ví dụ: giáo viên, kế toán, tự kinh doanh.",
+        "en": ""
+      }
+    },
+    {
+      "id": "education",
+      "step": 1,
+      "type": "single",
+      "required": true,
+      "label": {
+        "vi": "Trình độ học vấn",
+        "en": "Education"
+      },
+      "options": [
+        {
+          "value": "secondary",
+          "label": {
+            "vi": "Trung học",
+            "en": "Secondary school"
+          }
+        },
+        {
+          "value": "vocational",
+          "label": {
+            "vi": "Trung cấp nghề",
+            "en": "Vocational training"
+          }
+        },
+        {
+          "value": "college",
+          "label": {
+            "vi": "Cao đẳng",
+            "en": "College"
+          }
+        },
+        {
+          "value": "university",
+          "label": {
+            "vi": "Đại học",
+            "en": "University"
+          }
+        },
+        {
+          "value": "postgraduate",
+          "label": {
+            "vi": "Sau đại học",
+            "en": "Postgraduate"
+          }
+        }
+      ]
+    },
+    {
+      "id": "english_level",
+      "step": 1,
+      "type": "single",
+      "required": true,
+      "label": {
+        "vi": "Trình độ tiếng Anh của bạn",
+        "en": "English level"
+      },
+      "help": {
+        "vi": "Không sao nếu bạn chưa biết tiếng Anh. Huyền luôn có thể hỗ trợ dịch.",
+        "en": "It is fine not to speak English; Huyen can translate."
+      },
+      "options": [
+        {
+          "value": "none",
+          "label": {
+            "vi": "Chưa biết",
+            "en": "None"
+          }
+        },
+        {
+          "value": "basic",
+          "label": {
+            "vi": "Cơ bản",
+            "en": "Basic"
+          }
+        },
+        {
+          "value": "conversational",
+          "label": {
+            "vi": "Giao tiếp được",
+            "en": "Conversational"
+          }
+        },
+        {
+          "value": "fluent",
+          "label": {
+            "vi": "Thành thạo",
+            "en": "Fluent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "marital_history",
+      "step": 1,
+      "type": "single",
+      "required": true,
+      "label": {
+        "vi": "Tình trạng hôn nhân trước đây",
+        "en": "Marital history"
+      },
+      "options": [
+        {
+          "value": "never_married",
+          "label": {
+            "vi": "Chưa kết hôn",
+            "en": "Never married"
+          }
+        },
+        {
+          "value": "divorced",
+          "label": {
+            "vi": "Đã ly hôn",
+            "en": "Divorced"
+          }
+        },
+        {
+          "value": "widowed",
+          "label": {
+            "vi": "Góa chồng",
+            "en": "Widowed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "children",
+      "step": 1,
+      "type": "number",
+      "required": true,
+      "min": 0,
+      "max": 6,
+      "label": {
+        "vi": "Bạn có bao nhiêu con?",
+        "en": "Number of children"
+      },
+      "help": {
+        "vi": "Nhập 0 nếu bạn chưa có con.",
+        "en": ""
+      }
+    },
+    {
+      "id": "children_live_with",
+      "step": 1,
+      "type": "single",
+      "required": true,
+      "showIf": {
+        "id": "children",
+        "min": 1
+      },
+      "label": {
+        "vi": "Các con có đang sống cùng bạn không?",
+        "en": "Do her children live with her?"
+      },
+      "options": [
+        {
+          "value": "yes",
+          "label": {
+            "vi": "Có",
+            "en": "Yes"
+          }
+        },
+        {
+          "value": "some",
+          "label": {
+            "vi": "Một số con sống cùng tôi",
+            "en": "Some of them"
+          }
+        },
+        {
+          "value": "no",
+          "label": {
+            "vi": "Không",
+            "en": "No"
+          }
+        }
+      ]
+    },
+    {
+      "id": "wants_children",
+      "step": 2,
+      "type": "single",
+      "required": true,
+      "label": {
+        "vi": "Bạn có muốn có (thêm) con không?",
+        "en": "Would she like (more) children?"
+      },
+      "options": [
+        {
+          "value": "yes",
+          "label": {
+            "vi": "Có",
+            "en": "Yes"
+          }
+        },
+        {
+          "value": "no",
+          "label": {
+            "vi": "Không",
+            "en": "No"
+          }
+        },
+        {
+          "value": "open",
+          "label": {
+            "vi": "Tùy duyên, tôi cởi mở",
+            "en": "Open to it"
+          }
+        },
+        {
+          "value": "unsure",
+          "label": {
+            "vi": "Tôi chưa chắc",
+            "en": "Unsure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "religion",
+      "step": 2,
+      "type": "single",
+      "required": false,
+      "label": {
+        "vi": "Tôn giáo hoặc tín ngưỡng",
+        "en": "Religion or belief"
+      },
+      "help": {
+        "vi": "Không bắt buộc. Bạn có thể bỏ qua câu này hoặc chọn “Không muốn trả lời”.",
+        "en": "Optional. She may skip this or choose “prefer not to say”."
+      },
+      "options": [
+        {
+          "value": "none",
+          "label": {
+            "vi": "Không theo tôn giáo nào",
+            "en": "No religion"
+          }
+        },
+        {
+          "value": "buddhist",
+          "label": {
+            "vi": "Phật giáo",
+            "en": "Buddhist"
+          }
+        },
+        {
+          "value": "catholic",
+          "label": {
+            "vi": "Công giáo",
+            "en": "Catholic"
+          }
+        },
+        {
+          "value": "protestant",
+          "label": {
+            "vi": "Tin Lành",
+            "en": "Protestant"
+          }
+        },
+        {
+          "value": "caodai_hoahao",
+          "label": {
+            "vi": "Cao Đài / Hòa Hảo",
+            "en": "Cao Đài / Hòa Hảo"
+          }
+        },
+        {
+          "value": "ancestral",
+          "label": {
+            "vi": "Thờ cúng tổ tiên",
+            "en": "Ancestor veneration"
+          }
+        },
+        {
+          "value": "other",
+          "label": {
+            "vi": "Khác",
+            "en": "Other"
+          }
+        },
+        {
+          "value": "prefer_not",
+          "label": {
+            "vi": "Không muốn trả lời",
+            "en": "Prefer not to say"
+          }
+        }
+      ]
+    },
+    {
+      "id": "smoking",
+      "step": 2,
+      "type": "single",
+      "required": true,
+      "label": {
+        "vi": "Bạn có hút thuốc không?",
+        "en": "Smoking"
+      },
+      "options": [
+        {
+          "value": "never",
+          "label": {
+            "vi": "Không bao giờ",
+            "en": "Never"
+          }
+        },
+        {
+          "value": "sometimes",
+          "label": {
+            "vi": "Thỉnh thoảng",
+            "en": "Sometimes"
+          }
+        },
+        {
+          "value": "regularly",
+          "label": {
+            "vi": "Thường xuyên",
+            "en": "Regularly"
+          }
+        }
+      ]
+    },
+    {
+      "id": "drinking",
+      "step": 2,
+      "type": "single",
+      "required": true,
+      "label": {
+        "vi": "Bạn có uống rượu bia không?",
+        "en": "Drinking"
+      },
+      "options": [
+        {
+          "value": "never",
+          "label": {
+            "vi": "Không bao giờ",
+            "en": "Never"
+          }
+        },
+        {
+          "value": "socially",
+          "label": {
+            "vi": "Thỉnh thoảng, khi gặp gỡ bạn bè",
+            "en": "Socially"
+          }
+        },
+        {
+          "value": "regularly",
+          "label": {
+            "vi": "Thường xuyên",
+            "en": "Regularly"
+          }
+        }
+      ]
+    },
+    {
+      "id": "values",
+      "step": 2,
+      "type": "multi",
+      "required": true,
+      "max": 3,
+      "label": {
+        "vi": "Điều gì quan trọng nhất với bạn?",
+        "en": "Values that matter most to her"
+      },
+      "help": {
+        "vi": "Chọn tối đa 3 điều.",
+        "en": "Up to 3."
+      },
+      "options": [
+        {
+          "value": "family",
+          "label": {
+            "vi": "Gia đình",
+            "en": "Family"
+          }
+        },
+        {
+          "value": "honesty",
+          "label": {
+            "vi": "Sự trung thực",
+            "en": "Honesty"
+          }
+        },
+        {
+          "value": "faith",
+          "label": {
+            "vi": "Đức tin",
+            "en": "Faith"
+          }
+        },
+        {
+          "value": "kindness",
+          "label": {
+            "vi": "Lòng tốt",
+            "en": "Kindness"
+          }
+        },
+        {
+          "value": "ambition",
+          "label": {
+            "vi": "Hoài bão",
+            "en": "Ambition"
+          }
+        },
+        {
+          "value": "humour",
+          "label": {
+            "vi": "Sự hài hước",
+            "en": "Humour"
+          }
+        },
+        {
+          "value": "loyalty",
+          "label": {
+            "vi": "Sự chung thủy",
+            "en": "Loyalty"
+          }
+        },
+        {
+          "value": "independence",
+          "label": {
+            "vi": "Sự độc lập",
+            "en": "Independence"
+          }
+        },
+        {
+          "value": "tradition",
+          "label": {
+            "vi": "Truyền thống",
+            "en": "Tradition"
+          }
+        },
+        {
+          "value": "adventure",
+          "label": {
+            "vi": "Khám phá, trải nghiệm",
+            "en": "Adventure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "open_to_us",
+      "step": 3,
+      "type": "single",
+      "required": true,
+      "label": {
+        "vi": "Bạn có sẵn sàng sống ở Hoa Kỳ không?",
+        "en": "Open to living in the United States?"
+      },
+      "options": [
+        {
+          "value": "yes",
+          "label": {
+            "vi": "Có",
+            "en": "Yes"
+          }
+        },
+        {
+          "value": "maybe",
+          "label": {
+            "vi": "Có thể, cần trao đổi thêm",
+            "en": "Maybe, to discuss"
+          }
+        },
+        {
+          "value": "prefer_vietnam",
+          "label": {
+            "vi": "Tôi muốn ở lại Việt Nam",
+            "en": "Prefers to stay in Vietnam"
+          }
+        }
+      ]
+    },
+    {
+      "id": "partner_age_range",
+      "step": 3,
+      "type": "range",
+      "required": true,
+      "min": 18,
+      "max": 80,
+      "label": {
+        "vi": "Độ tuổi của người bạn đời mà bạn sẵn sàng tìm hiểu",
+        "en": "Partner age range she is open to"
+      },
+      "help": {
+        "vi": "Kéo hoặc nhập số để chọn từ bao nhiêu đến bao nhiêu tuổi.",
+        "en": ""
+      }
+    },
+    {
+      "id": "partner_matters",
+      "step": 3,
+      "type": "textarea",
+      "required": true,
+      "max": 600,
+      "label": {
+        "vi": "Điều gì quan trọng nhất với bạn ở một người bạn đời?",
+        "en": "What matters most to her in a partner"
+      },
+      "help": {
+        "vi": "Hãy viết bằng lời của bạn, tiếng Việt là tốt nhất.",
+        "en": ""
+      }
+    },
+    {
+      "id": "about",
+      "step": 4,
+      "type": "textarea",
+      "required": true,
+      "max": 1500,
+      "prefill": "about_text",
+      "label": {
+        "vi": "Giới thiệu về bản thân bạn",
+        "en": "About her"
+      },
+      "help": {
+        "vi": "Chúng tôi đã điền sẵn những gì bạn viết khi đăng ký. Bạn có thể sửa hoặc viết thêm.",
+        "en": "Prefilled from what she wrote at registration; she can edit it."
+      }
+    },
+    {
+      "id": "weekend",
+      "step": 4,
+      "type": "textarea",
+      "required": false,
+      "max": 500,
+      "label": {
+        "vi": "Một ngày cuối tuần bình thường của bạn",
+        "en": "A usual weekend"
+      },
+      "help": {
+        "vi": "Không bắt buộc.",
+        "en": "Optional."
+      }
+    },
+    {
+      "id": "message",
+      "step": 4,
+      "type": "textarea",
+      "required": false,
+      "max": 500,
+      "label": {
+        "vi": "Lời nhắn gửi người bạn đời tương lai",
+        "en": "A message to a future partner"
+      },
+      "help": {
+        "vi": "Không bắt buộc.",
+        "en": "Optional."
+      }
+    }
+  ],
+  "photos": {
+    "step": 5,
+    "max": 3,
+    "maxEdge": 1600,
+    "quality": 0.82
+  }
+}

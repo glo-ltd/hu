@@ -99,6 +99,48 @@ var MESSAGES = {
     en: 'Please enter the Zalo number or email you registered with.',
     vi: 'Vui lòng nhập số Zalo hoặc email bạn đã đăng ký.',
   },
+
+  // ---- Private profile link (/vi/ho-so). Vietnamese first: she sees these.
+  linkInvalid: {
+    en: 'This link can no longer be used. To get a new private link, reply to Heritage Union on Zalo or use our contact page.',
+    vi: 'Đường link này không còn dùng được nữa. Để nhận đường link riêng mới, bạn chỉ cần nhắn lại cho Heritage Union qua Zalo, hoặc liên hệ với chúng tôi qua trang Liên hệ.',
+  },
+  linkExpired: {
+    en: 'This link has expired (links last 60 days). To get a new one, reply to Heritage Union on Zalo or use our contact page.',
+    vi: 'Đường link này đã hết hạn (mỗi đường link dùng được trong 60 ngày). Để nhận đường link mới, bạn chỉ cần nhắn lại cho Heritage Union qua Zalo, hoặc liên hệ với chúng tôi qua trang Liên hệ.',
+  },
+  profileRateLimited: {
+    en: 'Too many requests from this link in the last hour. Please wait a little and try again.',
+    vi: 'Có quá nhiều lượt gửi từ đường link này trong một giờ qua. Bạn vui lòng đợi một lát rồi thử lại nhé.',
+  },
+  answerInvalid: {
+    en: 'One of your answers is not valid. Please check it and try again.',
+    vi: 'Có một câu trả lời chưa hợp lệ. Bạn vui lòng kiểm tra lại nhé.',
+  },
+  answerTooLong: {
+    en: 'One of your answers is too long. Please shorten it.',
+    vi: 'Có một câu trả lời quá dài. Bạn vui lòng rút gọn lại nhé.',
+  },
+  answerRequired: {
+    en: 'Please answer every required question before sending.',
+    vi: 'Bạn vui lòng trả lời đủ các câu bắt buộc trước khi gửi nhé.',
+  },
+  confirmTrue: {
+    en: 'Please confirm that the information is true and written by you.',
+    vi: 'Bạn vui lòng đánh dấu ô xác nhận thông tin là đúng sự thật và do chính bạn viết.',
+  },
+  tooManyPhotos: {
+    en: 'You can add up to 3 photos.',
+    vi: 'Bạn có thể thêm tối đa 3 ảnh.',
+  },
+  photoInvalid: {
+    en: 'This photo could not be saved. Please try again.',
+    vi: 'Chưa lưu được ảnh này. Bạn vui lòng thử lại nhé.',
+  },
+  profileSaveFailed: {
+    en: 'We could not save just now. Your answers are still here; please try again.',
+    vi: 'Chưa lưu được. Câu trả lời của bạn vẫn còn nguyên, bạn vui lòng thử lại nhé.',
+  },
 };
 
 function pickLang(data) {

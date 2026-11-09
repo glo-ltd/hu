@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hồ sơ của bạn — Heritage Union</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/assets/css/main.css?v=5">
+  <link rel="stylesheet" href="/assets/css/profile.css?v=1">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 44'%3E%3Ccircle cx='26' cy='22' r='12' fill='none' stroke='%235E2A2E' stroke-width='2'/%3E%3Ccircle cx='38' cy='22' r='12' fill='none' stroke='%23C2A35A' stroke-width='2'/%3E%3C/svg%3E">
+</head>
+<body class="pf-body">
+
+<a class="skip-link" href="#main-content">Chuyển đến nội dung chính</a>
+
+<header class="pf-header">
+  <a class="pf-logo" href="/vi/" aria-label="Heritage Union — về trang chủ">
+    <svg width="40" height="28" viewBox="0 0 52 36" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="18" cy="18" r="12.5" stroke="#5E2A2E" stroke-width="1.8" fill="none"/>
+      <circle cx="34" cy="18" r="12.5" stroke="#C2A35A" stroke-width="1.8" fill="none"/>
+    </svg>
+    <span>HERITAGE UNION</span>
+  </a>
+  <span class="pf-header-title">Hồ sơ của bạn</span>
+</header>
+
+<main id="main-content" class="pf-main">
+
+  <!-- Loading -->
+  <section id="pf-loading" class="pf-panel pf-center" aria-live="polite">
+    <p>Đang mở hồ sơ của bạn…</p>
+  </section>
+
+  <!-- No link / expired / unknown: a kind message, never a form -->
+  <section id="pf-nolink" class="pf-panel" hidden aria-labelledby="pf-nolink-title">
+    <span class="eyebrow">Hồ sơ của bạn</span>
+    <h1 id="pf-nolink-title">Chưa mở được hồ sơ</h1>
+    <p id="pf-nolink-message">Trang này chỉ mở được bằng đường link riêng mà Heritage Union gửi cho bạn.</p>
+    <p>Để nhận đường link mới, bạn chỉ cần nhắn lại cho Heritage Union qua Zalo (trả lời tin nhắn trước đó của chúng tôi), hoặc liên hệ với chúng tôi qua <a href="/vi/contact">trang Liên hệ</a>. Chúng tôi sẽ gửi lại cho bạn ngay.</p>
+    <p class="form-note">Nếu bạn muốn rút đăng ký, bạn có thể làm việc này bất cứ lúc nào tại <a href="/vi/withdraw">trang rút đăng ký</a>.</p>
+  </section>
+
+  <!-- The questionnaire -->
+  <section id="pf-app" class="pf-app" hidden>
+    <div class="pf-progress" aria-hidden="false">
+      <div class="pf-progress-top">
+        <span id="pf-step-count" class="pf-step-count">Bước 1/6</span>
+        <span id="pf-save-status" class="pf-save-status" role="status" aria-live="polite"></span>
+      </div>
+      <div class="pf-progress-track"><div id="pf-progress-bar" class="pf-progress-bar"></div></div>
+    </div>
+
+    <div id="pf-save-error" class="pf-save-error" role="alert" hidden>
+      <span>Chưa lưu được. Câu trả lời của bạn vẫn còn nguyên trên máy.</span>
+      <button type="button" id="pf-retry" class="pf-link-btn">Thử lại</button>
+    </div>
+
+    <form id="pf-form" class="pf-panel" novalidate>
+      <h1 id="pf-step-title" class="pf-step-title" tabindex="-1"></h1>
+      <p id="pf-step-intro" class="pf-step-intro"></p>
+      <div id="pf-step-body"></div>
+      <p id="pf-form-error" class="pf-form-error" role="alert" hidden></p>
+      <div class="pf-nav">
+        <button type="button" id="pf-back" class="btn btn--secondary btn--md pf-btn">Quay lại</button>
+        <button type="submit" id="pf-next" class="btn btn--primary btn--md pf-btn">Tiếp tục</button>
+      </div>
+    </form>
+    <p class="pf-footnote">Mỗi bước được lưu khi bạn bấm “Tiếp tục”. Bạn có thể dừng lại và quay lại sau bằng cùng đường link này.</p>
+  </section>
+
+  <!-- After submitting -->
+  <section id="pf-done" class="pf-panel" hidden aria-labelledby="pf-done-title">
+    <span class="eyebrow">Đã gửi hồ sơ</span>
+    <h1 id="pf-done-title" tabindex="-1">Cảm ơn bạn.</h1>
+    <p>Heritage Union đã nhận được hồ sơ của bạn.</p>
+    <p>Bạn có thể quay lại bằng cùng đường link này bất cứ lúc nào để sửa câu trả lời, thay đổi sự đồng ý của mình, hoặc rút đăng ký tại <a href="/vi/withdraw">trang rút đăng ký</a>.</p>
+    <p id="pf-done-photos" class="form-note" hidden>Ảnh của bạn đã được xoá vì bạn chưa đồng ý cho khách hàng xem ảnh.</p>
+    <p class="form-note">Đăng ký hoàn toàn miễn phí. Heritage Union không bao giờ yêu cầu bạn trả bất kỳ khoản tiền nào.</p>
+    <div class="pf-nav">
+      <button type="button" id="pf-edit-again" class="btn btn--secondary btn--md pf-btn">Xem lại hồ sơ</button>
+      <a class="btn btn--primary btn--md pf-btn" href="/vi/">Về trang chủ</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pf-footer">
+  <a href="/vi/privacy">Quyền riêng tư</a> &middot; <a href="/vi/your-rights">Quyền của bạn</a> &middot; <a href="/vi/withdraw">Rút đăng ký</a> &middot; <a href="/vi/contact">Liên hệ</a>
+</footer>
+
+<script src="/assets/js/profile.js?v=1" defer></script>
+</body>
+</html>
