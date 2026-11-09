@@ -45,6 +45,7 @@
   var answers = {};          // in-memory answers, incl. display_name
   var dirty = {};            // question ids changed since the last good save
   var step = 1;
+  var furthestStep = 1;      // prefills for later steps are only saved once she has seen them
   var saving = null;         // in-flight save promise
   var saveAgain = false;
   var autosaveTimer = null;
@@ -122,6 +123,8 @@
     answers[id] = value;
     dirty[id] = true;
     setStatus('');
+    var fe = $('pf-form-error');
+    if (fe && !fe.hidden && !document.querySelector('.pf-q.has-error:not([data-q="' + id + '"])')) fe.hidden = true;
   }
 
   // ------------------------------------------------------------------ saving
@@ -136,7 +139,7 @@
     var out = {};
     Object.keys(dirty).forEach(function (id) {
       var q = byId(id);
-      if (!q) return;
+      if (!q || q.step > furthestStep) return;
       var v = answers[id];
       out[id] = isEmpty(v) || !isShown(q) ? null : v;
     });
@@ -148,9 +151,9 @@
   function save() {
     if (autosaveTimer) { clearTimeout(autosaveTimer); autosaveTimer = null; }
     if (saving) { saveAgain = true; return saving; }
-    var ids = Object.keys(dirty);
-    if (!ids.length) { $('pf-save-error').hidden = true; return Promise.resolve(true); }
     var body = payloadFromDirty();
+    var ids = Object.keys(body);
+    if (!ids.length) { $('pf-save-error').hidden = true; return Promise.resolve(true); }
     var sent = {};
     ids.forEach(function (id) { sent[id] = JSON.stringify(answers[id]); });
     setStatus('saving');
@@ -368,7 +371,7 @@
     }
     input.addEventListener('input', function () { commit(input.value); });
     function bump(d) {
-      var cur = typeof answers[q.id] === 'number' ? answers[q.id] : (d > 0 ? q.min - 1 : q.min);
+      var cur = typeof answers[q.id] === 'number' ? answers[q.id] : q.min;
       var n = Math.min(q.max, Math.max(q.min, cur + d));
       input.value = n;
       commit(String(n));
@@ -436,6 +439,7 @@
 
   function goTo(n, focusTitle) {
     step = Math.max(1, Math.min(TOTAL_STEPS, n));
+    furthestStep = Math.max(furthestStep, step);
     $('pf-step-count').textContent = 'Bước ' + step + '/' + TOTAL_STEPS;
     $('pf-progress-bar').style.width = Math.round((step / TOTAL_STEPS) * 100) + '%';
     $('pf-step-title').textContent = stepTitle(step);
@@ -882,14 +886,17 @@
     });
   }
 
-  // Last chance to save typed text if she leaves the page.
-  document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'hidden' && token && Object.keys(dirty).length && navigator.sendBeacon) {
-      try {
-        navigator.sendBeacon(API + 'profile-save', new Blob([JSON.stringify({ token: token, answers: payloadFromDirty() })], { type: 'application/json' }));
-      } catch (e) {}
-    }
-  });
+  // Last chance to save typed text if she leaves the page or switches app.
+  function flushOnLeave() {
+    if (!token || !navigator.sendBeacon) return;
+    var body = payloadFromDirty();
+    if (!Object.keys(body).length) return;
+    try {
+      navigator.sendBeacon(API + 'profile-save', new Blob([JSON.stringify({ token: token, answers: body })], { type: 'application/json' }));
+    } catch (e) {}
+  }
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flushOnLeave(); });
+  window.addEventListener('pagehide', flushOnLeave);
 
   start();
 })();

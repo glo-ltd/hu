@@ -1,6 +1,7 @@
 /* Heritage Union: candidate profile page (/vi/ho-so). Mobile-first; built
    for a small Android phone. Uses the tokens from main.css. */
 
+html { background: var(--cream-100); }
 .pf-body { background: var(--cream-100); min-height: 100vh; display: flex; flex-direction: column; }
 
 .pf-header {
@@ -45,6 +46,7 @@
 /* Questions */
 .pf-q { display: grid; gap: 8px; padding: 14px 0; border-top: 1px solid var(--cream-200); }
 .pf-q:first-child { border-top: 0; padding-top: 4px; }
+.pf-q[hidden], .pf-panel[hidden], .pf-app[hidden] { display: none; }
 .pf-q-label { font-size: 17px; font-weight: 500; color: var(--ink-800); line-height: 1.4; }
 .pf-req { color: var(--burgundy-700); margin-left: 2px; }
 .pf-opt { font-size: 13px; color: var(--ink-400); font-weight: 400; margin-left: 4px; }
@@ -140,3 +142,5 @@
 @media (prefers-reduced-motion: reduce) {
   .pf-progress-bar { transition: none; }
 }
+
+[hidden] { display: none !important; }

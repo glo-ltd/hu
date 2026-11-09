@@ -1,4 +1,6 @@
 /* /admin/ team tool. Phone first: cards, not tables. */
+[hidden] { display: none !important; }
+html { background: var(--cream-100); }
 .ad-body { background: var(--cream-100); min-height: 100vh; font-size: 16px; }
 .ad-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 16px; background: var(--cream-50); border-bottom: 1px solid var(--cream-300); }
 .ad-brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 20px; color: var(--burgundy-700); }

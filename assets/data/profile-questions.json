@@ -913,8 +913,8 @@
         "en": "Partner age range she is open to"
       },
       "help": {
-        "vi": "Kéo hoặc nhập số để chọn từ bao nhiêu đến bao nhiêu tuổi.",
-        "en": ""
+        "vi": "Nhập tuổi nhỏ nhất và lớn nhất mà bạn thấy phù hợp.",
+        "en": "Youngest and oldest age she is open to."
       }
     },
     {
