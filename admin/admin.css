@@ -111,3 +111,8 @@ html { background: var(--cream-100); }
 .cl-sendbar { position: sticky; bottom: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; padding: 12px 14px; background: var(--white); border: 1px solid var(--cream-300); border-radius: var(--radius-sm); box-shadow: var(--shadow-md); }
 .cl-sendbar .btn { text-transform: none; }
 .cl-musts { margin: 6px 0 4px; font-size: 14px; }
+.cl-introrow { padding: 12px 0; }
+.cl-introrow.is-accepted { background: #FFF8E6; margin: 0 -8px; padding: 12px 8px; border-radius: var(--radius-xs); }
+.cl-consent-record { display: grid; gap: 2px; padding: 10px 12px; background: #E9F2E6; border: 1px solid #B8D2B0; border-radius: var(--radius-xs); font-size: 14.5px; }
+.cl-question { padding: 8px 12px; background: var(--cream-50); border-left: 3px solid var(--gold-500); }
+.cl-copy { display: grid; gap: 6px; margin-top: 10px; }

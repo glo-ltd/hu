@@ -85,6 +85,10 @@ Phase 2 (his profile, matching and choices): run
 `client_shortlists`, `client_choices`; two new columns on `clients`). No new
 env vars.
 
+Phase 3 (her decision and the introduction): run
+`supabase/migrations/2026-12-client-phase-3.sql` (tables `introductions` and
+`introduction_questions`). No new env vars.
+
 The fees, invoice numbering, link lengths and the other client-side
 decisions live in `netlify/shared/client-config.js`.
 

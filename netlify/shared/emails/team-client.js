@@ -18,7 +18,25 @@ function teamEmail(subjectText, line) {
   };
 }
 
+// Introduction notices: reference I-XXXXXXXX, linking to his page.
+function introEmail(subjectText, line) {
+  return {
+    id: 'T', name: subjectText, audience: 'team',
+    sample: { clientId: '1a2b3c4d-0000-4000-8000-000000000000', introId: '9f8e7d6c-0000-4000-8000-000000000000' },
+    build(d) {
+      const ref = 'I-' + String(d.introId).slice(0, 8).toUpperCase();
+      return render({
+        subject: subjectText + ' (' + ref + ')', audience: 'team',
+        blocks: [line + ' Reference ' + ref + '.', { button: { label: 'Open in the team page', href: clientAdminLink(d.clientId) } }],
+      });
+    },
+  };
+}
+
 module.exports = {
+  introAccepted: introEmail('A woman said yes to an introduction', 'A woman has said yes and chosen what to share. Tap "Introduce" to send both sides their details.'),
+  introDeclined: introEmail('A woman said no to an introduction', 'A woman has said no. He has been told kindly (R17), with no reason.'),
+  introQuestion: introEmail('A woman has a question before deciding', 'A woman has a question before she decides. Her message is on the team page.'),
   newEnquiry: teamEmail('New client enquiry', 'A new client enquiry has arrived.'),
   feeRequest: teamEmail('Fee document requested', 'The fee document was requested and sent automatically.'),
   applicationSubmitted: teamEmail('Client application submitted', 'An application is ready for document checks.'),

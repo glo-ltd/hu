@@ -23,6 +23,9 @@ exports.handler = async function (event) {
     if (prof.error) throw prof.error;
     var profile = prof.data;
     var cand = c.data;
+    // Introduction requests for her (status only; reference numbers).
+    const ir = await ctx.supabase.from('introductions').select('id, client_id, status, sent_at, decided_at, introduced_at').eq('candidate_id', id);
+    const introductions = (ir.data || []).map((x) => ({ ref: 'I-' + x.id.slice(0, 8).toUpperCase(), clientId: x.client_id, clientRef: 'C-' + x.client_id.slice(0, 8).toUpperCase(), status: x.status, sentAt: x.sent_at, decidedAt: x.decided_at, introducedAt: x.introduced_at }));
     logAction(ctx.email, 'view', id);
     return P.json(200, {
       ok: true,
@@ -35,6 +38,7 @@ exports.handler = async function (event) {
       stepsComplete: profile ? P.stepsComplete(profile) : 0,
       photos: await P.signedPhotos(ctx.supabase, (profile && profile.photo_paths) || []),
       questions: P.QUESTIONS,
+      introductions,
     });
   } catch (err) {
     console.error('admin-candidate failed:', err);

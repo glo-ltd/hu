@@ -561,15 +561,55 @@
     document.getElementById('cl-confirm-send').focus();
   }
 
+  var HIS_STATUS = {
+    waiting: 'Waiting for her reply',
+    introduced: '✓ Introduced: James has sent you her details',
+    not_this_time: 'Not this time',
+    unavailable: 'No longer available',
+  };
+
   function chosenView() {
     var v = view();
-    var ol = el('ol', { class: 'cl-choice-list' });
-    chosen.forEach(function (id) { ol.appendChild(el('li', null, [el('span', { text: nameOf(id) })])); });
+    var list = E.introductions && E.introductions.length ? E.introductions : chosen.map(function (id) { return { candidateId: id, name: nameOf(id), status: 'waiting' }; });
+    var ol = el('ol', { class: 'cl-intros' });
+    list.forEach(function (x) {
+      ol.appendChild(el('li', { class: 'cl-intro is-' + x.status }, [
+        el('span', { class: 'cl-intro-name', text: x.name || nameOf(x.candidateId) }),
+        el('span', { class: 'cl-intro-status', text: HIS_STATUS[x.status] || '' }),
+      ]));
+    });
     v.appendChild(progressCard(5));
     v.appendChild(card('cl-card--accent', [
-      el('h2', { text: 'Your choices' }), ol,
-      el('p', { text: 'James and Huyen will share your profile with your first choice, in her language. She decides, freely and in her own time, whether she would like to be introduced. You will hear from James as soon as there is news.' }),
+      el('h2', { text: 'Your introductions' }), ol,
+      el('p', { class: 'cl-help', text: (E.introductionsUsed || list.length) + ' of 5 introductions in use. A "no" or an unanswered request doesn\'t count.' }),
+      el('p', { text: 'James and Huyen share your profile with each woman in her language. Each decides freely, in her own time, and never has to give a reason. When a woman says yes, James sends you the details she chose to share.' }),
     ]));
+    if (E.canReplace) v.appendChild(replacementCard());
+    v.querySelectorAll('.cl-pc-photo').forEach(function (p) { p.addEventListener('contextmenu', function (e) { e.preventDefault(); }); });
+  }
+
+  function replacementCard() {
+    var left = R.cards.filter(function (c) { return (R.taken || []).indexOf(c.id) === -1; });
+    var c = card('', [el('h2', { text: 'Choose someone else' })]);
+    if (!left.length) { c.appendChild(el('p', { text: 'Everyone on your list has already been asked. James will be in touch about what happens next.' })); return c; }
+    c.appendChild(el('p', { text: 'You can choose another woman from your list. She will be asked in the same way.' }));
+    var grid = el('div', { class: 'cl-pcs' });
+    left.forEach(function (x) {
+      var pc = profileCard(x);
+      var btn = pc.querySelector('.cl-action');
+      var fresh = btn.cloneNode(false);
+      fresh.textContent = 'Choose ' + x.displayName;
+      fresh.disabled = false;
+      fresh.setAttribute('aria-pressed', 'false');
+      fresh.addEventListener('click', function () {
+        fresh.disabled = true;
+        H.api('client-replacement', { candidateId: x.id }).then(function (d) { H.setState(d); }, function (e) { if (!e.fatal) { fresh.disabled = false; window.alert(e.message); } });
+      });
+      btn.replaceWith(fresh);
+      grid.appendChild(pc);
+    });
+    c.appendChild(grid);
+    return c;
   }
 
   window.HUEngagement = { render: render };

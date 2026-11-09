@@ -6,6 +6,7 @@ const CP = require('../shared/client-profile');
 const S = require('../shared/client-stage');
 const E = require('../shared/emails');
 const { sendEmail, sendTeam } = require('../shared/emails/send');
+const I = require('../shared/introductions');
 
 exports.handler = async function (event) {
   const ctx = await CC.clientFromRequest(event);
@@ -34,6 +35,8 @@ exports.handler = async function (event) {
     if (ins.error) throw ins.error;
     const u = await sb.from('clients').update({ choices_submitted_at: now }).eq('id', full.id);
     if (u.error) throw u.error;
+    // Phase 3: one introduction request per choice, in his order.
+    await I.createRequests(sb, full.id, ids, 1, false);
     await CC.logEvent(sb, full.id, 'choices_submitted', 'client', ids.length + ' chosen');
     await sendEmail((full.application && full.application.email) || full.email, E.R12.build({ firstName: CC.firstName(full.full_name), count: ids.length }));
     await sendTeam(E.team.choicesReceived.build({ clientId: full.id }));

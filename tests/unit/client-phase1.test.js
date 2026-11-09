@@ -403,15 +403,19 @@ test('emails: every client email has a plain-text version, the concern link and 
   const E = require('../../netlify/shared/emails');
   for (const k of Object.keys(E)) {
     if (k === 'team') continue;
-    const o = E[k].build(E[k].sample);
-    assert.ok(o.text && o.html && o.subject, k);
-    assert.ok(o.text.includes('/contact?concern=1'), k + ' concern link');
-    assert.ok(o.text.includes('James\nFounder, Heritage Union'), k + ' signature');
+    const variants = E[k].variants ? Object.values(E[k].variants) : [E[k]];
+    for (const v of variants) {
+      const o = v.build(v.sample);
+      const vi = v.sample.lang === 'vi';
+      assert.ok(o.text && o.html && o.subject, k);
+      assert.ok(o.text.includes(vi ? '/vi/contact?concern=1' : '/contact?concern=1'), k + ' concern link');
+      assert.ok(o.text.includes(vi ? 'James\nNhà sáng lập, Heritage Union' : 'James\nFounder, Heritage Union'), k + ' signature');
+    }
   }
   for (const k of Object.keys(E.team)) {
-    const o = E.team[k].build({ clientId: crypto.randomUUID() });
+    const o = E.team[k].build({ clientId: crypto.randomUUID(), introId: crypto.randomUUID() });
     assert.ok(!o.text.includes('concern'), 'team emails have no concern footer');
-    assert.match(o.subject, /\(C-[0-9A-F]{8}\)$/);
+    assert.match(o.subject, /\([CI]-[0-9A-F]{8}\)$/);
   }
 });
 

@@ -11,11 +11,13 @@ const STATUSES = ['new', 'contacted', 'profile_in_progress', 'profile_complete',
 // id: generate a uuid on insert. unique: [column, caseInsensitive].
 // cascade: child tables deleted with a parent row (child, column).
 const TABLES = {
-  candidates: { id: true, cascade: [['candidate_profiles', 'candidate_id'], ['client_shortlists', 'candidate_id'], ['client_choices', 'candidate_id']] },
+  candidates: { id: true, cascade: [['candidate_profiles', 'candidate_id'], ['client_shortlists', 'candidate_id'], ['client_choices', 'candidate_id'], ['introductions', 'candidate_id']] },
   candidate_profiles: {},
   candidate_waitlist: { id: true },
-  clients: { id: true, unique: [['email', true]], cascade: [['client_events', 'client_id'], ['client_invoices', 'client_id'], ['client_profiles', 'client_id'], ['client_shortlists', 'client_id'], ['client_choices', 'client_id']] },
+  clients: { id: true, unique: [['email', true]], cascade: [['client_events', 'client_id'], ['client_invoices', 'client_id'], ['client_profiles', 'client_id'], ['client_shortlists', 'client_id'], ['client_choices', 'client_id'], ['introductions', 'client_id']] },
   client_profiles: {},
+  introductions: { id: true, cascade: [['introduction_questions', 'introduction_id']] },
+  introduction_questions: { id: true },
   client_shortlists: {},
   client_choices: {},
   client_events: { id: true },
@@ -78,6 +80,11 @@ class Query {
       if (!this.db.tables.candidates.some((c) => c.id === row.candidate_id)) return 'violates foreign key constraint';
     }
     if (/^client_/.test(this.table) && row.client_id && !this.db.table('clients').some((c) => c.id === row.client_id)) return 'violates foreign key constraint';
+    if (this.table === 'introductions') {
+      const others = this.db.table('introductions').filter((r) => r !== selfRow);
+      if (others.some((r) => r.client_id === row.client_id && r.candidate_id === row.candidate_id)) return 'duplicate key value violates unique constraint "introductions_one_per_pair"';
+      if (['sent', 'opened'].indexOf(row.status) !== -1 && others.some((r) => r.candidate_id === row.candidate_id && ['sent', 'opened'].indexOf(r.status) !== -1)) return 'duplicate key value violates unique constraint "introductions_one_open_per_woman"';
+    }
     const cfg = TABLES[this.table] || {};
     for (const [col, ci] of cfg.unique || []) {
       if (row[col] == null) continue;

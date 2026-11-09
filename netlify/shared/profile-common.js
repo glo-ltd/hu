@@ -419,6 +419,13 @@ async function applyWithdrawal(supabase, candidateId) {
   } catch (err) {
     console.error('Withdraw: deleting photos failed for', candidateId, err);
   }
+  // Any pending introduction request for her is cancelled; the client only
+  // ever sees "no longer available", never why.
+  try {
+    await require('./introductions').cancelForCandidate(supabase, candidateId, 'withdrawn');
+  } catch (err) {
+    console.error('Withdraw: cancelling introduction requests failed for', candidateId, err);
+  }
 }
 
 module.exports = {

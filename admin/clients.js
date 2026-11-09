@@ -37,7 +37,9 @@
     certificate_uploaded: 'Uploaded criminal record certificate', declaration_signed: 'Signed background declaration', agreement_accepted: 'Accepted client agreement',
     application_submitted: 'Sent his application (R6)', profile_submitted: 'Sent his profile', profile_summary_save: 'Summary saved',
     profile_summary_send: 'Summary sent for approval (R9)', profile_translate: 'Translations saved', summary_approved: 'Approved his summary (R10)',
-    summary_changes_requested: 'Asked for changes to his summary', shortlist_sent: 'Shortlist sent (R11)', choices_submitted: 'Sent his choices (R12)', check_id: 'Photo ID checked', check_certificate: 'Certificate checked',
+    summary_changes_requested: 'Asked for changes to his summary', intro_send: 'Request sent to her (R13)', intro_resend: 'New decision link made',
+    intro_introduce: 'Introduced (R15, R16)', intro_cancel: 'Request cancelled', intro_answered: 'Her question answered', intro_accepted: 'She said yes',
+    intro_declined: 'She said no (R17 to him)', intro_question: 'She asked a question', replacement_chosen: 'He chose a replacement', shortlist_sent: 'Shortlist sent (R11)', choices_submitted: 'Sent his choices (R12)', check_id: 'Photo ID checked', check_certificate: 'Certificate checked',
     uncheck_id: 'Photo ID check undone', uncheck_certificate: 'Certificate check undone', invoice_create: 'Invoice drafted', invoice_update: 'Invoice draft changed',
     invoice_send: 'Invoice sent (R7)', invoice_paid: 'Payment received (R8 welcome)', invoice_void: 'Invoice voided',
   };
@@ -138,12 +140,12 @@
   }
 
   // ------------------------------------------------------------------ detail
-  function loadDetail(id) {
+  function loadDetail(id, after) {
     H.show('ad-client-detail');
     var box = $('ad-client-detail');
     box.innerHTML = '';
     box.appendChild(el('p', { text: 'Loading…' }));
-    H.api('admin-client-get', { id: id }).then(function (d) { drawDetail(d); }, function (err) {
+    H.api('admin-client-get', { id: id }).then(function (d) { drawDetail(d); if (after) after(); }, function (err) {
       box.innerHTML = '';
       box.appendChild(el('p', { class: 'ad-flash is-error', text: err.message }));
       box.appendChild(el('button', { type: 'button', class: 'ad-link', text: '← All clients', onclick: function () { location.hash = 'clients'; } }));
@@ -242,6 +244,7 @@
         left.appendChild(translationSection(c, d));
       }
       right.appendChild(matchingSection(c, d));
+      if (d.introductions && d.introductions.length) left.insertBefore(introductionsSection(c, d), left.firstChild);
     }
     right.appendChild(actionsSection(c, d));
     if (['submitted', 'checked', 'invoiced', 'active', 'paused', 'closed'].indexOf(c.status) !== -1 || c.id_document_path || c.certificate_path) right.appendChild(documentsSection(c, d));
@@ -528,6 +531,72 @@
     if (p && p.submitted_at) sec.appendChild(el('a', { class: 'btn btn--primary btn--md', href: '#client-' + c.id + '/matching', text: 'Open the matching screen' }));
     if (d.shortlist.length) sec.appendChild(el('div', { class: 'ad-answer' }, [el('span', { class: 'ad-q', text: 'Shortlist sent ' + H.fmtDateTime(c.shortlist_sent_at) + ' (' + d.shortlist.length + ')' }), el('span', { class: 'ad-a', lang: 'vi', text: d.shortlist.map(function (x) { return x.name; }).join(', ') })]));
     if (d.choices.length) sec.appendChild(el('div', { class: 'ad-answer' }, [el('span', { class: 'ad-q', text: 'His choices, ' + H.fmtDateTime(c.choices_submitted_at) }), el('ol', { class: 'cl-ranked' }, d.choices.map(function (x) { return el('li', { lang: 'vi' }, [el('a', { href: '#' + x.id, text: x.name })]); }))]));
+    return sec;
+  }
+
+  // ------------------------------------------------------------------ phase 3: introductions
+  var INTRO_LABEL = { queued: 'Queued (she has another request open)', ready: 'Ready to send', sent: 'Sent to her', opened: 'She opened it', accepted: 'She said yes', introduced: 'Introduced',
+    declined: 'She said no', expired: 'Expired (no answer in 30 days)', cancelled: 'Cancelled' };
+  var METHOD = { messages: 'messages', voice: 'voice call', video: 'video call' };
+
+  function copyBox(text, note) {
+    var ta = el('textarea', { class: 'form-textarea ad-copybox', readonly: true, lang: 'vi', 'aria-label': 'Message to copy into Zalo' });
+    ta.value = text;
+    var p = el('p', { class: 'form-note', role: 'status', text: note });
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { p.textContent = note + ' Copied: paste it into Zalo.'; }, function () { ta.select(); });
+    else ta.select();
+    return el('div', { class: 'cl-copy' }, [p, ta]);
+  }
+
+  function introductionsSection(c, d) {
+    var sec = el('section', { class: 'ad-section' }, [el('h2', { text: 'Introductions' }),
+      el('p', { class: 'form-note', text: 'His choices in his order. Only one request per woman can be open at a time; the others wait. ' + d.introductions.filter(function (x) { return ['declined', 'expired', 'cancelled'].indexOf(x.status) === -1; }).length + ' of ' + d.maxIntroductions + ' in use.' })]);
+    var out = el('div', { id: 'cl-intro-out' });
+    d.introductions.forEach(function (x) {
+      var row = el('div', { class: 'ad-answer cl-introrow is-' + x.status }, [
+        el('div', { class: 'ad-card-top' }, [el('a', { class: 'ad-card-name', href: '#' + x.candidateId, lang: 'vi', text: x.rank + '. ' + x.name }), el('span', { class: 'ad-badge ad-badge--status', text: INTRO_LABEL[x.status] })]),
+        el('span', { class: 'ad-card-sub', text: [x.replacement ? 'Replacement' : null, 'her language: ' + (x.lang === 'en' ? 'English' : 'Vietnamese'), x.hasEmail ? 'has email' : 'Zalo only',
+          x.sentAt ? 'sent ' + H.fmtDate(x.sentAt) + ' by ' + x.sentBy : null, x.openedAt ? 'opened ' + H.fmtDate(x.openedAt) : null, x.decidedAt ? 'answered ' + H.fmtDate(x.decidedAt) : null,
+          x.introducedAt ? 'introduced ' + H.fmtDate(x.introducedAt) + ' by ' + x.introducedBy : null, x.cancelReason ? 'cancelled: ' + x.cancelReason : null].filter(Boolean).join(' · ') }),
+      ]);
+      if (x.consent && (x.status === 'accepted' || x.status === 'introduced')) {
+        row.appendChild(el('div', { class: 'cl-consent-record' }, [
+          el('strong', { text: 'Her written consent' }),
+          el('span', { text: 'Shares: ' + ['zalo', 'phone', 'email'].filter(function (k) { return x.consent[k]; }).map(function (k) { return k + ' ' + x.consent[k]; }).join(' · ') }),
+          el('span', { text: 'First contact: ' + (x.consent.contact || []).map(function (m) { return METHOD[m] || m; }).join(', ') }),
+          el('span', { class: 'ad-card-sub', text: 'Typed name "' + x.consentTypedName + '" · ' + H.fmtDateTime(x.decidedAt) + ' · wording ' + x.consentVersion }),
+        ]));
+      }
+      if (x.declineReason) row.appendChild(el('p', { class: 'cl-quote', text: 'Her private reason (never shown to him): ' + x.declineReason }));
+      x.questions.forEach(function (q) {
+        row.appendChild(el('div', { class: 'cl-question' }, [el('span', { class: 'ad-card-sub', text: 'Her question, ' + H.fmtDateTime(q.at) + (q.answeredAt ? ' · answered by ' + q.answeredBy : '') }), el('p', { lang: 'vi', text: q.message })]));
+      });
+      var acts = el('div', { class: 'ad-translate-row' });
+      function op(name, done, confirmText) {
+        var go = function () {
+          H.api('admin-intro', { id: c.id, op: name, introId: x.id }).then(function (r) {
+            H.flash(done);
+            loadDetail(c.id, r.zalo ? function () {
+              var o = $('cl-intro-out');
+              if (o) { o.innerHTML = ''; o.appendChild(copyBox(r.zalo, (r.emailed ? 'Also emailed to her. ' : '') + 'Message for ' + x.name + ' (' + (r.lang === 'en' ? 'English' : 'Vietnamese') + ').')); o.scrollIntoView({ block: 'center' }); }
+            } : null);
+          }, function (e) { H.flash(e.message, true); });
+        };
+        return confirmText ? function () { modal(confirmText[0], confirmText[1], confirmText[2], go); } : go;
+      }
+      if (x.status === 'ready') {
+        var why = c.status !== 'active' ? 'His engagement isn\'t active.' : x.otherOpen ? 'She has another request open.' : x.translationGaps.length ? 'Translations missing: ' + x.translationGaps.join(', ') : '';
+        acts.appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--sm', text: 'Send to her (R13)', disabled: !!why, onclick: op('send', 'Request sent. Copy the message into Zalo.', ['Send this request to ' + x.name + '?', 'This makes her private decision link (valid 30 days), emails her if she has an email, and gives you the message to paste into Zalo.', 'Send to her']) }));
+        if (why) acts.appendChild(el('span', { text: why }));
+      }
+      if (x.status === 'sent' || x.status === 'opened') acts.appendChild(el('button', { type: 'button', class: 'btn btn--secondary btn--sm', text: 'New link and message', onclick: op('resend', 'New link made; the old one no longer works.') }));
+      if (x.status === 'accepted') acts.appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--sm', text: 'Introduce (R15 to him, R16 to her)', onclick: op('introduce', 'Introduced. Copy her message into Zalo.', ['Introduce them?', 'He receives R15 with the details she chose. She receives R16 with his email and phone, and you get the message to paste into Zalo.', 'Introduce']) }));
+      if (['queued', 'ready', 'sent', 'opened'].indexOf(x.status) !== -1) acts.appendChild(el('button', { type: 'button', class: 'ad-link', text: 'Cancel request', onclick: op('cancel', 'Request cancelled.', ['Cancel this request?', 'He will see "No longer available". Her link stops working.', 'Cancel request']) }));
+      if (x.questions.some(function (q) { return !q.answeredAt; })) acts.appendChild(el('button', { type: 'button', class: 'btn btn--secondary btn--sm', text: 'Mark question answered', onclick: op('answered', 'Marked answered.') }));
+      if (acts.firstChild) row.appendChild(acts);
+      sec.appendChild(row);
+    });
+    sec.appendChild(out);
     return sec;
   }
 
