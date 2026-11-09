@@ -1,0 +1,4 @@
+{
+  "version": "DRAFT-2026-12-v0",
+  "note": "When the final agreement replaces the draft in client-agreement.html, give it a new version here (without the word DRAFT) and set the same value in that file's data-version attribute. A test checks they match. Clients can only accept a version without DRAFT."
+}

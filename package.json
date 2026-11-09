@@ -13,6 +13,8 @@
   "scripts": {
     "build:fee-pdf": "node scripts/build-fee-pdf.js",
     "test": "node --test tests/unit/*.test.js",
-    "test:e2e": "node tests/e2e/journey.js"
+    "test:e2e": "node tests/e2e/journey.js",
+    "build:email-docs": "node scripts/build-client-email-docs.js",
+    "test:e2e:client": "node tests/e2e/client-journey.js"
   }
 }

@@ -63,7 +63,7 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,300;1,400&display=swap"></noscript>
 
   <!-- Main stylesheet -->
-  <link rel="stylesheet" href="assets/css/main.css?v=4">
+  <link rel="stylesheet" href="assets/css/main.css?v=6">
 
   <!-- Favicon placeholder — replace with brand icon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 44'%3E%3Ccircle cx='26' cy='22' r='12' fill='none' stroke='%235E2A2E' stroke-width='2'/%3E%3Ccircle cx='38' cy='22' r='12' fill='none' stroke='%23C2A35A' stroke-width='2'/%3E%3C/svg%3E">
@@ -236,30 +236,79 @@
       </div>
 
       <div>
-        <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="contact-form">
-          <input type="hidden" name="form-name" value="contact">
-          <p style="position:absolute; left:-9999px;" aria-hidden="true">
-            <label>Leave this field blank<input name="bot-field" tabindex="-1" autocomplete="off"></label>
-          </p>
-          <div class="form-field">
-            <label class="form-label" for="contact-name">Full name</label>
-            <input class="form-input" type="text" id="contact-name" name="name" required>
+        <div id="enquiry-wrap">
+            <form id="enquiry-form" class="contact-form enquiry-form" novalidate>
+              <p style="position:absolute; left:-9999px;" aria-hidden="true">
+                <label>Leave this field blank<input name="website" tabindex="-1" autocomplete="off"></label>
+              </p>
+              <fieldset class="enq-who">
+                <legend class="form-label">I am…</legend>
+                <div class="enq-choices">
+                  <label class="enq-choice"><input type="radio" name="iAm" value="client" required> <span>A man interested in the service</span></label>
+                  <label class="enq-choice"><input type="radio" name="iAm" value="woman"> <span>A woman interested in registering</span></label>
+                  <label class="enq-choice"><input type="radio" name="iAm" value="other"> <span>Press, or something else</span></label>
+                </div>
+              </fieldset>
+
+              <div id="enq-woman" class="enq-woman" hidden>
+                <p><strong>Thank you for your interest.</strong> Women register directly, free of charge, on our registration page. Nothing you type here is sent.</p>
+                <p><a class="btn btn--primary btn--md" href="/vi/become-a-candidate">Đăng ký (Tiếng Việt)</a> <a class="btn btn--secondary btn--md" href="/become-a-candidate">Register in English</a></p>
+              </div>
+
+              <div id="enq-fields" class="enq-fields">
+                <div class="form-field">
+                  <label class="form-label" for="enq-name">Full name</label>
+                  <input class="form-input" type="text" id="enq-name" name="fullName" maxlength="120" autocomplete="name" required>
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="enq-email">Email address</label>
+                  <input class="form-input" type="email" id="enq-email" name="email" maxlength="200" autocomplete="email" required>
+                </div>
+                <div class="enq-row">
+                  <div class="form-field">
+                    <label class="form-label" for="enq-country">Country of residence</label>
+                    <input class="form-input" type="text" id="enq-country" name="country" maxlength="80" autocomplete="country-name" required>
+                  </div>
+                  <div class="form-field" id="enq-age-field">
+                    <label class="form-label" for="enq-age">Age</label>
+                    <input class="form-input" type="number" id="enq-age" name="age" min="18" max="99" inputmode="numeric">
+                  </div>
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="enq-phone">Phone or WhatsApp <span class="enq-optional">(optional)</span></label>
+                  <input class="form-input" type="tel" id="enq-phone" name="phone" maxlength="40" autocomplete="tel">
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="enq-source">How did you hear about us?</label>
+                  <select class="form-input" id="enq-source" name="source">
+                    <option value="">Choose…</option>
+                    <option value="search">Search engine</option>
+                    <option value="social">Social media</option>
+                    <option value="friend">A friend or family member</option>
+                    <option value="press">Press or an article</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="enq-message">Message</label>
+                  <textarea class="form-textarea" id="enq-message" name="message" maxlength="3000" required placeholder="A little about yourself, and what you hope for."></textarea>
+                </div>
+                <label class="enq-consent">
+                  <input type="checkbox" id="enq-consent" name="consent" required>
+                  <span>I agree to Heritage Union contacting me about my enquiry, and to my details being handled as described in the <a href="/privacy">Privacy Policy</a>.</span>
+                </label>
+                <div id="enq-turnstile"></div>
+                <p class="fee-form-error" id="enq-error" role="alert"></p>
+                <button class="btn btn--primary btn--md" type="submit" id="enq-submit" style="justify-self: start;">Send enquiry</button>
+                <p class="form-note">Every enquiry is read personally by James and held in strict confidence. We never share your details with third parties.</p>
+              </div>
+            </form>
+            <div class="fee-form-success enq-success" id="enq-success" hidden tabindex="-1">
+              <h3>Thank you.</h3>
+              <p id="enq-success-text">Your enquiry has reached James, who will reply to you personally within one working day. A confirmation is on its way to your inbox.</p>
+              <p><a class="btn btn--primary btn--md" href="#book" data-scroll-to="book">Book a free call</a></p>
+            </div>
           </div>
-          <div class="form-field">
-            <label class="form-label" for="contact-email">Email address</label>
-            <input class="form-input" type="email" id="contact-email" name="email" required>
-          </div>
-          <div class="form-field">
-            <label class="form-label" for="contact-country">Country</label>
-            <input class="form-input" type="text" id="contact-country" name="country">
-          </div>
-          <div class="form-field">
-            <label class="form-label" for="contact-message">Message</label>
-            <textarea class="form-textarea" id="contact-message" name="message" required></textarea>
-          </div>
-          <button class="btn btn--primary btn--md" type="submit" style="justify-self: start;">Send message</button>
-          <p class="form-note">By submitting, you agree to be contacted by Heritage Union about your enquiry. We never share your details with third parties.</p>
-        </form>
       </div>
     </div>
   </div>
@@ -409,6 +458,7 @@
      SCRIPTS
      ============================================================ -->
 <script src="assets/js/main.js?v=2" defer></script>
+<script src="/assets/js/enquiry.js?v=1" defer></script>
 
 </body>
 </html>

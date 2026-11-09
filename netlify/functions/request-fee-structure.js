@@ -1,9 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-const { Resend } = require('resend');
-
-const FROM_EMAIL = 'Heritage Union <team@heritage-union.com>';
-const INTERNAL_NOTIFY_EMAIL = 'james@heritage-union.com';
+const P = require('../shared/profile-common');
+const E = require('../shared/emails');
+const { sendEmail, sendTeam } = require('../shared/emails/send');
+const { logEvent, firstName } = require('../shared/client-common');
+const { ipHash } = require('../shared/request-utils');
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_FIELD_LENGTH = 200;
 
@@ -49,66 +50,46 @@ exports.handler = async function (event) {
     return jsonResponse(400, { error: 'Please provide a valid email address.' });
   }
 
-  var resend = new Resend(process.env.RESEND_API_KEY);
   var pdfPath = path.join(__dirname, 'assets', 'heritage-union-fee-structure.pdf');
   var pdfBuffer = fs.readFileSync(pdfPath);
-  var submittedAt = new Date();
+  var attachments = [{ filename: 'Heritage-Union-Fee-Structure.pdf', content: pdfBuffer.toString('base64') }];
 
-  try {
-    var visitorResult = await resend.emails.send({
-      from: FROM_EMAIL,
-      to: email,
-      subject: 'Heritage Union — Service & Investment Structure',
-      html:
-        '<p>Dear ' + escapeHtml(name) + ',</p>' +
-        '<p>Thank you for your interest in Heritage Union. As requested, please find attached our full Service &amp; Investment Structure document, setting out exactly how our engagement works and how fees are structured.</p>' +
-        '<p>If you have any questions after reading it, or would like to schedule a free, no-obligation consultation, simply reply to this email or visit <a href="https://heritage-union.com/contact">heritage-union.com/contact</a>.</p>' +
-        '<p>Warm regards,<br>The Heritage Union Team</p>',
-      attachments: [
-        {
-          filename: 'Heritage-Union-Fee-Structure.pdf',
-          content: pdfBuffer.toString('base64'),
-        },
-      ],
-    });
-
-    if (visitorResult.error) {
-      console.error('Resend send to visitor failed:', visitorResult.error);
-      return jsonResponse(502, { error: 'We could not send the document right now. Please try again shortly.' });
-    }
-
-    var internalResult = await resend.emails.send({
-      from: FROM_EMAIL,
-      to: INTERNAL_NOTIFY_EMAIL,
-      subject: 'New fee structure request — ' + name,
-      html:
-        '<p>A new fee structure request was submitted on heritage-union.com:</p>' +
-        '<ul>' +
-        '<li><strong>Name:</strong> ' + escapeHtml(name) + '</li>' +
-        '<li><strong>Email:</strong> ' + escapeHtml(email) + '</li>' +
-        '<li><strong>Country:</strong> ' + escapeHtml(country) + '</li>' +
-        '<li><strong>Submitted:</strong> ' + submittedAt.toUTCString() + '</li>' +
-        '</ul>',
-    });
-
-    if (internalResult.error) {
-      // The visitor already has their document — don't fail the request over
-      // the internal notification, just log it so it can be investigated.
-      console.error('Resend send to james@ failed:', internalResult.error);
-    }
-  } catch (err) {
-    console.error('Resend send threw:', err);
+  var sent = await sendEmail(email, E.R2.build({ firstName: firstName(name) }), { attachments: attachments });
+  if (!sent) {
     return jsonResponse(502, { error: 'We could not send the document right now. Please try again shortly.' });
   }
 
+  // Create or update the client record (matched by email, case-insensitive),
+  // so the team page shows who asked for the fee document. Never fails the
+  // request: he already has his document.
+  var clientId = null;
+  try {
+    var supabase = P.serviceClient();
+    if (supabase) {
+      var now = new Date().toISOString();
+      var lower = email.toLowerCase();
+      var found = await supabase.from('clients').select('id').ilike('email', lower.replace(/[\\%_]/g, function (c) { return '\\' + c; })).maybeSingle();
+      if (found.error) throw found.error;
+      if (found.data) {
+        clientId = found.data.id;
+        var upd = await supabase.from('clients').update({ fee_document_sent_at: now }).eq('id', clientId);
+        if (upd.error) throw upd.error;
+      } else {
+        var ins = await supabase.from('clients').insert({
+          full_name: name, email: lower, country: country, status: 'enquiry', status_changed_at: now, fee_document_sent_at: now,
+          source: 'fee_document', ip_hash: ipHash(event),
+        }).select('id').single();
+        if (ins.error) throw ins.error;
+        clientId = ins.data.id;
+      }
+      await logEvent(supabase, clientId, 'fee_document_sent', 'system');
+    }
+  } catch (err) {
+    console.error('Fee request: saving the client record failed:', err);
+  }
+
+  // Team notification: reference number only, never personal details.
+  if (clientId) await sendTeam(E.team.feeRequest.build({ clientId: clientId }));
+
   return jsonResponse(200, { ok: true });
 };
-
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}

@@ -72,3 +72,18 @@ html { background: var(--cream-100); }
 .ad-modal-box h2 { font-size: 24px; }
 .ad-modal-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .ad-modal-row .btn { flex: 1; text-transform: none; }
+
+/* Tabs: Candidates | Clients */
+.ad-tabs { display: flex; gap: 4px; padding: 0 16px; background: var(--cream-50); border-bottom: 1px solid var(--cream-300); }
+.ad-tab { padding: 12px 14px 10px; font-size: 15px; color: var(--ink-600); border-bottom: 2px solid transparent; }
+.ad-tab[aria-current="page"] { color: var(--burgundy-700); border-bottom-color: var(--burgundy-700); font-weight: 600; }
+.ad-tab:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+/* Clients tab */
+.cl-tl { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.cl-tl li { display: grid; gap: 2px; padding-left: 14px; border-left: 2px solid var(--gold-300); }
+.cl-yes { color: #8A3A36; font-weight: 600; }
+.cl-general summary { cursor: pointer; font-family: var(--font-display); font-size: 20px; color: var(--burgundy-700); }
+.cl-general { margin-top: 16px; }
+.ad-modal-box .form-input { margin-bottom: 8px; }
+@media (max-width: 959px) { .cl-right { order: -1; } }

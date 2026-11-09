@@ -1,0 +1,111 @@
+/* Heritage Union: client private page (/client). Calm, premium, phone first. */
+html { background: var(--cream-100); }
+[hidden] { display: none !important; }
+.cl-body { background: var(--cream-100); min-height: 100vh; display: flex; flex-direction: column; }
+.cl-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 20px; background: var(--cream-50); border-bottom: 1px solid var(--cream-300); }
+.cl-logo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-display); font-size: 15px; letter-spacing: 0.16em; color: var(--burgundy-700); font-weight: 500; }
+.cl-header-title { font-size: 14px; color: var(--ink-600); }
+.cl-main { flex: 1; width: 100%; max-width: 720px; margin: 0 auto; padding: 24px 16px 48px; display: grid; gap: 18px; align-content: start; }
+.cl-card { background: var(--white); border: 1px solid var(--cream-300); border-radius: var(--radius-sm); padding: 24px 20px; display: grid; gap: 14px; }
+.cl-card--accent { border-top: 3px solid var(--gold-500); }
+.cl-card h1, .cl-card h2 { font-size: 30px; }
+.cl-card h3 { font-size: 22px; }
+.cl-center { text-align: center; color: var(--ink-600); }
+.cl-welcome { display: grid; gap: 8px; padding: 8px 4px 4px; }
+.cl-welcome h1 { font-size: clamp(36px, 8vw, 48px); }
+.cl-lead { font-size: 17px; color: var(--ink-700); max-width: 56ch; }
+
+/* Step rail */
+.cl-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; counter-reset: step; }
+.cl-steps li { display: grid; gap: 6px; font-size: 12.5px; letter-spacing: 0.04em; color: var(--ink-400); text-align: left; }
+.cl-steps li::before { content: ""; height: 4px; border-radius: 2px; background: var(--cream-300); }
+.cl-steps li.is-done { color: var(--ink-700); }
+.cl-steps li.is-done::before { background: var(--gold-500); }
+.cl-steps li.is-current { color: var(--burgundy-700); font-weight: 600; }
+.cl-steps li.is-current::before { background: var(--burgundy-700); }
+.cl-steps button { all: unset; cursor: pointer; }
+.cl-steps button:focus-visible { box-shadow: var(--shadow-focus); }
+.cl-stepline { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 14px; color: var(--ink-600); }
+.cl-save { font-size: 13px; color: var(--ink-600); }
+.cl-save.is-saved::before { content: "✓ "; color: #2F6B3A; }
+
+.cl-intro { color: var(--ink-600); font-size: 15.5px; }
+
+/* Fields */
+.cl-field { display: grid; gap: 8px; padding: 14px 0; border-top: 1px solid var(--cream-200); }
+.cl-field:first-of-type { border-top: 0; }
+.cl-label { font-size: 16.5px; font-weight: 500; color: var(--ink-800); line-height: 1.45; }
+.cl-req { color: var(--burgundy-700); margin-left: 3px; }
+.cl-opt { font-size: 13px; color: var(--ink-400); font-weight: 400; margin-left: 4px; }
+.cl-help { font-size: 14px; color: var(--ink-600); line-height: 1.5; }
+.cl-error { font-size: 14px; color: #8A3A36; font-weight: 500; }
+.cl-error:empty { display: none; }
+.cl-field.has-error .form-input, .cl-field.has-error .form-textarea { border-color: #B9564F; }
+.cl-field .form-input, .cl-field .form-textarea { min-height: 48px; font-size: 16.5px; }
+.cl-counter { font-size: 13px; color: var(--ink-600); text-align: right; }
+.cl-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.cl-chip { min-height: 46px; padding: 10px 16px; font: inherit; font-size: 15.5px; background: var(--cream-50); color: var(--ink-800); border: 1px solid var(--cream-300); border-radius: 23px; cursor: pointer; }
+.cl-chip[aria-checked="true"] { background: var(--burgundy-700); border-color: var(--burgundy-700); color: var(--cream-50); }
+.cl-chip:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+.cl-num { max-width: 140px; }
+.cl-lang-row { display: grid; grid-template-columns: 1fr 150px 44px; gap: 8px; align-items: center; }
+.cl-lang-row .form-input { min-height: 46px; }
+.cl-icon-btn { min-height: 44px; min-width: 44px; background: none; border: 1px solid var(--cream-300); border-radius: var(--radius-xs); color: var(--burgundy-700); font-size: 20px; cursor: pointer; }
+.cl-link-btn { background: none; border: 0; padding: 6px 2px; font: inherit; font-weight: 600; color: var(--burgundy-700); text-decoration: underline; cursor: pointer; justify-self: start; min-height: 40px; }
+
+/* Documents */
+.cl-doc { display: grid; gap: 10px; padding: 14px; border: 1px dashed var(--cream-300); border-radius: var(--radius-sm); background: var(--cream-50); }
+.cl-doc.is-uploaded { border-style: solid; border-color: #B8D2B0; background: #F3F8F1; }
+.cl-doc-status { font-size: 15px; }
+.cl-file { position: relative; justify-self: start; }
+.cl-file input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.cl-file:focus-within .btn { box-shadow: var(--shadow-focus); }
+.cl-file .btn, .cl-nav .btn, .cl-action { text-transform: none; letter-spacing: 0.01em; }
+
+/* Signature */
+.cl-sign { display: grid; gap: 12px; padding: 18px; background: var(--cream-50); border: 1px solid var(--gold-300); border-radius: var(--radius-sm); }
+.cl-sign-text { font-family: var(--font-display); font-size: 20px; line-height: 1.35; color: var(--burgundy-800); }
+.cl-check { display: flex; gap: 12px; align-items: flex-start; font-size: 16px; line-height: 1.5; cursor: pointer; }
+.cl-check input { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--burgundy-700); flex: 0 0 auto; }
+.cl-typed { font-family: var(--font-display); font-size: 22px !important; font-style: italic; }
+.cl-signed { color: #2F5B2A; font-size: 15px; }
+
+/* Agreement */
+.cl-agreement-box { max-height: 360px; overflow: auto; padding: 18px; border: 1px solid var(--cream-300); border-radius: var(--radius-sm); background: var(--cream-50); }
+.cl-agreement h2 { font-size: 26px; margin-bottom: 10px; }
+.cl-agreement p, .cl-agreement li { font-size: 15.5px; margin-bottom: 8px; }
+.cl-draft-banner { display: inline-block; padding: 4px 10px; background: #FFF4DC; border: 1px solid var(--gold-500); color: #5A4512; font-weight: 600; font-size: 13px; letter-spacing: 0.04em; margin-bottom: 12px !important; }
+.cl-soon { padding: 16px; background: #FFF4DC; border: 1px solid var(--gold-300); border-radius: var(--radius-sm); color: #5A4512; }
+
+/* Review */
+.cl-review { display: grid; gap: 6px; }
+.cl-review dl { margin: 0; display: grid; gap: 4px 14px; grid-template-columns: minmax(120px, 40%) 1fr; font-size: 15px; }
+.cl-review dt { color: var(--ink-600); }
+.cl-review dd { margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+.cl-review-head { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--cream-200); padding-top: 12px; }
+.cl-tick { color: #2F5B2A; }
+.cl-cross { color: #8A3A36; }
+
+.cl-nav { display: flex; gap: 10px; flex-wrap: wrap; }
+.cl-nav .btn { flex: 1; min-height: 52px; font-size: 16px; }
+.cl-form-error { color: #8A3A36; font-weight: 500; }
+.cl-form-error:empty { display: none; }
+
+/* Timeline (after sending) */
+.cl-timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.cl-timeline li { display: grid; grid-template-columns: 28px 1fr; gap: 12px; padding: 10px 0; position: relative; }
+.cl-timeline li::before { content: ""; width: 14px; height: 14px; margin: 5px 0 0 6px; border-radius: 50%; border: 2px solid var(--cream-300); background: var(--white); }
+.cl-timeline li.is-done::before { background: var(--gold-500); border-color: var(--gold-500); }
+.cl-timeline li.is-now::before { border-color: var(--burgundy-700); box-shadow: 0 0 0 4px var(--burgundy-050); }
+.cl-timeline strong { display: block; font-weight: 500; }
+.cl-timeline span { color: var(--ink-600); font-size: 14.5px; }
+.cl-invoice { display: grid; gap: 6px; padding: 16px; border: 1px solid var(--cream-300); border-radius: var(--radius-sm); background: var(--cream-50); }
+.cl-invoice-amount { font-family: var(--font-display); font-size: 28px; color: var(--burgundy-700); }
+
+.cl-footer { text-align: center; font-size: 13px; padding: 18px; color: var(--ink-600); }
+
+@media (min-width: 640px) {
+  .cl-card { padding: 32px; }
+  .cl-main { padding-top: 40px; }
+}
+#cl-step-title, #cl-hello { outline: none; }

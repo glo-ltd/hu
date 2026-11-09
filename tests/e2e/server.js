@@ -35,15 +35,15 @@ function start(port) {
           return res.end(out.body);
         }
         // Storage: direct upload to a signed URL, and signed view URLs
-        const up = /^\/storage\/v1\/object\/upload\/sign\/candidate-photos\/(.+)$/.exec(url.pathname);
+        const up = /^\/storage\/v1\/object\/upload\/sign\/([a-z-]+)\/(.+)$/.exec(url.pathname);
         if (up && req.method === 'PUT') {
           const ok = fake.putSigned(url.searchParams.get('token'), body, req.headers['content-type']);
           res.writeHead(ok ? 200 : 400, { 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify(ok ? { Key: 'candidate-photos/' + up[1] } : { error: 'bad token' }));
+          return res.end(JSON.stringify(ok ? { Key: up[1] + '/' + up[2] } : { error: 'bad token' }));
         }
-        const view = /^\/storage\/v1\/object\/sign\/candidate-photos\/(.+)$/.exec(url.pathname);
+        const view = /^\/storage\/v1\/object\/sign\/([a-z-]+)\/(.+)$/.exec(url.pathname);
         if (view) {
-          const o = fake.objects['candidate-photos/' + decodeURIComponent(view[1])];
+          const o = fake.objects[view[1] + '/' + decodeURIComponent(view[2])];
           if (!o) { res.writeHead(404); return res.end(); }
           res.writeHead(200, { 'Content-Type': o.contentType || 'image/jpeg' });
           return res.end(o.bytes);

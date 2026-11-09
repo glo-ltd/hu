@@ -7,6 +7,19 @@ const crypto = require('crypto');
 
 const STATUSES = ['new', 'contacted', 'profile_in_progress', 'profile_complete', 'withdrawn', 'deleted'];
 
+// Tables the functions use, with the constraints that matter to the tests.
+// id: generate a uuid on insert. unique: [column, caseInsensitive].
+// cascade: child tables deleted with a parent row (child, column).
+const TABLES = {
+  candidates: { id: true, cascade: [['candidate_profiles', 'candidate_id']] },
+  candidate_profiles: {},
+  candidate_waitlist: { id: true },
+  clients: { id: true, unique: [['email', true]], cascade: [['client_events', 'client_id'], ['client_invoices', 'client_id']] },
+  client_events: { id: true },
+  client_invoices: { id: true, unique: [['number', false]] },
+  general_enquiries: { id: true },
+};
+
 function clone(v) { return v === undefined ? undefined : JSON.parse(JSON.stringify(v)); }
 
 class Query {
@@ -25,7 +38,17 @@ class Query {
   eq(c, v) { this.filters.push((r) => r[c] === v); return this; }
   neq(c, v) { this.filters.push((r) => r[c] !== v); return this; }
   in(c, arr) { this.filters.push((r) => arr.indexOf(r[c]) !== -1); return this; }
-  gte(c, v) { this.filters.push((r) => r[c] >= v); return this; }
+  gte(c, v) { this.filters.push((r) => r[c] != null && r[c] >= v); return this; }
+  gt(c, v) { this.filters.push((r) => r[c] != null && r[c] > v); return this; }
+  lt(c, v) { this.filters.push((r) => r[c] != null && r[c] < v); return this; }
+  lte(c, v) { this.filters.push((r) => r[c] != null && r[c] <= v); return this; }
+  is(c, v) { this.filters.push((r) => (v === null ? r[c] == null : r[c] === v)); return this; }
+  not(c, op, v) {
+    if (op === 'is') this.filters.push((r) => (v === null ? r[c] != null : r[c] !== v));
+    else if (op === 'in') { const arr = String(v).replace(/^\(|\)$/g, '').split(',').map((x) => x.replace(/^"|"$/g, '')); this.filters.push((r) => arr.indexOf(r[c]) === -1); }
+    else this.filters.push((r) => r[c] !== v);
+    return this;
+  }
   ilike(c, pattern) {
     const re = new RegExp('^' + pattern.replace(/\\([\\%_])/g, '\u0000$1').replace(/[.*+?^${}()|[\]]/g, '\\$&').replace(/%/g, '.*').replace(/_/g, '.').replace(/\u0000(.)/g, (m, ch) => '\\' + ch) + '$', 'i');
     this.filters.push((r) => r[c] != null && re.test(r[c]));
@@ -43,13 +66,20 @@ class Query {
     this.cols.split(',').map((s) => s.trim()).filter(Boolean).forEach((c) => { out[c] = clone(row[c]); });
     return out;
   }
-  check(row) {
+  check(row, selfRow) {
     if (this.table === 'candidates' && STATUSES.indexOf(row.status) === -1) return 'invalid enum value ' + row.status;
     if (this.table === 'candidate_profiles') {
       if ((row.photo_paths || []).length > 3) return 'violates check constraint "candidate_profiles_max_photos"';
       if (row.display_name && row.display_name.length > 40) return 'violates check constraint "candidate_profiles_display_name_length"';
       if (!row.questions_version) return 'null value in column "questions_version"';
       if (!this.db.tables.candidates.some((c) => c.id === row.candidate_id)) return 'violates foreign key constraint';
+    }
+    if (/^client_/.test(this.table) && row.client_id && !this.db.table('clients').some((c) => c.id === row.client_id)) return 'violates foreign key constraint';
+    const cfg = TABLES[this.table] || {};
+    for (const [col, ci] of cfg.unique || []) {
+      if (row[col] == null) continue;
+      const norm = (v) => (ci ? String(v).toLowerCase() : v);
+      if (this.db.table(this.table).some((r) => r !== selfRow && r[col] != null && norm(r[col]) === norm(row[col]))) return 'duplicate key value violates unique constraint (' + col + ')';
     }
     return null;
   }
@@ -60,7 +90,7 @@ class Query {
       return { data: null, error: { message: 'simulated failure' } };
     }
     db.calls.push({ table: this.table, op: this.op, payload: clone(this.payload) });
-    const rows = db.tables[this.table];
+    const rows = db.table(this.table);
     if (!rows) return { data: null, error: { message: 'relation "' + this.table + '" does not exist' } };
     const match = (r) => this.filters.every((f) => f(r));
     let result;
@@ -68,7 +98,7 @@ class Query {
     if (this.op === 'insert') {
       result = [];
       for (const p of this.payload) {
-        const row = Object.assign(this.table === 'candidates' ? { id: crypto.randomUUID(), status: 'new' } : {}, this.defaults(), clone(p));
+        const row = Object.assign((TABLES[this.table] || {}).id ? { id: crypto.randomUUID() } : {}, this.table === 'candidates' ? { status: 'new' } : {}, this.defaults(), clone(p));
         const err = this.check(row);
         if (err) return { data: null, error: { message: err } };
         if (this.table === 'candidate_profiles' && rows.some((r) => r.candidate_id === row.candidate_id)) return { data: null, error: { message: 'duplicate key' } };
@@ -78,16 +108,16 @@ class Query {
       result = [];
       for (const r of rows.filter(match)) {
         const next = Object.assign({}, r, clone(this.payload), { updated_at: now });
-        const err = this.check(next);
+        const err = this.check(next, r);
         if (err) return { data: null, error: { message: err } };
         Object.assign(r, next); result.push(r);
       }
     } else if (this.op === 'delete') {
       result = rows.filter(match);
       db.tables[this.table] = rows.filter((r) => !match(r));
-      if (this.table === 'candidates') {
-        const ids = result.map((r) => r.id);
-        db.tables.candidate_profiles = db.tables.candidate_profiles.filter((p) => ids.indexOf(p.candidate_id) === -1);
+      const ids = result.map((r) => r.id);
+      for (const [child, col] of (TABLES[this.table] || {}).cascade || []) {
+        db.tables[child] = db.table(child).filter((p) => ids.indexOf(p[col]) === -1);
       }
     } else {
       result = rows.filter(match);
@@ -134,8 +164,13 @@ class FakeSupabase {
     };
     this.storage = { from: (bucket) => self.bucket(bucket) };
   }
+  table(name) {
+    if (!this.tables[name] && TABLES[name]) this.tables[name] = [];
+    return this.tables[name];
+  }
   reset() {
-    this.tables = { candidates: [], candidate_profiles: [], candidate_waitlist: [] };
+    this.tables = {};
+    Object.keys(TABLES).forEach((t) => { this.tables[t] = []; });
     this.objects = {}; // "bucket/path" -> { bytes: Buffer, contentType }
     this.uploadTokens = {};
     this.users = {};
@@ -166,6 +201,11 @@ class FakeSupabase {
         const pre = key(prefix) + '/';
         return { data: Object.keys(self.objects).filter((k) => k.indexOf(pre) === 0).map((k) => ({ name: k.slice(pre.length) })), error: null };
       },
+      async download(path) {
+        const o = self.objects[key(path)];
+        if (!o) return { data: null, error: { message: 'Object not found' } };
+        return { data: new Blob([o.bytes], { type: o.contentType || 'application/octet-stream' }), error: null };
+      },
       async remove(paths) {
         paths.forEach((p) => { delete self.objects[key(p)]; });
         return { data: paths.map((p) => ({ name: p })), error: null };
@@ -180,8 +220,8 @@ class FakeSupabase {
     this.objects[k] = { bytes, contentType };
     return true;
   }
-  addObject(path, bytes) { this.objects['candidate-photos/' + path] = { bytes: bytes || Buffer.from('x'), contentType: 'image/jpeg' }; }
-  hasObject(path) { return !!this.objects['candidate-photos/' + path]; }
+  addObject(path, bytes, bucket) { this.objects[(bucket || 'candidate-photos') + '/' + path] = { bytes: bytes || Buffer.from('x'), contentType: 'image/jpeg' }; }
+  hasObject(path, bucket) { return !!this.objects[(bucket || 'candidate-photos') + '/' + path]; }
 }
 
 module.exports = { FakeSupabase };

@@ -86,3 +86,45 @@ replying **"RÚT"** (or **"WITHDRAW"** in English) on Zalo.
   James to add it to `ADMIN_EMAILS` in Netlify.
 - Anything else: email James with the candidate number from the address
   bar (the long code after `#`), never her name or Zalo number.
+
+## Clients (the Clients tab)
+
+The **Clients** tab sits beside Candidates. Each man moves through:
+new enquiry → call booked → call held → invited → applying → documents to
+check → ready to invoice → awaiting payment → active. The filters along the
+top follow the same order.
+
+**Every morning:** open **New enquiries**. Each one has already had an
+automatic thank-you (R1) with links to book a call and to request the fee
+document. Reply to him personally within one working day.
+
+**The call:** when he books on Calendly, tap **Call booked**; after it,
+**Call held**. Then choose one:
+- **Invite to apply:** sends R3 with the fee document and his private
+  application link (valid 30 days). Only works once `CLIENT_SIGNUPS_OPEN` is on.
+- **Thinking it over:** you'll get a reminder after 7 days.
+- **Not the right fit:** sends R4, a short, kind email with no reasons.
+
+**Documents to check:** when he sends his application you get an email.
+Open his page, tap **Open** on his photo ID and certificate (each link works
+for 10 minutes), and check that:
+- the ID matches his legal name and date of birth;
+- the certificate is official, from his country of residence, and dated
+  within the last 6 months.
+
+Then tap **Mark checked** on each. Read his background declaration: any
+"yes" is shown in red. You can still send **Not the right fit** at this
+stage.
+
+**Invoice:** the draft shows the standard fee; change the amount for a
+founding member before sending. **Preview PDF**, then **Send invoice**. It
+gets the next number (HU-2026-0001…) and goes to him with the PDF and the
+bank details. When the money is in the account, tap **Mark payment
+received**: his 12 months start that day and he gets the welcome email with
+his link to begin his profile.
+
+**Links:** if he loses his link or it expires, tap **Send a new private
+link**. The old one stops working.
+
+Every action is recorded in the **Timeline** with who did it.
+
