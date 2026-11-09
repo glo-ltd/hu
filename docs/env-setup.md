@@ -89,6 +89,12 @@ Phase 3 (her decision and the introduction): run
 `supabase/migrations/2026-12-client-phase-3.sql` (tables `introductions` and
 `introduction_questions`). No new env vars.
 
+Phase 4 (automation, closing, feedback, concerns): run
+`supabase/migrations/2026-12-client-phase-4.sql` (tables `client_feedback`
+and `concerns`; new columns on `clients`). No new env vars. It adds the
+`daily-tasks` scheduled function (once a day, set in `netlify.toml`).
+Netlify shows its runs under **Functions → daily-tasks**.
+
 The fees, invoice numbering, link lengths and the other client-side
 decisions live in `netlify/shared/client-config.js`.
 

@@ -20,7 +20,7 @@ module.exports = {
           'We check your documents, then send your invoice. Payment is by bank transfer.',
           'Once payment is received, you write your profile, and we prepare your introductions ' + C.MATCHING_TIME_TEXT + '.',
         ] },
-        'Our Service & Investment Structure is attached again for reference.',
+        'Our Service & Investment Structure is attached again for reference. You can also download it at heritage-union.com/assets/documents/heritage-union-fee-structure.pdf.',
         { button: { label: 'Start your application', href: d.link } },
         { small: 'This link is private to you and works until ' + d.expiresOn + '. Please don\'t forward it. If it expires, just reply and I\'ll send a new one.' },
         'Warm regards,',

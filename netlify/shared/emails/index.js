@@ -14,8 +14,13 @@ module.exports = {
   R11: require('./r11-profiles-to-review'),
   R12: require('./r12-choices-received'),
   R13: require('./r13-introduction-request'),
+  R14: require('./r14-gentle-reminder'),
   R15: require('./r15-she-accepted'),
   R16: require('./r16-his-details'),
   R17: require('./r17-not-this-time'),
+  R18: require('./r18-here-if-you-need-us'),
+  R19: require('./r19-congratulations'),
+  R20: require('./r20-twelve-months'),
+  R21: require('./r21-feedback'),
   team: require('./team-client'),
 };

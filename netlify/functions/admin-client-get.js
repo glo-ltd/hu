@@ -53,7 +53,7 @@ exports.handler = async function (event) {
         id: x.id, candidateId: x.candidate_id, rank: x.rank, replacement: x.is_replacement, status: x.status, statusChangedAt: x.status_changed_at,
         name: (cprofs.find((y) => y.candidate_id === x.candidate_id) || {}).display_name || '—', lang, hasEmail: !!cand.email, herStatus: cand.status,
         sentAt: x.sent_at, sentBy: x.sent_by, openedAt: x.opened_at, decidedAt: x.decided_at, expiresAt: x.decision_token_expires_at,
-        introducedAt: x.introduced_at, introducedBy: x.introduced_by, cancelReason: x.cancel_reason,
+        introducedAt: x.introduced_at, introducedBy: x.introduced_by, cancelReason: x.cancel_reason, reminderSentAt: x.reminder_sent_at, expiredAt: x.expired_at,
         consent: x.consent, consentTypedName: x.consent_typed_name, consentVersion: x.consent_text_version, decisionLang: x.decision_lang,
         declineReason: x.decline_reason,
         questions: qs.filter((q) => q.introduction_id === x.id).map((q) => ({ message: q.message, at: q.created_at, answeredAt: q.answered_at, answeredBy: q.answered_by })),
@@ -61,6 +61,10 @@ exports.handler = async function (event) {
         translationGaps: I.translationGaps(c.data, pr.data, lang),
       };
     });
+    // Phase 4: feedback and concerns linked to him.
+    const fb = await ctx.supabase.from('client_feedback').select('rating, comments, publish_permission, permission_text_version, created_at').eq('client_id', id);
+    const cn = await ctx.supabase.from('concerns').select('id, about, reporter_role, message, created_at, handled_at').eq('client_id', id);
+    delete client.feedback_token_hash;
     logAction(ctx.email, 'client_view', id);
     return P.json(200, {
       ok: true,
@@ -79,6 +83,10 @@ exports.handler = async function (event) {
       shortlist: (sl.data || []).map((x) => ({ id: x.candidate_id, name: names[x.candidate_id] || '—', sentAt: x.sent_at })),
       choices: (ch.data || []).sort((a, b) => a.rank - b.rank).map((x) => ({ id: x.candidate_id, rank: x.rank, name: names[x.candidate_id] || '—' })),
       introductions,
+      feedback: fb.data || [],
+      concerns: cn.data || [],
+      honourFeeCents: CC.C.FEES.honour.amountCents,
+      retentionMonths: CC.C.DOCUMENT_RETENTION_MONTHS_AFTER_CLOSE,
       maxIntroductions: CC.C.MAX_INTRODUCTIONS,
     });
   } catch (e) {

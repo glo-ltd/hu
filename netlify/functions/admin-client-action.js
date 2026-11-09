@@ -11,9 +11,16 @@ const path = require('path');
 
 const PRE_INVOICE = ['enquiry', 'call_booked', 'call_held', 'thinking', 'invited', 'applying', 'submitted', 'checked'];
 
+// Same file and approach as request-fee-structure.js. If it can't be read,
+// R3 still goes out: it also links to the PDF on the website.
 function feePdfAttachment() {
-  const file = path.join(__dirname, 'assets', 'heritage-union-fee-structure.pdf');
-  return [{ filename: 'Heritage-Union-Fee-Structure.pdf', content: fs.readFileSync(file).toString('base64') }];
+  try {
+    const file = path.join(__dirname, 'assets', 'heritage-union-fee-structure.pdf');
+    return [{ filename: 'Heritage-Union-Fee-Structure.pdf', content: fs.readFileSync(file).toString('base64') }];
+  } catch (err) {
+    console.error('Fee PDF could not be read for R3; sending without the attachment:', err.message);
+    return undefined;
+  }
 }
 
 function contactEmail(c) { return (c.application && c.application.email) || c.email; }
@@ -61,6 +68,16 @@ const ACTIONS = {
     const l = await newLink(sb, c, applying ? CC.C.APPLICATION_LINK_DAYS : CC.C.CLIENT_LINK_DAYS);
     const ok = await sendEmail(contactEmail(c), E.R5.build({ firstName: CC.firstName(c.full_name), link: l.link, expiresOn: l.expiresOn, purpose: applying ? 'application' : 'page' }));
     return ok ? null : { warning: 'A new link was made, but the email could not be sent.' };
+  },
+  // A concern about him: pause blocks new requests and shows "paused" on
+  // his page. Requests already with a woman stay open; "Introduce" waits.
+  async pause(sb, c) {
+    if (c.status !== 'active') return 'Only an active engagement can be paused.';
+    await CC.setStatus(sb, c.id, 'paused', { paused_at: new Date().toISOString(), paused_reason: 'concern' });
+  },
+  async unpause(sb, c) {
+    if (c.status !== 'paused') return 'He isn\'t paused.';
+    await CC.setStatus(sb, c.id, 'active', { paused_at: null, paused_reason: null });
   },
   // Stage 3: document checks. Both checked -> ready for an invoice.
   async check_id(sb, c, email) { return check(sb, c, email, 'id'); },

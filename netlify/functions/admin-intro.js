@@ -20,7 +20,7 @@ exports.handler = async function (event) {
   if (ctx.response) return ctx.response;
   const sb = ctx.supabase;
   const { id, op, introId } = ctx.data;
-  if (!isUuid(id) || !isUuid(introId) || ['send', 'resend', 'introduce', 'cancel', 'answered'].indexOf(op) === -1) return P.json(400, { error: 'Invalid request.' });
+  if (!isUuid(id) || !isUuid(introId) || ['send', 'resend', 'introduce', 'cancel', 'answered', 'reminder'].indexOf(op) === -1) return P.json(400, { error: 'Invalid request.' });
   try {
     const ir = await sb.from('introductions').select('*').eq('id', introId).eq('client_id', id).maybeSingle();
     if (ir.error) throw ir.error;
@@ -67,6 +67,11 @@ exports.handler = async function (event) {
     } else if (op === 'cancel') {
       if (I.PENDING.indexOf(intro.status) === -1) return P.json(409, { error: 'Only a request that hasn\'t been answered can be cancelled.' });
       await I.setIntroStatus(sb, intro, 'cancelled', { cancelled_at: now, cancel_reason: 'team', decision_token_hash: null, decision_token_expires_at: null });
+    } else if (op === 'reminder') {
+      // The R14 text for a woman without email, to paste into Zalo.
+      if (I.OPEN.indexOf(intro.status) === -1) return P.json(409, { error: 'This request isn\'t waiting for her answer.' });
+      out.zalo = E.R14.zalo({ lang, name: herName, expiresOn: new Date(intro.decision_token_expires_at).toLocaleDateString(lang === 'en' ? 'en-GB' : 'vi-VN', { day: 'numeric', month: lang === 'en' ? 'long' : 'numeric', year: 'numeric' }) });
+      out.lang = lang;
     } else if (op === 'answered') {
       const q = await sb.from('introduction_questions').update({ answered_at: now, answered_by: ctx.email }).eq('introduction_id', intro.id).is('answered_at', null);
       if (q.error) throw q.error;

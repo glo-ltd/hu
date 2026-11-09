@@ -81,7 +81,7 @@ WHAT HAPPENS NEXT
 - We check your documents, then send your invoice. Payment is by bank transfer.
 - Once payment is received, you write your profile, and we prepare your introductions within 2–4 weeks.
 
-Our Service & Investment Structure is attached again for reference.
+Our Service & Investment Structure is attached again for reference. You can also download it at heritage-union.com/assets/documents/heritage-union-fee-structure.pdf.
 
 Start your application: https://heritage-union.com/client#t=EXAMPLE
 
@@ -407,6 +407,56 @@ If anything ever worries you, tell us in confidence: https://heritage-union.com/
 Heritage Union · heritage-union.com
 ```
 
+## R14 (vi) — Tiếng Việt
+
+- **To:** the woman
+- **When:** Her preferred language is Vietnamese.
+- **Subject:** Nhắc nhẹ về lời mời làm quen — Heritage Union
+
+```text
+Chào Hoa,
+
+Heritage Union chỉ nhắc nhẹ: hai tuần trước, một khách hàng đã mong được làm quen với bạn. Bạn không cần vội, và hoàn toàn không có nghĩa vụ gì.
+
+Nếu bạn muốn trả lời, dù là đồng ý, từ chối hay hỏi thêm, bạn có thể mở lại đường link riêng trong tin nhắn trước của chúng tôi, hoặc chỉ cần nhắn cho Heritage Union qua Zalo.
+
+Nếu bạn không trả lời, lời mời sẽ tự hết hạn vào ngày 8/1/2027, và anh ấy chỉ nhận được một lời báo nhẹ nhàng, không kèm lý do. Bạn không bao giờ phải trả bất kỳ khoản tiền nào.
+
+Trân trọng,
+
+James
+Nhà sáng lập, Heritage Union
+
+--
+Nếu có bất cứ điều gì khiến bạn lo ngại, hãy báo cho chúng tôi, mọi thông tin đều được giữ kín: https://heritage-union.com/vi/contact?concern=1
+Heritage Union · heritage-union.com
+```
+
+## R14 (en) — English
+
+- **To:** the woman
+- **When:** Her preferred language is English.
+- **Subject:** A gentle reminder about your introduction request — Heritage Union
+
+```text
+Dear Hoa,
+
+Just a gentle reminder: two weeks ago, a Heritage Union client asked to be introduced to you. There is no rush, and you are under no obligation.
+
+If you would like to answer, whether yes, no or with a question, just open the private link in our earlier message, or reply to Heritage Union on Zalo.
+
+If you don't answer, the request simply expires on 8 January 2027, and he only receives a kind note, without any reason. You never pay anything.
+
+Warm regards,
+
+James
+Founder, Heritage Union
+
+--
+If anything ever worries you, tell us in confidence: https://heritage-union.com/contact?concern=1
+Heritage Union · heritage-union.com
+```
+
 ## R15 — She would like to be introduced
 
 - **To:** the client
@@ -462,7 +512,7 @@ Email: michael@example.com
 MỘT VÀI LỜI KHUYÊN CHO NHỮNG LẦN TRÒ CHUYỆN ĐẦU TIÊN
 
 - Hãy từ từ. Bạn không cần vội, và không có ai ép buộc bạn.
-- Việt Nam nhanh hơn nước của anh ấy vài tiếng. Hãy chọn giờ thuận tiện cho bạn.
+- Giờ ở Việt Nam và nước của anh ấy có thể chênh nhau nhiều tiếng. Hãy chọn giờ thuận tiện cho bạn.
 - Không bao giờ gửi hoặc nhận tiền, và không chia sẻ thông tin ngân hàng hay giấy tờ tùy thân. Nếu có ai hỏi bạn về tiền, hãy dừng lại và báo ngay cho chúng tôi.
 - Nếu gặp mặt, hãy gặp ở nơi công cộng và báo cho người thân biết.
 - Huyền luôn sẵn sàng hỗ trợ bạn bằng tiếng Việt, kể cả giúp dịch. Bạn chỉ cần nhắn cho Heritage Union qua Zalo, hoặc email team@heritage-union.com.
@@ -497,7 +547,7 @@ Phone / WhatsApp: +44 7700 900123
 A FEW TIPS FOR YOUR FIRST CONVERSATIONS
 
 - Take your time. There is no rush, and no one can pressure you.
-- Vietnam is several hours ahead of his country. Choose times that suit you.
+- There may be several hours' time difference between Vietnam and his country. Choose times that suit you.
 - Never send or receive money, and never share bank details or identity documents. If anyone asks you about money, stop and tell us at once.
 - If you meet, meet in a public place and tell someone close to you.
 - Huyen is always there to help you in Vietnamese, including with translation. Just message Heritage Union on Zalo, or email team@heritage-union.com.
@@ -543,7 +593,134 @@ If anything ever worries you, tell us in confidence: https://heritage-union.com/
 Heritage Union · heritage-union.com
 ```
 
+## R18 — We're here if you need us
+
+- **To:** the client
+- **When:** Automatically (daily-tasks), once, 3 months after his first introduction.
+- **Subject:** We're here if you need us — Heritage Union
+
+```text
+Dear Michael,
+
+It is three months since your first introduction, and I wanted to say that Huyen and I are still here for you.
+
+If you would like help with anything (translation, understanding cultural differences, planning a visit, or simply talking something through), just reply to this email.
+
+And if anything has ever concerned you, please tell us in confidence.
+
+Warm regards,
+
+James
+Founder, Heritage Union
+
+--
+If anything ever worries you, tell us in confidence: https://heritage-union.com/contact?concern=1
+Heritage Union · heritage-union.com
+```
+
+## R19 — Congratulations
+
+- **To:** the client
+- **When:** Only when James presses "Relationship success" on the team page. The honour-payment invoice is attached.
+- **Subject:** Congratulations — Heritage Union
+
+```text
+Dear Michael,
+
+Congratulations. Huyen and I are so happy for you both. Thank you for letting us be a small part of your story.
+
+As set out in your client agreement, the honour payment is now due. Your invoice is attached and summarised below.
+
+Invoice HU-2027-0004
+Honour payment
+USD 10,000.00
+Due by 23 June 2027
+
+Payment by bank transfer
+Account name: Heritage Union
+IBAN: …
+Reference: HU-2027-0004
+
+We are always here if you need us, now and in the future.
+
+With warmest wishes,
+
+James
+Founder, Heritage Union
+
+--
+If anything ever worries you, tell us in confidence: https://heritage-union.com/contact?concern=1
+Heritage Union · heritage-union.com
+```
+
+## R20 — Twelve months complete
+
+- **To:** the client
+- **When:** When James presses "12 months complete" on the team page.
+- **Subject:** Your engagement is complete — Heritage Union
+
+```text
+Dear Michael,
+
+Your 12-month engagement with Heritage Union is now complete. Thank you for the trust you have placed in us.
+
+To confirm: nothing more is owed. No further fees are due from you.
+
+As promised in our Privacy Policy, your identity documents will be deleted 6 months from today.
+
+I wish you every happiness, and you are always welcome to write to me.
+
+Warm regards,
+
+James
+Founder, Heritage Union
+
+--
+If anything ever worries you, tell us in confidence: https://heritage-union.com/contact?concern=1
+Heritage Union · heritage-union.com
+```
+
+## R21 — Your feedback
+
+- **To:** the client
+- **When:** With every closing (relationship success, 12 months complete, or close).
+- **Subject:** Would you share your thoughts? — Heritage Union
+
+```text
+Dear Michael,
+
+Would you tell me how you found Heritage Union? It takes two minutes, and it helps us look after the men and women who come after you.
+
+Share your feedback: https://heritage-union.com/feedback#t=EXAMPLE
+
+We will only ever publish what you write if you give us written permission on the form, and only in the way you choose.
+
+This link is private to you and works until 8 March 2027.
+
+Thank you,
+
+James
+Founder, Heritage Union
+
+--
+If anything ever worries you, tell us in confidence: https://heritage-union.com/contact?concern=1
+Heritage Union · heritage-union.com
+```
+
 ## Team notifications
+
+## Team — New concern
+
+- **To:** everyone in ADMIN_EMAILS
+- **Subject:** New concern reported (R-5A5A5A5A)
+
+```text
+A concern has been reported through the website. Please read it today. Reference R-5A5A5A5A.
+
+Open concerns in the team page: https://heritage-union.com/admin/#clients/concerns
+
+Heritage Union · heritage-union.com
+```
 
 ## Team — A woman said yes to an introduction
 
@@ -565,6 +742,32 @@ Heritage Union · heritage-union.com
 
 ```text
 A woman has said no. He has been told kindly (R17), with no reason. Reference I-9F8E7D6C.
+
+Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
+
+Heritage Union · heritage-union.com
+```
+
+## Team — Send a gentle reminder on Zalo
+
+- **To:** everyone in ADMIN_EMAILS
+- **Subject:** Send a gentle reminder on Zalo (I-9F8E7D6C)
+
+```text
+A request has had no answer for 14 days and she has no email address. Open his page and copy the reminder into Zalo. Reference I-9F8E7D6C.
+
+Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
+
+Heritage Union · heritage-union.com
+```
+
+## Team — An introduction request expired
+
+- **To:** everyone in ADMIN_EMAILS
+- **Subject:** An introduction request expired (I-9F8E7D6C)
+
+```text
+A request reached 30 days without an answer and has expired. He has been told kindly (R17). Reference I-9F8E7D6C.
 
 Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
 
@@ -617,6 +820,32 @@ Heritage Union · heritage-union.com
 
 ```text
 An application is ready for document checks. Reference C-1A2B3C4D.
+
+Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
+
+Heritage Union · heritage-union.com
+```
+
+## Team — Engagement reached 12 months
+
+- **To:** everyone in ADMIN_EMAILS
+- **Subject:** Engagement reached 12 months (C-1A2B3C4D)
+
+```text
+A client's engagement has reached 12 months. Decide whether to close it (12 months complete, relationship success or close). Reference C-1A2B3C4D.
+
+Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
+
+Heritage Union · heritage-union.com
+```
+
+## Team — Client feedback received
+
+- **To:** everyone in ADMIN_EMAILS
+- **Subject:** Client feedback received (C-1A2B3C4D)
+
+```text
+A client has sent feedback. Reference C-1A2B3C4D.
 
 Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
 

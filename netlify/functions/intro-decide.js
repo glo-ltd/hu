@@ -9,8 +9,8 @@ const { json, ipHash } = require('../shared/request-utils');
 const I = require('../shared/introductions');
 const CC = require('../shared/client-common');
 const E = require('../shared/emails');
-const { sendEmail, sendTeam } = require('../shared/emails/send');
-const { clientPageLink } = require('../shared/emails/refs');
+const { sendTeam } = require('../shared/emails/send');
+const { notifyHimNotThisTime } = require('../shared/intro-notify');
 
 function bad(code, vi, en, field) { return json(400, { error: vi, error_en: en, code, field }); }
 
@@ -59,22 +59,5 @@ exports.handler = async function (event) {
     return I.herErr(502, 'failed');
   }
 };
-
-// R17 to him: kind, no reasons. If he has introductions left and women on
-// his list he hasn't chosen yet, a fresh link to choose someone else.
-async function notifyHimNotThisTime(sb, intro) {
-  const c = (await sb.from('clients').select('*').eq('id', intro.client_id).single()).data;
-  const herName = ((await sb.from('candidate_profiles').select('display_name').eq('candidate_id', intro.candidate_id).maybeSingle()).data || {}).display_name || 'her';
-  const canReplace = c.status === 'active' && (await I.usedCount(sb, c.id)) < CC.C.MAX_INTRODUCTIONS;
-  const d = { firstName: CC.firstName(c.full_name), herName, canReplace };
-  if (canReplace) {
-    const t = CC.newClientToken(CC.C.CLIENT_LINK_DAYS);
-    await sb.from('clients').update({ access_token_hash: t.hash, access_token_expires_at: t.expiresAt, link_sent_at: new Date().toISOString() }).eq('id', c.id);
-    d.link = clientPageLink(t.token);
-    d.expiresOn = CC.fmtDate(t.expiresAt);
-  }
-  await sendEmail((c.application && c.application.email) || c.email, E.R17.build(d));
-  await sb.from('introductions').update({ declined_notice_sent_at: new Date().toISOString() }).eq('id', intro.id);
-}
 
 exports.notifyHimNotThisTime = notifyHimNotThisTime;

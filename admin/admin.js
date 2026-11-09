@@ -104,7 +104,7 @@
     // Remember which candidate the email link pointed to. localStorage (not
     // sessionStorage) because the sign-in link usually opens in a new tab.
     // Only her reference number is kept, and only for an hour.
-    try { if (/^(client-)?[0-9a-f-]{36}$|^clients$/i.test(target)) localStorage.setItem(NEXT_KEY, JSON.stringify({ id: target, at: Date.now() })); } catch (err) {}
+    try { if (/^(client-)?[0-9a-f-]{36}$|^clients(\/concerns)?$/i.test(target)) localStorage.setItem(NEXT_KEY, JSON.stringify({ id: target, at: Date.now() })); } catch (err) {}
     $('ad-signin-msg').textContent = 'Sending…';
     sb.auth.signInWithOtp({
       email: email,
@@ -130,7 +130,7 @@
     try {
       var saved = JSON.parse(localStorage.getItem(NEXT_KEY) || 'null');
       localStorage.removeItem(NEXT_KEY);
-      if (saved && /^(client-)?[0-9a-f-]{36}$|^clients$/i.test(saved.id) && Date.now() - saved.at < 3600000) next = saved.id;
+      if (saved && /^(client-)?[0-9a-f-]{36}$|^clients(\/concerns)?$/i.test(saved.id) && Date.now() - saved.at < 3600000) next = saved.id;
     } catch (err) {}
     $('ad-tabs').hidden = false;
     if (next && !/^#(client-)?[0-9a-f-]{36}$/i.test(location.hash)) { location.hash = next; return; }

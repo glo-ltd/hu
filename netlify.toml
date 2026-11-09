@@ -5,6 +5,11 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+# Reminders, expiries, the 3-month check-in, the 12-month flag and document
+# deletion. Scheduled functions can't be called from outside in production.
+[functions."daily-tasks"]
+  schedule = "@daily"
+
 [[headers]]
   for = "/*"
   [headers.values]
@@ -24,6 +29,14 @@
 # The client's private page: never indexed, never cached, no referrer.
 [[headers]]
   for = "/client*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+    Referrer-Policy = "no-referrer"
+
+# The client's feedback form (R21).
+[[headers]]
+  for = "/feedback*"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
     Cache-Control = "no-store"
