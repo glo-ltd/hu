@@ -35,7 +35,9 @@
     call_booked: 'Call booked', call_held: 'Call held', thinking: 'Thinking it over', invite: 'Invited to apply (R3)', not_a_fit: 'Not the right fit (R4)',
     resend_link: 'New private link sent (R5)', application_started: 'Started his application', id_uploaded: 'Uploaded photo ID',
     certificate_uploaded: 'Uploaded criminal record certificate', declaration_signed: 'Signed background declaration', agreement_accepted: 'Accepted client agreement',
-    application_submitted: 'Sent his application (R6)', check_id: 'Photo ID checked', check_certificate: 'Certificate checked',
+    application_submitted: 'Sent his application (R6)', profile_submitted: 'Sent his profile', profile_summary_save: 'Summary saved',
+    profile_summary_send: 'Summary sent for approval (R9)', profile_translate: 'Translations saved', summary_approved: 'Approved his summary (R10)',
+    summary_changes_requested: 'Asked for changes to his summary', shortlist_sent: 'Shortlist sent (R11)', choices_submitted: 'Sent his choices (R12)', check_id: 'Photo ID checked', check_certificate: 'Certificate checked',
     uncheck_id: 'Photo ID check undone', uncheck_certificate: 'Certificate check undone', invoice_create: 'Invoice drafted', invoice_update: 'Invoice draft changed',
     invoice_send: 'Invoice sent (R7)', invoice_paid: 'Payment received (R8 welcome)', invoice_void: 'Invoice voided',
   };
@@ -233,6 +235,14 @@
       ]));
     }
 
+    if (['active', 'paused', 'closed'].indexOf(c.status) !== -1) {
+      left.appendChild(profileSection(c, d));
+      if (d.profile && d.profile.submitted_at) {
+        left.appendChild(summarySection(c, d));
+        left.appendChild(translationSection(c, d));
+      }
+      right.appendChild(matchingSection(c, d));
+    }
     right.appendChild(actionsSection(c, d));
     if (['submitted', 'checked', 'invoiced', 'active', 'paused', 'closed'].indexOf(c.status) !== -1 || c.id_document_path || c.certificate_path) right.appendChild(documentsSection(c, d));
     if (['submitted', 'checked', 'invoiced', 'active', 'paused', 'closed'].indexOf(c.status) !== -1 || d.invoices.length) right.appendChild(invoicesSection(c, d));
@@ -384,10 +394,225 @@
     return sec;
   }
 
+  // ------------------------------------------------------------------ phase 2: his profile
+  function pqAnswer(q, v) {
+    if (v === undefined || v === null || v === '' || (Array.isArray(v) && !v.length)) return null;
+    var lab = function (opts, x) { var o = opts.filter(function (y) { return y.value === x; })[0]; return o ? o.label : x; };
+    if (q.type === 'single') return lab(q.options, v);
+    if (q.type === 'multi') return v.map(function (x) { return lab(q.options, x); }).join(', ');
+    if (q.type === 'range') return v[0] + '–' + v[1];
+    if (q.type === 'languages' || q.type === 'langreq') return v.map(function (x) { return (x.language === 'other' ? x.other : lab(q.options, x.language)) + (q.type === 'langreq' ? ' (at least ' : ' (') + lab(q.levels, x.level).toLowerCase() + ')'; }).join(', ');
+    return String(v);
+  }
+  function pqValue(q, p) { return q.storage === 'column' ? p.display_name : q.storage === 'message' ? p.message_to_women : (p.answers || {})[q.id]; }
+
+  function profileSection(c, d) {
+    var sec = el('section', { class: 'ad-section' }, [el('h2', { text: 'His profile (F4)' })]);
+    var p = d.profile;
+    if (!p) { sec.appendChild(el('p', { class: 'ad-empty', text: 'Not started yet.' })); return sec; }
+    sec.appendChild(el('p', { class: 'form-note', text: p.submitted_at ? 'Sent ' + H.fmtDateTime(p.submitted_at) + '. Shown as he wrote it; the team can\'t edit his answers.' : 'He is still writing it (not sent yet).' }));
+    if (d.profilePhotos.length) sec.appendChild(el('div', { class: 'ad-photos' }, d.profilePhotos.map(function (x, i) { return el('img', { src: x.url || '', alt: 'His photo ' + (i + 1) }); })));
+    d.profileQuestions.steps.forEach(function (st) {
+      var qs = d.profileQuestions.questions.filter(function (q) { return q.step === st.step; });
+      if (!qs.length) return;
+      sec.appendChild(el('h3', { text: st.title }));
+      qs.forEach(function (q) {
+        var t = pqAnswer(q, pqValue(q, p));
+        if (t === null && !q.required) return;
+        sec.appendChild(el('div', { class: 'ad-answer' }, [el('span', { class: 'ad-q', text: q.label }), el('span', { class: 'ad-a' + (t ? '' : ' ad-empty'), text: t || 'No answer' })]));
+      });
+    });
+    return sec;
+  }
+
+  // Starter paragraph from his answers, for James to edit.
+  function keyFacts(c, d) {
+    var p = d.profile, a = p.answers || {}, Q = {};
+    d.profileQuestions.questions.forEach(function (q) { Q[q.id] = q; });
+    var age = c.application && c.application.date_of_birth ? Math.floor((Date.now() - Date.parse(c.application.date_of_birth)) / 31557600000) : null;
+    var name = p.display_name || c.full_name.split(' ')[0];
+    var parts = [];
+    parts.push(name + ' is ' + (age ? 'a ' + age + '-year-old ' : 'a ') + (a.occupation ? a.occupation.toLowerCase() : 'professional') + (a.city || a.country ? ' living in ' + [a.city, a.country].filter(Boolean).join(', ') : '') + '.');
+    if (a.languages) parts.push('He speaks ' + pqAnswer(Q.languages, a.languages) + '.');
+    var fam = [];
+    if (a.marital_history) fam.push('He is ' + pqAnswer(Q.marital_history, a.marital_history).toLowerCase());
+    if (typeof a.children === 'number') fam.push(a.children === 0 ? 'has no children' : 'has ' + a.children + (a.children === 1 ? ' child' : ' children'));
+    if (fam.length) parts.push(fam.join(' and ') + '.');
+    if (a.values) parts.push('What matters most to him: ' + pqAnswer(Q.values, a.values).toLowerCase() + '.');
+    if (a.where_live) parts.push('Where he hopes to live: ' + pqAnswer(Q.where_live, a.where_live).toLowerCase() + '.');
+    return '<p>' + parts.join(' ') + '</p><p>' + (a.partner_matters ? 'In his own words: “' + a.partner_matters.replace(/</g, '&lt;') + '”' : '') + '</p>';
+  }
+
+  function words(html) { return (html.replace(/<[^>]+>/g, ' ').match(/\S+/g) || []).length; }
+
+  function summarySection(c, d) {
+    var p = d.profile;
+    var sec = el('section', { class: 'ad-section' }, [el('h2', { text: 'Profile summary (English)' })]);
+    var state = p.summary_approved_at ? '✓ Approved by him ' + H.fmtDateTime(p.summary_approved_at)
+      : p.summary_sent_at ? 'Sent to him for approval ' + H.fmtDateTime(p.summary_sent_at)
+      : p.changes_requested_at ? 'He asked for changes ' + H.fmtDateTime(p.changes_requested_at) : 'Not sent yet';
+    sec.appendChild(el('p', { class: p.changes_requested_at && !p.summary_sent_at && !p.summary_approved_at ? 'ad-preview-banner' : 'form-note', text: state + (p.summary_by ? ' · last saved by ' + p.summary_by + ', ' + H.fmtDateTime(p.summary_at) : '') }));
+    if (p.changes_requested_at && !p.summary_approved_at) sec.appendChild(el('blockquote', { class: 'cl-quote', text: p.changes_comment || '' }));
+    var editor = el('div', { class: 'cl-editor', contenteditable: p.summary_approved_at ? 'false' : 'true', role: 'textbox', 'aria-multiline': 'true', 'aria-label': 'Profile summary', id: 'cl-summary-editor' });
+    editor.innerHTML = p.summary_html || '';
+    var count = el('span', { class: 'ad-card-sub' });
+    var upd = function () { count.textContent = words(editor.innerHTML) + ' words (aim for about 300)'; };
+    editor.addEventListener('input', upd); upd();
+    if (!p.summary_approved_at) {
+      var tb = el('div', { class: 'cl-toolbar', role: 'toolbar', 'aria-label': 'Formatting' }, [
+        el('button', { type: 'button', class: 'btn btn--secondary btn--sm', text: 'Bold', onclick: function () { document.execCommand('bold'); editor.focus(); } }),
+        el('button', { type: 'button', class: 'btn btn--secondary btn--sm', text: 'Italic', onclick: function () { document.execCommand('italic'); editor.focus(); } }),
+        el('button', { type: 'button', class: 'btn btn--secondary btn--sm', text: 'List', onclick: function () { document.execCommand('insertUnorderedList'); editor.focus(); } }),
+        el('button', { type: 'button', class: 'btn btn--secondary btn--sm', text: 'Insert key facts', onclick: function () { editor.innerHTML = keyFacts(c, d) + editor.innerHTML; upd(); } }),
+      ]);
+      sec.appendChild(tb);
+    }
+    sec.appendChild(editor);
+    var row = el('div', { class: 'ad-translate-row' }, [count]);
+    if (!p.summary_approved_at) {
+      row.appendChild(el('button', { type: 'button', class: 'btn btn--secondary btn--sm', text: 'Save draft', onclick: function () {
+        H.api('admin-client-profile', { id: c.id, op: 'summary_save', html: editor.innerHTML }).then(function () { H.flash('Summary saved.'); loadDetail(c.id); }, function (e) { H.flash(e.message, true); });
+      } }));
+      row.appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--sm', text: 'Save and send for approval (R9)', onclick: function () {
+        modal('Send the summary to him for approval?', 'He receives R9 with a new private link. He can approve it or ask for changes.', 'Send', function () {
+          H.api('admin-client-profile', { id: c.id, op: 'summary_save', html: editor.innerHTML }).then(function () { return H.api('admin-client-profile', { id: c.id, op: 'summary_send' }); })
+            .then(function () { H.flash('Sent for approval.'); loadDetail(c.id); }, function (e) { H.flash(e.message, true); });
+        });
+      } }));
+    }
+    sec.appendChild(row);
+    return sec;
+  }
+
+  function translationSection(c, d) {
+    var p = d.profile;
+    var sec = el('section', { class: 'ad-section' }, [el('h2', { text: 'Vietnamese translations' }),
+      el('p', { class: 'form-note', text: 'For Huyen: the summary, his declaration and his message, side by side. Women read these in Vietnamese before deciding. ' + (p.translated_by ? 'Last saved by ' + p.translated_by + ', ' + H.fmtDateTime(p.translated_at) + '.' : 'Not translated yet.') })]);
+    function pair(label, en, viEl) {
+      var enBox = el('div', { class: 'cl-pair-en' });
+      enBox.innerHTML = en; // sanitised summary HTML, or escaped text
+      return el('div', { class: 'cl-pair' }, [el('div', null, [el('span', { class: 'ad-q', text: label + ' — English' }), enBox]), el('div', null, [el('span', { class: 'ad-q', text: 'Tiếng Việt' }), viEl])]);
+    }
+    var esc = function (t) { return String(t || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\n/g, '<br>'); };
+    var sumVi = el('textarea', { class: 'form-textarea', lang: 'vi', rows: 10, 'aria-label': 'Summary in Vietnamese' });
+    sumVi.value = (p.summary_vi_html || '').replace(/<br>/g, '\n').replace(/<\/p>\s*<p>/g, '\n\n').replace(/<\/?p>/g, '');
+    sec.appendChild(pair('Summary', p.summary_html || '<em>No summary yet</em>', sumVi));
+    var decl = {};
+    sec.appendChild(el('h3', { text: 'Background declaration' }));
+    d.form.fields.filter(function (f) { return f.section === 'declaration' && f.type !== 'document'; }).forEach(function (f) {
+      var v = (c.declaration || {})[f.id];
+      if (v === undefined || v === null || v === '') return;
+      var shown = f.type === 'single' ? (f.options.filter(function (o) { return o.value === v; })[0] || {}).label : String(v);
+      var t = el('textarea', { class: 'form-textarea', lang: 'vi', rows: f.type === 'textarea' ? 4 : 2, 'aria-label': f.label + ' (Vietnamese)' });
+      t.value = (p.declaration_vi || {})[f.id] || '';
+      decl[f.id] = t;
+      sec.appendChild(pair(f.label, esc(f.label + ': ' + shown), t));
+    });
+    var msgVi = el('textarea', { class: 'form-textarea', lang: 'vi', rows: 4, 'aria-label': 'Message in Vietnamese' });
+    msgVi.value = p.message_vi || '';
+    sec.appendChild(el('h3', { text: 'His message to each woman' }));
+    sec.appendChild(pair('Message', esc(p.message_to_women || ''), msgVi));
+    sec.appendChild(el('div', { class: 'ad-translate-row' }, [el('button', { type: 'button', class: 'btn btn--primary btn--sm', text: 'Save translations', onclick: function () {
+      var dv = {}; Object.keys(decl).forEach(function (k) { dv[k] = decl[k].value; });
+      var html = sumVi.value.trim() ? '<p>' + esc(sumVi.value.trim()).replace(/(<br>){2,}/g, '</p><p>') + '</p>' : '';
+      H.api('admin-client-profile', { id: c.id, op: 'translate', summaryVi: html, declarationVi: dv, messageVi: msgVi.value }).then(function () { H.flash('Translations saved.'); loadDetail(c.id); }, function (e) { H.flash(e.message, true); });
+    } })]));
+    return sec;
+  }
+
+  function matchingSection(c, d) {
+    var p = d.profile;
+    var sec = el('section', { class: 'ad-section' }, [el('h2', { text: 'Matching and choices' })]);
+    var ready = p && p.summary_approved_at;
+    sec.appendChild(el('p', { class: 'form-note', text: !p || !p.submitted_at ? 'Matching opens once he has sent his profile.' : ready ? 'His summary is approved.' : 'You can look at matches now; the shortlist can be sent once he approves his summary.' }));
+    if (p && p.submitted_at) sec.appendChild(el('a', { class: 'btn btn--primary btn--md', href: '#client-' + c.id + '/matching', text: 'Open the matching screen' }));
+    if (d.shortlist.length) sec.appendChild(el('div', { class: 'ad-answer' }, [el('span', { class: 'ad-q', text: 'Shortlist sent ' + H.fmtDateTime(c.shortlist_sent_at) + ' (' + d.shortlist.length + ')' }), el('span', { class: 'ad-a', lang: 'vi', text: d.shortlist.map(function (x) { return x.name; }).join(', ') })]));
+    if (d.choices.length) sec.appendChild(el('div', { class: 'ad-answer' }, [el('span', { class: 'ad-q', text: 'His choices, ' + H.fmtDateTime(c.choices_submitted_at) }), el('ol', { class: 'cl-ranked' }, d.choices.map(function (x) { return el('li', { lang: 'vi' }, [el('a', { href: '#' + x.id, text: x.name })]); }))]));
+    return sec;
+  }
+
+  // ------------------------------------------------------------------ matching screen
+  var M = null;
+  var picked = [];
+  var onlyAll = false;
+  var sortBy = 'date';
+  var LABELS = { age: 'Ages', abroad: 'Living abroad', children: 'Children', education: 'Education', language: 'Shared language' };
+
+  function loadMatching(id) {
+    H.show('ad-client-detail');
+    var box = $('ad-client-detail');
+    box.innerHTML = '';
+    box.appendChild(el('p', { text: 'Loading…' }));
+    H.api('admin-matching', { id: id }).then(function (d) {
+      M = d; M.id = id;
+      picked = d.women.filter(function (w) { return w.shortlisted; }).map(function (w) { return w.id; });
+      drawMatching();
+    }, function (e) { box.innerHTML = ''; box.appendChild(el('p', { class: 'ad-flash is-error', text: e.message })); });
+  }
+
+  function drawMatching() {
+    var box = $('ad-client-detail');
+    box.innerHTML = '';
+    box.appendChild(el('div', { class: 'ad-detail-head' }, [el('a', { class: 'ad-link', href: '#client-' + M.id, text: '← Back to his page' })]));
+    box.appendChild(el('h1', { text: 'Matching' }));
+    var a = M.mustHaves;
+    box.appendChild(el('p', { class: 'form-note', text: 'Only women whose profiles are complete, who consented to clients seeing their profile, and who haven\'t withdrawn. Ticks come from her own answers only. There are no scores.' }));
+    var WL = { my_country: 'in his country', open_vietnam: 'open to Vietnam', open_elsewhere: 'open to elsewhere' };
+    var CA = { none: 'none', one: 'up to one', any: 'any number' };
+    var cap = function (x) { return String(x || '').charAt(0).toUpperCase() + String(x || '').slice(1); };
+    box.appendChild(el('dl', { class: 'ad-dl cl-musts' }, [
+      el('dt', { text: 'Her age' }), el('dd', { text: (a.her_age_range ? a.her_age_range.join('–') : '?') + ' (he is ' + (M.hisAge || '?') + ')' }),
+      el('dt', { text: 'Where to live' }), el('dd', { text: WL[a.where_live] || '?' }),
+      el('dt', { text: 'Children accepted' }), el('dd', { text: CA[a.children_accepted] || '?' }),
+      el('dt', { text: 'Minimum education' }), el('dd', { text: cap(a.min_education || '?') }),
+      el('dt', { text: 'Shared language' }), el('dd', { text: (a.must_languages || []).map(function (x) { return cap(x.language) + ' (at least ' + x.level + ')'; }).join(' or ') || 'No requirement' }),
+    ]));
+    if (!M.summaryApproved) box.appendChild(el('p', { class: 'ad-preview-banner', text: 'He hasn\'t approved his summary yet, so the shortlist can\'t be sent.' }));
+    if (M.choicesSubmittedAt) box.appendChild(el('p', { class: 'ad-preview-banner', text: 'He has already sent his choices; the shortlist can\'t change.' }));
+    var allBtn = el('button', { type: 'button', class: 'ad-filter', 'aria-pressed': onlyAll ? 'true' : 'false', text: 'Matches all', onclick: function () { onlyAll = !onlyAll; drawMatching(); } });
+    var sortSel = el('select', { class: 'form-input', 'aria-label': 'Sort', style: 'max-width:260px' }, [el('option', { value: 'date', text: 'Sort: registration date' }), el('option', { value: 'ticks', text: 'Sort: number of ticks' })]);
+    sortSel.value = sortBy;
+    sortSel.addEventListener('change', function () { sortBy = sortSel.value; drawMatching(); });
+    box.appendChild(el('div', { class: 'ad-toolbar' }, [el('div', { class: 'ad-filters' }, [allBtn]), sortSel]));
+    var list = M.women.filter(function (w) { return !onlyAll || w.matchesAll; }).slice();
+    if (sortBy === 'ticks') list.sort(function (x, y) { return y.ticks - x.ticks || (x.registeredAt < y.registeredAt ? -1 : 1); });
+    box.appendChild(el('p', { class: 'form-note', text: list.length + ' of ' + M.women.length + ' women · ' + picked.length + ' of ' + M.max + ' selected' }));
+    var grid = el('div', { class: 'ad-cards' });
+    list.forEach(function (w) {
+      var on = picked.indexOf(w.id) !== -1;
+      var cb = el('input', { type: 'checkbox', id: 'pick-' + w.id, disabled: (!on && picked.length >= M.max) || !!M.choicesSubmittedAt });
+      cb.checked = on;
+      cb.addEventListener('change', function () { var k = picked.indexOf(w.id); if (k !== -1) picked.splice(k, 1); else if (picked.length < M.max) picked.push(w.id); drawMatching(); });
+      var checks = el('ul', { class: 'cl-ticks' });
+      Object.keys(LABELS).forEach(function (k) { var t = w.checks[k]; checks.appendChild(el('li', { class: t.ok ? 'is-ok' : 'is-no', title: t.detail }, [el('span', { 'aria-hidden': 'true', text: t.ok ? '✓' : '✗' }), ' ' + LABELS[k], el('span', { class: 'cl-tick-detail', text: ' — ' + t.detail })])); });
+      grid.appendChild(el('div', { class: 'ad-card cl-match' + (on ? ' is-picked' : '') }, [
+        el('label', { class: 'cl-match-top', for: 'pick-' + w.id }, [cb, el('span', { class: 'ad-card-name', lang: 'vi', text: w.displayName + ', ' + w.age }), el('span', { class: 'ad-card-sub', lang: 'vi', text: w.province || '' })]),
+        el('span', { class: 'ad-card-sub', text: 'Registered ' + H.fmtDate(w.registeredAt) + ' · ' + w.ticks + ' of 5 ticks' + (w.matchesAll ? ' · matches all' : '') }),
+        checks,
+        el('div', { class: 'ad-badges' }, [
+          el('span', { class: 'ad-badge' + (w.photoConsent ? ' ad-badge--ok' : ''), text: w.photoConsent ? w.photoCount + ' photo(s) shared' : 'No photos shared' }),
+          w.needsTranslation.length ? el('a', { class: 'ad-badge ad-badge--warn', href: '#' + w.id, text: 'Needs English translation (' + w.needsTranslation.length + ')' }) : el('span', { class: 'ad-badge ad-badge--ok', text: 'Translated' }),
+        ]),
+      ]));
+    });
+    if (!list.length) grid.appendChild(el('p', { class: 'form-note', text: 'Nobody here.' }));
+    box.appendChild(grid);
+    var blocked = picked.some(function (id) { var w = M.women.filter(function (x) { return x.id === id; })[0]; return w && w.needsTranslation.length; });
+    var send = el('button', { type: 'button', class: 'btn btn--primary btn--md', text: 'Send to client (' + picked.length + ')', disabled: !picked.length || !M.summaryApproved || !!M.choicesSubmittedAt || blocked });
+    send.addEventListener('click', function () {
+      modal('Send ' + picked.length + ' profiles to him?', 'He receives R11 with a private link (valid 30 days) to read them and choose up to 5. Any earlier list he hasn\'t chosen from is replaced.', 'Send to client', function () {
+        H.api('admin-shortlist-send', { id: M.id, candidateIds: picked }).then(function (r) { H.flash(r.warning || 'Sent.', !!r.warning); location.hash = 'client-' + M.id; }, function (e) { H.flash(e.message, true); });
+      });
+    });
+    box.appendChild(el('div', { class: 'cl-sendbar' }, [el('span', { text: blocked ? 'A selected woman needs her answers translated first.' : picked.length + ' selected' }), send]));
+  }
+
   // ------------------------------------------------------------------ routing
   window.HUClients = {
     route: function (hash) {
       H = window.HUAdmin;
+      var mm = /^#client-([0-9a-f-]{36})\/matching$/i.exec(hash);
+      if (mm) { loadMatching(mm[1]); return; }
       var m = /^#client-([0-9a-f-]{36})$/i.exec(hash);
       if (m) loadDetail(m[1]); else loadList();
     },

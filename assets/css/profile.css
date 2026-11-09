@@ -149,3 +149,10 @@ html { background: var(--cream-100); }
 @media (max-width: 480px) {
   .pf-header-title { display: none; }
 }
+
+/* Other languages (step 1) */
+.pf-langs { display: grid; gap: 10px; }
+.pf-lang-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: center; padding: 10px; border: 1px solid var(--cream-200); border-radius: var(--radius-sm); background: var(--cream-50); }
+.pf-lang-row .pf-lang-other { grid-column: 1 / -1; }
+.pf-lang-row .pf-lang-remove { grid-column: 1 / -1; justify-self: end; min-height: 40px; padding: 4px; }
+.pf-lang-add { justify-self: start; }

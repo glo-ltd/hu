@@ -220,7 +220,8 @@ const PORT = 8901;
     const r8 = lastEmailTo('michael@example.com', /Welcome to Heritage Union/);
     token = tokenFrom(r8.text);
     await cp.goto(base + '/client#t=' + token);
-    await cp.locator('.cl-timeline').waitFor();
+    await cp.locator('#cl-eyebrow:has-text("Your engagement")').waitFor();
+    await cp.locator('#cl-view .cl-card').first().waitFor();
     assert.equal(await cp.textContent('#cl-eyebrow'), 'Your engagement');
     await shot(cp, 'client-active-welcome');
     await cctx.close();
@@ -238,7 +239,7 @@ const PORT = 8901;
     const dctx = await newContext(browser, DESKTOP);
     const dp = await dctx.newPage();
     await dp.goto(base + '/client#t=' + token);
-    await dp.locator('.cl-timeline').waitFor();
+    await dp.locator('#cl-view .cl-card').first().waitFor();
     await shot(dp, 'client-active-desktop');
     // signups switched off: polite message
     process.env.CLIENT_SIGNUPS_OPEN = 'false';

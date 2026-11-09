@@ -128,3 +128,29 @@ link**. The old one stops working.
 
 Every action is recorded in the **Timeline** with who did it.
 
+### After payment: his profile, summary and matching
+
+1. **He writes his profile** on his private page (about 20 minutes). When
+   he sends it you get an email. Open his page: his answers, photos and his
+   message to the women are under **His profile**.
+2. **James writes the summary** (about 300 words) in the **Profile summary**
+   box. **Insert key facts** starts it from his answers; edit freely.
+   **Save and send for approval** emails him (R9). He either approves it
+   (R10) or asks for changes. His comment then appears in a quote box: edit,
+   then send again.
+3. **Huyen translates** the summary, his background declaration and his
+   message in the **Vietnamese translations** boxes (English on the left,
+   Vietnamese on the right), then **Save translations**. Women read these
+   before deciding, so this must be done before any introduction.
+4. **Matching:** **Open the matching screen**. It lists only women whose
+   profiles are complete, who agreed to clients seeing their profile, and who
+   haven't withdrawn. Each has a ✓ or ✗ for each of his must-haves, taken
+   from her own answers. There are no scores: please don't keep any ranking
+   or opinion of a woman anywhere. **Matches all** narrows the list.
+   - A woman marked **Needs English translation** can't be sent until her
+     own free-text answers are translated (on her page, Candidates tab).
+   - Tick up to 20, then **Send to client**. He gets R11 with a link (valid
+     30 days) to read the profiles and choose up to 5 in order.
+5. **His choices** arrive by email and show on his page under **Matching and
+   choices**, in order. They can only be changed by you.
+

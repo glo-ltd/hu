@@ -243,6 +243,112 @@ If anything ever worries you, tell us in confidence: https://heritage-union.com/
 Heritage Union · heritage-union.com
 ```
 
+## R9 — Your profile is ready
+
+- **To:** the client
+- **When:** When James sends the profile summary he has written for him to approve.
+- **Subject:** Your profile is ready to approve — Heritage Union
+
+```text
+Dear Michael,
+
+Thank you for completing your profile. I have written a short summary from your answers. It is what the women you choose will read first, in their own language, with your photos, your background declaration and your message.
+
+Please read it carefully. If it is right, approve it. If anything should change, tell me what, and I will revise it.
+
+Read and approve your profile: https://heritage-union.com/client#t=EXAMPLE
+
+This link is private to you and works until 8 February 2027.
+
+Warm regards,
+
+James
+Founder, Heritage Union
+
+--
+If anything ever worries you, tell us in confidence: https://heritage-union.com/contact?concern=1
+Heritage Union · heritage-union.com
+```
+
+## R10 — Profile approved
+
+- **To:** the client
+- **When:** Automatically, when he approves his profile summary.
+- **Subject:** Thank you — your profile is approved
+
+```text
+Dear Michael,
+
+Thank you for approving your profile.
+
+I will now look for women whose own answers meet the things that matter most to you. Every woman we show you has registered herself and chosen to let clients see her profile.
+
+Your profiles will be ready within 2–4 weeks. I will email you as soon as they are.
+
+Warm regards,
+
+James
+Founder, Heritage Union
+
+--
+If anything ever worries you, tell us in confidence: https://heritage-union.com/contact?concern=1
+Heritage Union · heritage-union.com
+```
+
+## R11 — Profiles ready to review
+
+- **To:** the client
+- **When:** When James sends him his shortlist from the matching screen.
+- **Subject:** Your profiles are ready — Heritage Union
+
+```text
+Dear Michael,
+
+12 women whose own answers meet your must-haves have chosen to let clients see their profiles. Their profiles are ready for you to read.
+
+Take your time. When you are ready, choose up to 5, in order of preference, and send your choices. Your choices can't be changed afterwards except by writing to me, so please choose carefully.
+
+Read the profiles: https://heritage-union.com/client#t=EXAMPLE
+
+These profiles are shared with you in confidence. Please don't copy, save or share them, or their photos, with anyone.
+
+This link is private to you and works until 8 February 2027.
+
+Warm regards,
+
+James
+Founder, Heritage Union
+
+--
+If anything ever worries you, tell us in confidence: https://heritage-union.com/contact?concern=1
+Heritage Union · heritage-union.com
+```
+
+## R12 — Your choices are received
+
+- **To:** the client
+- **When:** Automatically, when he sends his choices.
+- **Subject:** Your choices are received — Heritage Union
+
+```text
+Dear Michael,
+
+Thank you. Your 5 choices have reached me.
+
+Next, Huyen and I will share your profile, your background declaration and your message with the woman you chose first, in her own language. She will decide, freely and in her own time, whether she would like to be introduced. If she would, I will send you the contact details she chooses to share.
+
+A woman never has to give a reason if she says no, and we never ask her to. If she does, or doesn't reply within 30 days, you can choose someone else from your list.
+
+Warm regards,
+
+James
+Founder, Heritage Union
+
+--
+If anything ever worries you, tell us in confidence: https://heritage-union.com/contact?concern=1
+Heritage Union · heritage-union.com
+```
+
 ## Team notifications
 
 ## Team — New client enquiry
@@ -291,6 +397,58 @@ Heritage Union · heritage-union.com
 
 ```text
 It has been a week since this client said he was thinking it over. Reference C-1A2B3C4D.
+
+Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
+
+Heritage Union · heritage-union.com
+```
+
+## Team — Client profile ready for a summary
+
+- **To:** everyone in ADMIN_EMAILS
+- **Subject:** Client profile ready for a summary (C-1A2B3C4D)
+
+```text
+A client has sent his profile. It is ready for you to write his summary. Reference C-1A2B3C4D.
+
+Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
+
+Heritage Union · heritage-union.com
+```
+
+## Team — Client asked for changes to his summary
+
+- **To:** everyone in ADMIN_EMAILS
+- **Subject:** Client asked for changes to his summary (C-1A2B3C4D)
+
+```text
+A client has asked for changes to his profile summary. Reference C-1A2B3C4D.
+
+Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
+
+Heritage Union · heritage-union.com
+```
+
+## Team — Client approved his summary
+
+- **To:** everyone in ADMIN_EMAILS
+- **Subject:** Client approved his summary (C-1A2B3C4D)
+
+```text
+A client has approved his profile summary. He is ready for matching once the translations are done. Reference C-1A2B3C4D.
+
+Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
+
+Heritage Union · heritage-union.com
+```
+
+## Team — Client sent his choices
+
+- **To:** everyone in ADMIN_EMAILS
+- **Subject:** Client sent his choices (C-1A2B3C4D)
+
+```text
+A client has sent his choices from his shortlist. Reference C-1A2B3C4D.
 
 Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
 

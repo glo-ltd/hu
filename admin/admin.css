@@ -87,3 +87,27 @@ html { background: var(--cream-100); }
 .cl-general { margin-top: 16px; }
 .ad-modal-box .form-input { margin-bottom: 8px; }
 @media (max-width: 959px) { .cl-right { order: -1; } }
+
+/* Clients: profile summary, translations, matching */
+.cl-editor { min-height: 220px; padding: 14px; border: 1px solid var(--cream-300); border-radius: var(--radius-xs); background: var(--white); font-size: 16px; line-height: 1.6; }
+.cl-editor:focus { outline: none; border-color: var(--gold-500); box-shadow: var(--shadow-focus); }
+.cl-editor p { margin: 0 0 10px; }
+.cl-toolbar { display: flex; flex-wrap: wrap; gap: 6px; }
+.cl-toolbar .btn, .ad-translate-row .btn { text-transform: none; letter-spacing: 0.01em; }
+.cl-quote { margin: 0; padding: 10px 14px; border-left: 3px solid var(--gold-500); background: var(--cream-50); font-style: italic; }
+.cl-pair { display: grid; gap: 10px; padding: 10px 0; border-top: 1px solid var(--cream-200); }
+@media (min-width: 720px) { .cl-pair { grid-template-columns: 1fr 1fr; } }
+.cl-pair-en { font-size: 15px; padding: 8px 10px; background: var(--cream-50); border-radius: var(--radius-xs); }
+.cl-pair textarea { min-height: 60px; font-size: 15px; }
+.cl-ranked { margin: 4px 0 0; padding-left: 20px; }
+.cl-match { cursor: default; }
+.cl-match.is-picked { border-color: var(--burgundy-700); box-shadow: 0 0 0 2px var(--burgundy-050); }
+.cl-match-top { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: baseline; cursor: pointer; }
+.cl-match-top input { width: 22px; height: 22px; accent-color: var(--burgundy-700); align-self: center; }
+.cl-ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; font-size: 14px; }
+.cl-ticks .is-ok { color: #2F5B2A; }
+.cl-ticks .is-no { color: #8A3A36; }
+.cl-tick-detail { color: var(--ink-600); }
+.cl-sendbar { position: sticky; bottom: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; padding: 12px 14px; background: var(--white); border: 1px solid var(--cream-300); border-radius: var(--radius-sm); box-shadow: var(--shadow-md); }
+.cl-sendbar .btn { text-transform: none; }
+.cl-musts { margin: 6px 0 4px; font-size: 14px; }

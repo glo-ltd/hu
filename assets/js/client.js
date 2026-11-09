@@ -609,7 +609,7 @@
     submitted: 'Thank you. Your application has reached us, and we will be in touch within 3 working days.',
     checked: 'Your documents are in order. Your invoice will follow shortly by email.',
     invoiced: 'Your invoice has been sent to your email. Once payment arrives, you will begin your profile.',
-    active: 'Your payment has arrived, thank you. Welcome to Heritage Union.',
+    active: 'Welcome to Heritage Union.',
     paused: 'Your engagement is paused for the moment. James will be in touch with you directly.',
   };
 
@@ -623,10 +623,23 @@
       values.application = Object.assign({}, S.application);
       values.declaration = Object.assign({}, S.declaration);
       goTo(firstOpenStep());
+    } else if ((S.status === 'active' || S.status === 'paused') && S.engagement && window.HUEngagement) {
+      $('cl-view').innerHTML = '';
+      window.HUEngagement.render(S);
     } else {
       statusView();
     }
   }
+
+  // Shared with the engagement stages (assets/js/client-engagement.js).
+  window.HUClient = {
+    api: api, el: el, fmtDate: fmtDate, money: money, showMessage: showMessage,
+    setState: function (d) { S = d; render(); },
+    view: function () { return $('cl-view'); },
+    lead: function (t) { $('cl-lead').textContent = t; },
+    token: function () { return token; },
+    reduceMotion: reduceMotion,
+  };
 
   function start() {
     if (!token) { showMessage('This page isn\'t available', 'This page opens only with the private link Heritage Union emailed to you. If you need a new one, simply reply to any email from us, or write to team@heritage-union.com.'); return; }

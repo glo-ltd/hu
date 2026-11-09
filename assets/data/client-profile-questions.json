@@ -1,0 +1,608 @@
+{
+  "version": "2026-12-v1",
+  "steps": [
+    {
+      "step": 1,
+      "title": "About you",
+      "intro": "These mirror the questions the women answer, so you can be compared fairly."
+    },
+    {
+      "step": 2,
+      "title": "Family and values",
+      "intro": ""
+    },
+    {
+      "step": 3,
+      "title": "The future",
+      "intro": ""
+    },
+    {
+      "step": 4,
+      "title": "What you're looking for",
+      "intro": "Your must-haves. We use only facts each woman has chosen to share in her own answers. We never ask about, or match on, appearance."
+    },
+    {
+      "step": 5,
+      "title": "Your photos",
+      "intro": "1 to 3 photos. Recent, your face clearly visible, only you in the picture."
+    },
+    {
+      "step": 6,
+      "title": "Your message, then send",
+      "intro": "Write your message, check your answers, then send your profile to James."
+    }
+  ],
+  "photos": {
+    "step": 5,
+    "min": 1,
+    "max": 3,
+    "maxEdge": 1600,
+    "quality": 0.82
+  },
+  "questions": [
+    {
+      "id": "display_name",
+      "step": 1,
+      "type": "text",
+      "required": true,
+      "label": "The first name you'd like shown",
+      "max": 40,
+      "help": "Your first name only. Women see this, never your surname.",
+      "storage": "column"
+    },
+    {
+      "id": "country",
+      "step": 1,
+      "type": "text",
+      "required": true,
+      "label": "Country you live in",
+      "max": 80
+    },
+    {
+      "id": "city",
+      "step": 1,
+      "type": "text",
+      "required": true,
+      "label": "City or town",
+      "max": 80,
+      "help": "Shown as written. You may prefer to give the nearest large city."
+    },
+    {
+      "id": "occupation",
+      "step": 1,
+      "type": "text",
+      "required": true,
+      "label": "Occupation",
+      "max": 100
+    },
+    {
+      "id": "education",
+      "step": 1,
+      "type": "single",
+      "required": true,
+      "label": "Highest education",
+      "options": [
+        {
+          "value": "secondary",
+          "label": "Secondary school"
+        },
+        {
+          "value": "vocational",
+          "label": "Vocational training"
+        },
+        {
+          "value": "college",
+          "label": "College"
+        },
+        {
+          "value": "university",
+          "label": "University"
+        },
+        {
+          "value": "postgraduate",
+          "label": "Postgraduate (Master's or above)"
+        }
+      ]
+    },
+    {
+      "id": "languages",
+      "step": 1,
+      "type": "languages",
+      "required": true,
+      "label": "Languages you speak, and how well",
+      "max": 6,
+      "options": [
+        {
+          "value": "english",
+          "label": "English"
+        },
+        {
+          "value": "vietnamese",
+          "label": "Vietnamese"
+        },
+        {
+          "value": "chinese",
+          "label": "Chinese"
+        },
+        {
+          "value": "korean",
+          "label": "Korean"
+        },
+        {
+          "value": "japanese",
+          "label": "Japanese"
+        },
+        {
+          "value": "russian",
+          "label": "Russian"
+        },
+        {
+          "value": "french",
+          "label": "French"
+        },
+        {
+          "value": "german",
+          "label": "German"
+        },
+        {
+          "value": "polish",
+          "label": "Polish"
+        },
+        {
+          "value": "other",
+          "label": "Other"
+        }
+      ],
+      "levels": [
+        {
+          "value": "basic",
+          "label": "Basic"
+        },
+        {
+          "value": "conversational",
+          "label": "Conversational"
+        },
+        {
+          "value": "fluent",
+          "label": "Fluent"
+        },
+        {
+          "value": "native",
+          "label": "Native"
+        }
+      ],
+      "help": "Include your first language."
+    },
+    {
+      "id": "marital_history",
+      "step": 1,
+      "type": "single",
+      "required": true,
+      "label": "Marital history",
+      "options": [
+        {
+          "value": "never_married",
+          "label": "Never married"
+        },
+        {
+          "value": "divorced",
+          "label": "Divorced"
+        },
+        {
+          "value": "widowed",
+          "label": "Widowed"
+        }
+      ]
+    },
+    {
+      "id": "children",
+      "step": 1,
+      "type": "number",
+      "required": true,
+      "label": "How many children do you have?",
+      "min": 0,
+      "max": 10
+    },
+    {
+      "id": "children_live_with",
+      "step": 1,
+      "type": "single",
+      "required": true,
+      "label": "Do they live with you?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes"
+        },
+        {
+          "value": "some",
+          "label": "Some of them"
+        },
+        {
+          "value": "no",
+          "label": "No"
+        }
+      ],
+      "showIf": {
+        "id": "children",
+        "min": 1
+      }
+    },
+    {
+      "id": "wants_children",
+      "step": 2,
+      "type": "single",
+      "required": true,
+      "label": "Would you like (more) children?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes"
+        },
+        {
+          "value": "no",
+          "label": "No"
+        },
+        {
+          "value": "open",
+          "label": "I'm open to it"
+        },
+        {
+          "value": "unsure",
+          "label": "I'm not sure yet"
+        }
+      ]
+    },
+    {
+      "id": "religion",
+      "step": 2,
+      "type": "single",
+      "required": false,
+      "label": "Religion or belief",
+      "options": [
+        {
+          "value": "none",
+          "label": "No religion"
+        },
+        {
+          "value": "buddhist",
+          "label": "Buddhist"
+        },
+        {
+          "value": "catholic",
+          "label": "Catholic"
+        },
+        {
+          "value": "protestant",
+          "label": "Protestant"
+        },
+        {
+          "value": "caodai_hoahao",
+          "label": "Cao Đài or Hòa Hảo"
+        },
+        {
+          "value": "ancestral",
+          "label": "Ancestor worship"
+        },
+        {
+          "value": "other",
+          "label": "Other"
+        },
+        {
+          "value": "prefer_not",
+          "label": "Prefer not to say"
+        }
+      ],
+      "help": "Optional. You can skip this, or choose “Prefer not to say”."
+    },
+    {
+      "id": "smoking",
+      "step": 2,
+      "type": "single",
+      "required": true,
+      "label": "Do you smoke?",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "regularly",
+          "label": "Regularly"
+        }
+      ]
+    },
+    {
+      "id": "drinking",
+      "step": 2,
+      "type": "single",
+      "required": true,
+      "label": "Do you drink alcohol?",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "socially",
+          "label": "Socially, with friends"
+        },
+        {
+          "value": "regularly",
+          "label": "Regularly"
+        }
+      ]
+    },
+    {
+      "id": "values",
+      "step": 2,
+      "type": "multi",
+      "required": true,
+      "label": "The 3 values that matter most to you",
+      "max": 3,
+      "options": [
+        {
+          "value": "family",
+          "label": "Family"
+        },
+        {
+          "value": "honesty",
+          "label": "Honesty"
+        },
+        {
+          "value": "faith",
+          "label": "Faith"
+        },
+        {
+          "value": "kindness",
+          "label": "Kindness"
+        },
+        {
+          "value": "ambition",
+          "label": "Ambition"
+        },
+        {
+          "value": "humour",
+          "label": "Humour"
+        },
+        {
+          "value": "loyalty",
+          "label": "Loyalty"
+        },
+        {
+          "value": "independence",
+          "label": "Independence"
+        },
+        {
+          "value": "tradition",
+          "label": "Tradition"
+        },
+        {
+          "value": "adventure",
+          "label": "Adventure"
+        }
+      ],
+      "help": "The same list the women choose from."
+    },
+    {
+      "id": "where_live",
+      "step": 3,
+      "type": "single",
+      "required": true,
+      "label": "Where would you hope to live together?",
+      "options": [
+        {
+          "value": "my_country",
+          "label": "In my country"
+        },
+        {
+          "value": "open_vietnam",
+          "label": "Open to living in Vietnam"
+        },
+        {
+          "value": "open_elsewhere",
+          "label": "Open to living elsewhere"
+        }
+      ]
+    },
+    {
+      "id": "household_finances",
+      "step": 3,
+      "type": "single",
+      "required": true,
+      "label": "In a shared life, how do you picture the household finances?",
+      "options": [
+        {
+          "value": "both_contribute",
+          "label": "We both contribute"
+        },
+        {
+          "value": "partner_main",
+          "label": "I'd hope my partner would be the main provider"
+        },
+        {
+          "value": "own_independence",
+          "label": "I want to be financially independent"
+        },
+        {
+          "value": "decide_together",
+          "label": "We'd talk it through and decide together"
+        }
+      ],
+      "help": "The same question, with the same answers, that the women answer. There's no right or wrong answer."
+    },
+    {
+      "id": "parents_support_view",
+      "step": 3,
+      "type": "single",
+      "required": true,
+      "label": "How would you feel about a partner who helps support her parents?",
+      "options": [
+        {
+          "value": "happy",
+          "label": "Happy to help"
+        },
+        {
+          "value": "open",
+          "label": "Open to discussing it"
+        },
+        {
+          "value": "prefer_not",
+          "label": "I'd prefer not"
+        }
+      ],
+      "help": "In Vietnam it is common and respected for daughters to help their parents."
+    },
+    {
+      "id": "her_age_range",
+      "step": 4,
+      "type": "range",
+      "required": true,
+      "label": "Her age: the range you're open to",
+      "min": 18,
+      "max": 80
+    },
+    {
+      "id": "must_languages",
+      "step": 4,
+      "type": "langreq",
+      "required": false,
+      "label": "Languages she must share with you",
+      "max": 4,
+      "options": [
+        {
+          "value": "english",
+          "label": "English"
+        },
+        {
+          "value": "vietnamese",
+          "label": "Vietnamese"
+        },
+        {
+          "value": "chinese",
+          "label": "Chinese"
+        },
+        {
+          "value": "korean",
+          "label": "Korean"
+        },
+        {
+          "value": "japanese",
+          "label": "Japanese"
+        },
+        {
+          "value": "russian",
+          "label": "Russian"
+        },
+        {
+          "value": "french",
+          "label": "French"
+        },
+        {
+          "value": "german",
+          "label": "German"
+        },
+        {
+          "value": "polish",
+          "label": "Polish"
+        }
+      ],
+      "levels": [
+        {
+          "value": "basic",
+          "label": "Basic"
+        },
+        {
+          "value": "conversational",
+          "label": "Conversational"
+        },
+        {
+          "value": "fluent",
+          "label": "Fluent"
+        },
+        {
+          "value": "native",
+          "label": "Native"
+        }
+      ],
+      "help": "Add a language and the minimum level she needs. If you add more than one, sharing any one of them is enough. Leave this empty if Heritage Union's translation support is enough to begin with."
+    },
+    {
+      "id": "min_education",
+      "step": 4,
+      "type": "single",
+      "required": true,
+      "label": "Minimum education",
+      "options": [
+        {
+          "value": "any",
+          "label": "Any"
+        },
+        {
+          "value": "secondary",
+          "label": "Secondary school"
+        },
+        {
+          "value": "vocational",
+          "label": "Vocational training"
+        },
+        {
+          "value": "college",
+          "label": "College"
+        },
+        {
+          "value": "university",
+          "label": "University"
+        },
+        {
+          "value": "postgraduate",
+          "label": "Postgraduate (Master's or above)"
+        }
+      ]
+    },
+    {
+      "id": "children_accepted",
+      "step": 4,
+      "type": "single",
+      "required": true,
+      "label": "Children she may already have",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "one",
+          "label": "Up to one"
+        },
+        {
+          "value": "any",
+          "label": "Any number"
+        }
+      ]
+    },
+    {
+      "id": "partner_matters",
+      "step": 4,
+      "type": "textarea",
+      "required": true,
+      "label": "What matters most to you in a partner?",
+      "max": 600,
+      "help": "In your own words. Please write about character and the life you hope to share, not appearance."
+    },
+    {
+      "id": "message",
+      "step": 6,
+      "type": "textarea",
+      "required": true,
+      "label": "A short message to each woman you choose",
+      "max": 500,
+      "help": "She reads this, translated into her language, with your profile. Keep it warm and simple.",
+      "storage": "message"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "version": "2026-11-v2",
+  "version": "2026-12-v3",
   "steps": [
     {
       "step": 1,
@@ -433,6 +433,130 @@
           }
         }
       ]
+    },
+    {
+      "id": "other_languages",
+      "step": 1,
+      "type": "languages",
+      "required": false,
+      "max": 4,
+      "label": {
+        "vi": "Bạn còn nói được ngôn ngữ nào khác không?",
+        "en": "Other languages you speak",
+        "team": "Other languages"
+      },
+      "help": {
+        "vi": "Không bắt buộc. Chọn từng ngôn ngữ và trình độ của bạn. Không cần kể tiếng Việt và tiếng Anh.",
+        "en": "Optional. Choose each language and your level. No need to include Vietnamese or English."
+      },
+      "options": [
+        {
+          "value": "chinese",
+          "label": {
+            "vi": "Tiếng Trung",
+            "en": "Chinese"
+          }
+        },
+        {
+          "value": "korean",
+          "label": {
+            "vi": "Tiếng Hàn",
+            "en": "Korean"
+          }
+        },
+        {
+          "value": "japanese",
+          "label": {
+            "vi": "Tiếng Nhật",
+            "en": "Japanese"
+          }
+        },
+        {
+          "value": "russian",
+          "label": {
+            "vi": "Tiếng Nga",
+            "en": "Russian"
+          }
+        },
+        {
+          "value": "french",
+          "label": {
+            "vi": "Tiếng Pháp",
+            "en": "French"
+          }
+        },
+        {
+          "value": "german",
+          "label": {
+            "vi": "Tiếng Đức",
+            "en": "German"
+          }
+        },
+        {
+          "value": "polish",
+          "label": {
+            "vi": "Tiếng Ba Lan",
+            "en": "Polish"
+          }
+        },
+        {
+          "value": "other",
+          "label": {
+            "vi": "Khác",
+            "en": "Other"
+          }
+        }
+      ],
+      "levels": [
+        {
+          "value": "basic",
+          "label": {
+            "vi": "Cơ bản",
+            "en": "Basic"
+          }
+        },
+        {
+          "value": "conversational",
+          "label": {
+            "vi": "Giao tiếp được",
+            "en": "Conversational"
+          }
+        },
+        {
+          "value": "fluent",
+          "label": {
+            "vi": "Thành thạo",
+            "en": "Fluent"
+          }
+        },
+        {
+          "value": "native",
+          "label": {
+            "vi": "Bản ngữ",
+            "en": "Native"
+          }
+        }
+      ],
+      "otherLabel": {
+        "vi": "Ngôn ngữ nào?",
+        "en": "Which language?"
+      },
+      "addLabel": {
+        "vi": "+ Thêm ngôn ngữ",
+        "en": "+ Add a language"
+      },
+      "removeLabel": {
+        "vi": "Xoá",
+        "en": "Remove"
+      },
+      "chooseLabel": {
+        "vi": "Chọn ngôn ngữ…",
+        "en": "Choose a language…"
+      },
+      "levelLabel": {
+        "vi": "Trình độ…",
+        "en": "Level…"
+      }
     },
     {
       "id": "marital_history",

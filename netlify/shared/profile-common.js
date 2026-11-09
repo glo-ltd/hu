@@ -231,6 +231,28 @@ function cleanAnswer(q, raw) {
       if (typeof n !== 'number' || !Number.isInteger(n) || n < q.min || n > q.max) return { error: 'answerInvalid' };
       return { value: n };
     }
+    case 'languages': {
+      // [{ language, level, other? }]: each language once; "other" needs its name.
+      if (!Array.isArray(raw) || raw.length > q.max) return { error: 'answerInvalid' };
+      var langs = optionValues;
+      var levels = (q.levels || []).map(function (l) { return l.value; });
+      var out = [];
+      for (var k = 0; k < raw.length; k++) {
+        var it = raw[k];
+        if (!it || typeof it !== 'object' || langs.indexOf(it.language) === -1 || levels.indexOf(it.level) === -1) return { error: 'answerInvalid' };
+        var item = { language: it.language, level: it.level };
+        if (it.language === 'other') {
+          var name = typeof it.other === 'string' ? it.other.normalize('NFC').trim().replace(/\s+/g, ' ') : '';
+          if (!name) return { error: 'answerInvalid' };
+          if (name.length > 40) return { error: 'answerTooLong' };
+          item.other = name;
+        } else if (out.some(function (o) { return o.language === it.language; })) {
+          return { error: 'answerInvalid' };
+        }
+        out.push(item);
+      }
+      return { value: out.length ? out : null };
+    }
     case 'range': {
       if (!Array.isArray(raw) || raw.length !== 2) return { error: 'answerInvalid' };
       var lo = raw[0], hi = raw[1];

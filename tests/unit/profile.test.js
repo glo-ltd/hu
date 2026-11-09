@@ -66,7 +66,7 @@ test('profile-save: saves answers, moves new -> profile_in_progress, display_nam
   assert.equal(prof.display_name, 'Lan');
   assert.equal(prof.answers.display_name, undefined);
   assert.equal(prof.answers.occupation, 'Giáo viên');
-  assert.equal(prof.questions_version, '2026-11-v2');
+  assert.equal(prof.questions_version, '2026-12-v3');
   assert.equal(fake.tables.candidates[0].status, 'profile_in_progress');
   // children -> 0 drops the follow-up question
   await call('profile-save', { token: c.token, answers: { children: 0 } });
@@ -269,10 +269,10 @@ test('question set: province list matches registration; nothing sensitive asked'
   for (const banned of ['income', 'salary', 'health', 'ethnic', 'politic', 'weight', 'height', 'measure', 'id_number', 'cccd', 'sex']) {
     assert.ok(!ids.includes(banned), banned);
   }
-  assert.equal(P.QUESTIONS.version, '2026-11-v2');
+  assert.equal(P.QUESTIONS.version, '2026-12-v3');
   for (const q of P.QUESTIONS.questions) {
     assert.ok(q.label.vi && q.label.en, q.id);
-    assert.ok(['text', 'textarea', 'single', 'multi', 'number', 'range'].includes(q.type));
+    assert.ok(['text', 'textarea', 'single', 'multi', 'number', 'range', 'languages'].includes(q.type));
     (q.options || []).forEach((o) => assert.ok(o.label.vi && o.label.en, q.id + ':' + o.value));
   }
 });
@@ -331,4 +331,21 @@ test('question set: every question, option and step has natural English for the 
       if (q.id !== 'province' && o.value !== 'caodai_hoahao') assert.ok(!VI.test(o.label.en), q.id + '/' + o.value + ' English');
     }
   }
+});
+
+test('other languages (step 1, optional): validated server-side; version bumped', async () => {
+  assert.equal(P.QUESTIONS.version, '2026-12-v3');
+  const q = P.QUESTION_BY_ID.other_languages;
+  assert.equal(q.step, 1); assert.equal(q.required, false); assert.equal(q.type, 'languages');
+  const c = seedCandidate();
+  let r = await call('profile-save', { token: c.token, answers: { other_languages: [{ language: 'chinese', level: 'fluent' }, { language: 'other', other: 'Thai', level: 'basic' }] } });
+  assert.equal(r.status, 200, r.raw);
+  assert.deepEqual(fake.tables.candidate_profiles[0].answers.other_languages, [{ language: 'chinese', level: 'fluent' }, { language: 'other', level: 'basic', other: 'Thai' }]);
+  for (const bad of [[{ language: 'klingon', level: 'basic' }], [{ language: 'chinese', level: 'expert' }], [{ language: 'other', level: 'basic' }],
+    [{ language: 'french', level: 'basic' }, { language: 'french', level: 'fluent' }], new Array(5).fill(0).map((_, i) => ({ language: 'other', other: 'L' + i, level: 'basic' }))]) {
+    r = await call('profile-save', { token: c.token, answers: { other_languages: bad } });
+    assert.equal(r.status, 400, JSON.stringify(bad));
+  }
+  r = await call('profile-save', { token: c.token, answers: { other_languages: [] } });
+  assert.equal(fake.tables.candidate_profiles[0].answers.other_languages, undefined, 'empty clears it');
 });

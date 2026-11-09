@@ -256,11 +256,19 @@
     for (var i = 0; i < (q.options || []).length; i++) if (q.options[i].value === value) return q.options[i].label[LANG];
     return value;
   }
+  function languagesText(q, v) {
+    return v.map(function (x) {
+      var lv = (q.levels || []).filter(function (l) { return l.value === x.level; })[0];
+      return (x.language === 'other' ? x.other : optionLabel(q, x.language)) + ' (' + (lv ? lv.label[LANG] : x.level) + ')';
+    }).join(', ');
+  }
+
   function formatAnswer(q, v) {
     if (isEmpty(v)) return null;
     if (q.type === 'single') return optionLabel(q, v);
     if (q.type === 'multi') return v.map(function (x) { return optionLabel(q, x); }).join(', ');
     if (q.type === 'range') return t('range', v[0], v[1]);
+    if (q.type === 'languages') return languagesText(q, v);
     return String(v);
   }
   function setAnswer(id, value) {
@@ -345,6 +353,9 @@
     if ((q.type === 'text' || q.type === 'textarea') && v.trim().length > q.max) return MESSAGES.tooLong(q.max);
     if (q.type === 'number' && (typeof v !== 'number' || v < q.min || v > q.max || Math.floor(v) !== v)) return MESSAGES.number(q);
     if (q.type === 'range' && (!Array.isArray(v) || !(v[0] >= q.min && v[1] <= q.max && v[0] <= v[1]))) return MESSAGES.range(q);
+    if (q.type === 'languages' && v.some(function (x) { return !x.language || !x.level || (x.language === 'other' && !String(x.other || '').trim()); })) {
+      return LANG === 'en' ? 'Please choose a language and a level for each line, or remove the line.' : 'Bạn vui lòng chọn ngôn ngữ và trình độ cho mỗi dòng, hoặc xoá dòng đó nhé.';
+    }
     return '';
   }
 
@@ -389,7 +400,7 @@
     var labelId = 'q-' + q.id + '-label';
     var helpId = 'q-' + q.id + '-help';
     var errId = 'q-' + q.id + '-err';
-    var label = el(q.type === 'single' && q.widget !== 'select' || q.type === 'multi' || q.type === 'range' ? 'span' : 'label',
+    var label = el(q.type === 'single' && q.widget !== 'select' || q.type === 'multi' || q.type === 'range' || q.type === 'languages' ? 'span' : 'label',
       { class: 'pf-q-label', id: labelId, for: q.type === 'text' || q.type === 'textarea' || q.type === 'number' || q.widget === 'select' ? 'q-' + q.id : null },
       [q.label[LANG], q.required ? el('span', { class: 'pf-req', 'aria-hidden': 'true', text: '*' }) : el('span', { class: 'pf-opt', text: t('optional') })]);
     return el('div', { class: 'pf-q', 'data-q': q.id }, [
@@ -543,6 +554,53 @@
     return el('div', { class: 'pf-range', role: 'group', 'aria-labelledby': 'q-' + q.id + '-label' }, [t('from'), lo, t('to'), hi, t('years')]);
   }
 
+  // Other languages: one row per language (choose, "other" name, level, remove).
+  function renderLanguages(q) {
+    var list = (answers[q.id] || []).map(function (x) { return { language: x.language, level: x.level, other: x.other || '' }; });
+    var wrap = el('div', { class: 'pf-langs', role: 'group', 'aria-labelledby': 'q-' + q.id + '-label', 'aria-describedby': describedBy(q) });
+    function commit() {
+      var clean = list.filter(function (x) { return x.language || x.level; }).map(function (x) {
+        var o = { language: x.language, level: x.level };
+        if (x.language === 'other') o.other = x.other;
+        return o;
+      });
+      setAnswer(q.id, clean.length ? clean : null);
+      showFieldError(q.id, '');
+    }
+    function draw() {
+      wrap.innerHTML = '';
+      list.forEach(function (item, i) {
+        var lang = el('select', { class: 'form-input', 'aria-label': q.chooseLabel[LANG] + ' ' + (i + 1), id: i === 0 ? 'q-' + q.id : null });
+        lang.appendChild(el('option', { value: '', text: q.chooseLabel[LANG] }));
+        q.options.forEach(function (o) {
+          var taken = o.value !== 'other' && o.value !== item.language && list.some(function (x) { return x.language === o.value; });
+          var opt = el('option', { value: o.value, text: o.label[LANG], disabled: taken });
+          if (item.language === o.value) opt.selected = true;
+          lang.appendChild(opt);
+        });
+        var level = el('select', { class: 'form-input', 'aria-label': q.levelLabel[LANG] + ' ' + (i + 1) });
+        level.appendChild(el('option', { value: '', text: q.levelLabel[LANG] }));
+        q.levels.forEach(function (l) { var o = el('option', { value: l.value, text: l.label[LANG] }); if (item.level === l.value) o.selected = true; level.appendChild(o); });
+        var row = el('div', { class: 'pf-lang-row' }, [lang, level]);
+        if (item.language === 'other') {
+          var other = el('input', { class: 'form-input pf-lang-other', type: 'text', maxlength: 40, placeholder: q.otherLabel[LANG], 'aria-label': q.otherLabel[LANG] });
+          other.value = item.other || '';
+          other.addEventListener('input', function () { item.other = other.value; commit(); });
+          row.appendChild(other);
+        }
+        row.appendChild(el('button', { type: 'button', class: 'pf-link-btn pf-lang-remove', text: q.removeLabel[LANG], onclick: function () { list.splice(i, 1); commit(); draw(); } }));
+        lang.addEventListener('change', function () { item.language = lang.value; if (item.language !== 'other') item.other = ''; commit(); draw(); });
+        level.addEventListener('change', function () { item.level = level.value; commit(); });
+        wrap.appendChild(row);
+      });
+      if (list.length < q.max) {
+        wrap.appendChild(el('button', { type: 'button', class: 'pf-chip pf-lang-add', text: q.addLabel[LANG], onclick: function () { list.push({ language: '', level: '', other: '' }); draw(); var s = wrap.querySelectorAll('select'); if (s.length) s[s.length - 2].focus(); } }));
+      }
+    }
+    draw();
+    return wrap;
+  }
+
   function renderQuestion(q) {
     var control =
       q.type === 'text' ? renderText(q) :
@@ -550,7 +608,8 @@
       q.type === 'single' ? renderSingle(q) :
       q.type === 'multi' ? renderMulti(q) :
       q.type === 'number' ? renderNumber(q) :
-      q.type === 'range' ? renderRange(q) : null;
+      q.type === 'range' ? renderRange(q) :
+      q.type === 'languages' ? renderLanguages(q) : null;
     var box = questionBox(q, control);
     if (!isShown(q)) box.hidden = true;
     return box;
