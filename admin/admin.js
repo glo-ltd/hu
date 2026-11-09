@@ -95,7 +95,10 @@
     var email = $('ad-email').value.trim();
     if (!email) return;
     var target = location.hash.replace('#', '');
-    try { if (/^[0-9a-f-]{36}$/i.test(target)) sessionStorage.setItem(NEXT_KEY, target); } catch (err) {}
+    // Remember which candidate the email link pointed to. localStorage (not
+    // sessionStorage) because the sign-in link usually opens in a new tab.
+    // Only her reference number is kept, and only for an hour.
+    try { if (/^[0-9a-f-]{36}$/i.test(target)) localStorage.setItem(NEXT_KEY, JSON.stringify({ id: target, at: Date.now() })); } catch (err) {}
     $('ad-signin-msg').textContent = 'Sending…';
     sb.auth.signInWithOtp({
       email: email,
@@ -118,7 +121,11 @@
     $('ad-me').textContent = s.user && s.user.email ? s.user.email : '';
     $('ad-signout').hidden = false;
     var next = null;
-    try { next = sessionStorage.getItem(NEXT_KEY); sessionStorage.removeItem(NEXT_KEY); } catch (err) {}
+    try {
+      var saved = JSON.parse(localStorage.getItem(NEXT_KEY) || 'null');
+      localStorage.removeItem(NEXT_KEY);
+      if (saved && /^[0-9a-f-]{36}$/i.test(saved.id) && Date.now() - saved.at < 3600000) next = saved.id;
+    } catch (err) {}
     if (next && !/^#[0-9a-f-]{36}$/i.test(location.hash)) { location.hash = next; return; }
     route();
   }
