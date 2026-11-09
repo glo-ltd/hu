@@ -32,7 +32,9 @@ test('registration creates a profile token (hash only, 60 days), returns it once
   const mail = sentEmails.find((m) => m.to === 'hoa@example.com');
   assert.ok(mail.html.includes('https://heritage-union.com/vi/ho-so#t=' + tok));
   assert.match(mail.html, /không chia sẻ/);
-  const team = sentEmails.find((m) => m.to === 'james@heritage-union.com');
+  // Team email goes to everyone in ADMIN_EMAILS (James and Huyen), lower-cased.
+  const team = sentEmails.find((m) => Array.isArray(m.to) && m.to.includes('james@heritage-union.com'));
+  assert.deepEqual(team.to, ['james@heritage-union.com', 'huyen@heritage-union.com']);
   assert.ok(!team.html.includes(tok) && !team.html.includes('Hoa'));
   assert.equal((await call('profile-get', { token: tok })).status, 200);
 });

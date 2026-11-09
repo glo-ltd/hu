@@ -2,7 +2,6 @@ const { Resend } = require('resend');
 const { createClient } = require('@supabase/supabase-js');
 
 const FROM_EMAIL = 'Heritage Union <team@heritage-union.com>';
-const INTERNAL_NOTIFY_EMAIL = 'james@heritage-union.com';
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_CONTACT_LENGTH = 100;
 
@@ -23,7 +22,7 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
-const { normaliseZalo, pickLang, msg } = require('../shared/candidate-common');
+const { normaliseZalo, pickLang, msg, teamNotifyEmails } = require('../shared/candidate-common');
 const { applyWithdrawal } = require('../shared/profile-common');
 
 // Escape the wildcard characters ilike understands, so an email is matched
@@ -121,7 +120,7 @@ exports.handler = async function (event) {
       var idList = matchedIds.map(function (id) { return escapeHtml(id); }).join(', ');
       var internalResult = await resend.emails.send({
         from: FROM_EMAIL,
-        to: INTERNAL_NOTIFY_EMAIL,
+        to: teamNotifyEmails(),
         subject: 'Candidate withdrawal request',
         html: '<p>Withdrawal processed for candidate ID(s): ' + idList + ' — view in the team tool: https://heritage-union.com/admin/</p>',
       });

@@ -152,4 +152,17 @@ function msg(key, lang) {
   return entry[lang] || entry.en;
 }
 
-module.exports = { normaliseZalo, isValidZalo, signupsOpen, pickLang, msg };
+
+// Who gets the team emails about candidates (new registration, profile
+// submitted, withdrawal): everyone in ADMIN_EMAILS, the same list that can
+// use /admin/. Falls back to James if it isn't set. The emails carry only a
+// reference number, never personal details.
+function teamNotifyEmails() {
+  var list = String(process.env.ADMIN_EMAILS || '')
+    .split(',')
+    .map(function (e) { return e.trim().toLowerCase(); })
+    .filter(function (e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); });
+  return list.length ? list : ['james@heritage-union.com'];
+}
+
+module.exports = { normaliseZalo, isValidZalo, signupsOpen, pickLang, msg, teamNotifyEmails };

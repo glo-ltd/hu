@@ -1,11 +1,10 @@
 const crypto = require('crypto');
 const { Resend } = require('resend');
 const { createClient } = require('@supabase/supabase-js');
-const { normaliseZalo, isValidZalo, signupsOpen, pickLang, msg } = require('../shared/candidate-common');
+const { normaliseZalo, isValidZalo, signupsOpen, pickLang, msg, teamNotifyEmails } = require('../shared/candidate-common');
 const { newProfileToken, profileLink } = require('../shared/profile-common');
 
 const FROM_EMAIL = 'Heritage Union <team@heritage-union.com>';
-const INTERNAL_NOTIFY_EMAIL = 'james@heritage-union.com';
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const CONSENT_TEXT_VERSION = 'vi-2026-10-v2';
 const MAX_NAME_LENGTH = 100;
@@ -303,7 +302,7 @@ async function handleRegistration(supabase, data, ipHash, event, lang) {
       // notification emails.
       var internalResult = await resend.emails.send({
         from: FROM_EMAIL,
-        to: INTERNAL_NOTIFY_EMAIL,
+        to: teamNotifyEmails(),
         subject: 'New candidate registration',
         html: '<p>New candidate registration (#' + escapeHtml(candidateId) + ').</p>' +
           '<p><a href="https://heritage-union.com/admin/#' + escapeHtml(candidateId) + '">Open in the team tool</a></p>',

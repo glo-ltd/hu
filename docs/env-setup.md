@@ -57,7 +57,7 @@ The team tool signs in with Supabase Auth email links. Two more variables:
 | Variable | Value |
 | --- | --- |
 | `SUPABASE_ANON_KEY` | The **publishable** (anon) key from Project Settings → API. It is public by design: it only starts the sign-in. Every table has RLS on with no policies, so this key alone can read nothing. |
-| `ADMIN_EMAILS` | Comma-separated emails allowed to use `/admin/`, e.g. `james@heritage-union.com,huyen@heritage-union.com`. Case doesn't matter. Anyone not on this list is refused even if they can sign in. |
+| `ADMIN_EMAILS` | Comma-separated emails allowed to use `/admin/`, e.g. `james@heritage-union.com,huyen@heritage-union.com`. Case doesn't matter. Anyone not on this list is refused even if they can sign in. Everyone on this list also gets the team emails about candidates (new registration, profile submitted, withdrawal); if it is empty, they go to james@ only. Fee-structure requests still go to james@ only. |
 
 Supabase Auth settings (Authentication in the Supabase dashboard). James
 does these by hand:

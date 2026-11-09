@@ -3,6 +3,7 @@
 const { Resend } = require('resend');
 const P = require('../shared/profile-common');
 const { profileState } = require('../shared/profile-state');
+const { teamNotifyEmails } = require('../shared/candidate-common');
 
 exports.handler = async function (event) {
   var ctx = await P.candidateFromRequest(event);
@@ -70,7 +71,7 @@ async function notifyTeam(candidateId, updated) {
     var id = P.escapeHtml(candidateId);
     var res = await resend.emails.send({
       from: P.FROM_EMAIL,
-      to: P.INTERNAL_NOTIFY_EMAIL,
+      to: teamNotifyEmails(),
       subject: 'Candidate profile ' + (updated ? 'updated' : 'submitted') + ' (#' + candidateId + ')',
       html: '<p>Candidate profile ' + (updated ? 'updated' : 'submitted') + ' (#' + id + ').</p>' +
         '<p><a href="' + P.SITE_URL + '/admin/#' + id + '">Open in the team tool</a></p>',
