@@ -232,8 +232,11 @@ twice:
   you need us", once.
 - **12 months:** his card shows **12 months reached**, and you get an
   email. Nothing closes by itself: you choose how to close.
-- **6 months after closing:** his photo ID, certificate and photos are
-  deleted.
+- **While she waits for a certificate she asked him for**, neither of the
+  two steps above happens: her 30 days are paused until he declines or you
+  mark his certificate as seen, and the paused days are added back.
+- **6 months after closing:** his photos, and any certificate he provided
+  at a woman's request, are deleted.
 
 ### Closing an engagement (his page → Engagement)
 

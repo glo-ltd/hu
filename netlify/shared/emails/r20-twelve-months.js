@@ -13,7 +13,7 @@ module.exports = {
         'Dear ' + d.firstName + ',',
         'Your ' + C.ENGAGEMENT_MONTHS + '-month engagement with Heritage Union is now complete. Thank you for the trust you have placed in us.',
         'To confirm: nothing more is owed. No further fees are due from you.',
-        'As promised in our Privacy Policy, your identity documents will be deleted ' + C.DOCUMENT_RETENTION_MONTHS_AFTER_CLOSE + ' months from today.',
+        'As promised in our Privacy Policy, your photos, and any certificate you provided at a woman\'s request, will be deleted ' + C.DOCUMENT_RETENTION_MONTHS_AFTER_CLOSE + ' months from today.',
         'I wish you every happiness, and you are always welcome to write to me.',
         'Warm regards,',
       ],

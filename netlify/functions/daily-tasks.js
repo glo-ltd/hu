@@ -2,12 +2,16 @@
 // Every step records when it acted, so running it twice changes nothing.
 //   1. R14 gentle reminder 14 days after a request with no answer
 //      (email if she has one; otherwise the team is asked to send it on Zalo)
-//   2. expire requests at 30 days (counts as a no: R17 to him)
+//      (not while she waits for a certificate she asked him for)
+//   2. expire requests at 30 days (counts as a no: R17 to him); the 30 days
+//      are paused while she waits for a certificate she asked him for
+
 //   3. release each woman's next queued request (safety net)
 //   4. remind the team about "thinking it over" clients after 7 days
 //   5. R18 "We're here if you need us", once, 3 months after his first introduction
 //   6. flag engagements reaching 12 months on the team page
-//   7. delete client documents 6 months after an engagement closes
+//   7. delete client documents (certificates women asked for, and his
+//      photos) 6 months after an engagement closes
 const P = require('../shared/profile-common');
 const CC = require('../shared/client-common');
 const I = require('../shared/introductions');
@@ -25,7 +29,7 @@ async function run(sb, now) {
 
   // 1. Gentle reminder at 14 days
   await safe('reminders', async () => {
-    const r = await sb.from('introductions').select('*').in('status', I.OPEN).is('reminder_sent_at', null).lte('sent_at', iso(now - CC.C.DECISION_REMINDER_DAYS * DAY));
+    const r = await sb.from('introductions').select('*').in('status', I.OPEN).is('reminder_sent_at', null).is('expiry_paused_at', null).lte('sent_at', iso(now - CC.C.DECISION_REMINDER_DAYS * DAY));
     if (r.error) throw r.error;
     for (const intro of r.data || []) {
       // Mark first, so a second run (or a crash after sending) never repeats it.
@@ -51,7 +55,7 @@ async function run(sb, now) {
 
   // 2. Expire at 30 days (counts as a no)
   await safe('expiry', async () => {
-    const r = await sb.from('introductions').select('*').in('status', I.OPEN).lt('decision_token_expires_at', iso(now));
+    const r = await sb.from('introductions').select('*').in('status', I.OPEN).is('expiry_paused_at', null).lt('decision_token_expires_at', iso(now));
     if (r.error) throw r.error;
     for (const intro of r.data || []) {
       const u = await sb.from('introductions').update({ status: 'expired', status_changed_at: iso(now), expired_at: iso(now), decision_token_hash: null }).eq('id', intro.id).in('status', I.OPEN).select('id');
@@ -126,8 +130,10 @@ async function run(sb, now) {
     if (r.error) throw r.error;
     for (const c of r.data || []) {
       await CC.deleteClientFolder(sb, c.id);
-      const u = await sb.from('clients').update({ documents_deleted_at: iso(now), id_document_path: null, certificate_path: null }).eq('id', c.id);
+      const u = await sb.from('clients').update({ documents_deleted_at: iso(now) }).eq('id', c.id);
       if (u.error) throw u.error;
+      const ui = await sb.from('introductions').update({ cert_path: null }).eq('client_id', c.id).not('cert_path', 'is', null);
+      if (ui.error) throw ui.error;
       await sb.from('client_profiles').update({ photo_paths: [] }).eq('client_id', c.id);
       await CC.logEvent(sb, c.id, 'documents_deleted', 'system');
       out.documentsDeleted++;

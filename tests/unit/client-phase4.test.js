@@ -98,19 +98,34 @@ test('engagements reaching 12 months are flagged once; never closed automaticall
   void c;
 });
 
-test('documents (ID, certificate, photos) deleted 6 months after closing, not before', async () => {
+test('documents (certificates given at a woman\'s request, and photos) deleted 6 months after closing, not before', async () => {
   const c = activeClient();
-  const paths = [c.id + '/id/' + crypto.randomUUID() + '.pdf', c.id + '/certificate/' + crypto.randomUUID() + '.pdf', c.id + '/photos/' + crypto.randomUUID() + '.jpg'];
+  const w = seedWoman();
+  const paths = [c.id + '/certificate/' + crypto.randomUUID() + '.pdf', c.id + '/photos/' + crypto.randomUUID() + '.jpg'];
   paths.forEach((p) => fake.addObject(p, S.PDF, 'client-documents'));
-  Object.assign(fake.tables.clients[0], { status: 'closed', closed_at: isoDaysAgo(10), documents_delete_after: new Date(Date.now() + 170 * DAY).toISOString(), id_document_path: paths[0], certificate_path: paths[1] });
+  const it = intro(c.id, w.id, { status: 'declined', cert_requested_at: isoDaysAgo(40), cert_response: 'provided', cert_path: paths[0], cert_seen_at: isoDaysAgo(39) });
+  Object.assign(fake.tables.clients[0], { status: 'closed', closed_at: isoDaysAgo(10), documents_delete_after: new Date(Date.now() + 170 * DAY).toISOString() });
   assert.equal((await run()).documentsDeleted, 0);
   assert.ok(fake.hasObject(paths[0], 'client-documents'));
   const out = await run(171);
   assert.equal(out.documentsDeleted, 1);
   paths.forEach((p) => assert.equal(fake.hasObject(p, 'client-documents'), false, p));
-  assert.equal(fake.tables.clients[0].id_document_path, null);
+  assert.equal(it.cert_path, null);
   assert.ok(fake.tables.clients[0].documents_deleted_at);
   assert.equal((await run(172)).documentsDeleted, 0);
+});
+
+test('while she waits for a certificate she asked for: no R14 and no expiry; both resume afterwards', async () => {
+  const c = activeClient(); profileFor(c);
+  const w = seedWoman({ email: 'hoa@example.vn' });
+  const it = intro(c.id, w.id, { sent_at: isoDaysAgo(31), decision_token_expires_at: isoDaysAgo(1), cert_requested_at: isoDaysAgo(20), expiry_paused_at: isoDaysAgo(20) });
+  let out = await run();
+  assert.equal(out.reminders + out.remindersByZalo, 0);
+  assert.equal(out.expired, 0);
+  assert.equal(it.status, 'sent');
+  it.expiry_paused_at = null;
+  out = await run();
+  assert.equal(out.expired, 1);
 });
 
 // ------------------------------------------------------------------ closing
