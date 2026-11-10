@@ -31,7 +31,7 @@
     ['all', 'All', null],
   ];
   var EVENT_LABEL = {
-    enquiry: 'Enquiry received', enquiry_again: 'Wrote again through the enquiry form', fee_document_sent: 'Fee document sent (R2)',
+    enquiry: 'Enquiry received', added_by_team: 'Added by the team (got in touch directly)', enquiry_again: 'Wrote again through the enquiry form', fee_document_sent: 'Fee document sent (R2)',
     call_booked: 'Call booked', call_held: 'Call held', thinking: 'Thinking it over', invite: 'Invited to apply (R3)', not_a_fit: 'Not the right fit (R4)',
     resend_link: 'New private link sent (R5)', application_started: 'Started his application', id_uploaded: 'Uploaded photo ID',
     certificate_uploaded: 'Uploaded criminal record certificate', declaration_signed: 'Signed background declaration', agreement_accepted: 'Accepted client agreement',
@@ -92,10 +92,43 @@
     var search = el('input', { class: 'form-input ad-search', type: 'search', id: 'cl-search', placeholder: 'Search name, email or country', 'aria-label': 'Search clients' });
     search.addEventListener('input', drawList);
     box.appendChild(el('p', { id: 'cl-signups', class: 'ad-preview-banner', hidden: true, text: 'Client sign-ups are switched off (CLIENT_SIGNUPS_OPEN is not true). Enquiries still arrive, but application links can\'t be sent and his private page shows "not available yet".' }));
-    box.appendChild(el('div', { class: 'ad-toolbar' }, [filters, search]));
+    var add = el('button', { type: 'button', class: 'btn btn--secondary btn--md', id: 'cl-add', text: '+ Add client', onclick: addClient });
+    box.appendChild(el('div', { class: 'ad-toolbar' }, [filters, search, add]));
     box.appendChild(el('p', { id: 'cl-count', class: 'form-note' }));
     box.appendChild(el('div', { id: 'cl-cards', class: 'ad-cards' }));
     box.appendChild(el('details', { class: 'ad-section cl-general', id: 'cl-general' }));
+  }
+
+  // "Add client": for a man who got in touch by email, WhatsApp, phone, in
+  // person or by referral. Same record as the enquiry form; nothing is sent
+  // to him. If his email is already a client, it opens that record instead.
+  function addClient() {
+    function field(id, label, attrs) {
+      return el('div', { class: 'form-group' }, [el('label', { class: 'form-label', for: id, text: label }), el('input', Object.assign({ class: 'form-input', id: id }, attrs || {}))]);
+    }
+    var channel = el('select', { class: 'form-input', id: 'cl-add-channel' }, [
+      ['', 'Choose…'], ['email', 'Email'], ['whatsapp', 'WhatsApp'], ['phone', 'Phone'], ['in_person', 'In person'], ['referral', 'Referral'], ['other', 'Other'],
+    ].map(function (o) { return el('option', { value: o[0], text: o[1] }); }));
+    var body = [
+      el('p', { class: 'form-note', text: 'For someone who contacted you directly. Nothing is sent to him.' }),
+      field('cl-add-name', 'Full name', { autocomplete: 'off', maxlength: 120 }),
+      field('cl-add-email', 'Email', { type: 'email', autocomplete: 'off', maxlength: 200 }),
+      field('cl-add-country', 'Country of residence', { maxlength: 80 }),
+      field('cl-add-age', 'Age (optional)', { inputmode: 'numeric', maxlength: 2 }),
+      field('cl-add-phone', 'Phone or WhatsApp (optional)', { maxlength: 40 }),
+      el('div', { class: 'form-group' }, [el('label', { class: 'form-label', for: 'cl-add-channel', text: 'How did he get in touch?' }), channel]),
+      el('div', { class: 'form-group' }, [el('label', { class: 'form-label', for: 'cl-add-message', text: 'What he asked about (optional)' }), el('textarea', { class: 'form-input', id: 'cl-add-message', rows: 3, maxlength: 1000 })]),
+    ];
+    modal('Add client', body, 'Add client', function () {
+      H.api('admin-client-create', {
+        fullName: $('cl-add-name').value, email: $('cl-add-email').value, country: $('cl-add-country').value,
+        age: $('cl-add-age').value, phone: $('cl-add-phone').value, channel: $('cl-add-channel').value, message: $('cl-add-message').value,
+      }).then(function (r) {
+        H.flash(r.existing ? 'He was already a client, so his record is open.' : 'Client added.');
+        location.hash = 'client-' + r.id;
+      }, function (err) { H.flash(err.message, true); });
+    });
+    $('cl-add-name').focus();
   }
 
   function drawList() {
