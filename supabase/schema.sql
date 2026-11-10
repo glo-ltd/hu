@@ -162,7 +162,7 @@ values ('candidate-photos', 'candidate-photos', false, 3145728, array['image/jpe
 on conflict (id) do nothing;
 
 -- ============================================================
--- Clients, phase 1 (December 2026). Identical copy of
+-- Clients, phase 1. Identical copy of
 -- supabase/migrations/2026-12-client-phase-1.sql.
 -- ============================================================
 
@@ -174,6 +174,11 @@ on conflict (id) do nothing;
 -- so only the service role (Netlify Functions) can read or write. Client
 -- documents live in a PRIVATE bucket with no storage policies; every upload
 -- and view goes through a short-lived signed URL made by a function.
+--
+-- If an earlier draft of this file was already applied, nothing needs
+-- dropping: its document columns (id_document_path, certificate_path,
+-- id_checked_*, certificate_checked_*) are simply no longer used, and the
+-- two new columns are added by the "add column if not exists" lines below.
 
 -- 1. Clients: one row per man, from first enquiry to the end of his engagement.
 create table if not exists public.clients (
@@ -220,13 +225,10 @@ create table if not exists public.clients (
   agreement_accepted_at timestamptz,
   submitted_at timestamptz,
 
-  -- Documents (paths in the client-documents bucket) and the team's check.
-  id_document_path text,
-  certificate_path text,
-  id_checked_at timestamptz,
-  id_checked_by text,
-  certificate_checked_at timestamptz,
-  certificate_checked_by text,
+  -- Heritage Union does not carry out background checks. James reads the
+  -- application and sworn declaration before the invoice can be sent.
+  declaration_read_at timestamptz,
+  declaration_read_by text,
 
   -- Engagement
   paid_at timestamptz,
@@ -322,11 +324,16 @@ create table if not exists public.general_enquiries (
 
 alter table public.general_enquiries enable row level security;
 
--- 5. Private bucket for his photo ID and criminal record certificate
---    (and, from phase 2, his profile photos). 10 MB; PDF, JPEG or PNG.
+-- 5. Private bucket for his profile photos (phase 2) and any official
+--    certificate he chooses to provide when a woman asks for one (phase 3).
+--    10 MB; PDF, JPEG or PNG.
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('client-documents', 'client-documents', false, 10485760, array['application/pdf', 'image/jpeg', 'image/png'])
 on conflict (id) do nothing;
+
+-- 6. For a project where an earlier draft of this file was already applied.
+alter table public.clients add column if not exists declaration_read_at timestamptz;
+alter table public.clients add column if not exists declaration_read_by text;
 
 -- ============================================================
 -- Clients, phase 2. Identical copy of
@@ -449,6 +456,20 @@ create table if not exists public.introductions (
   consent_ip_hash text,
   decline_reason text,              -- private: never shown to him
 
+  -- "Ask him for an official background check first". Heritage Union does
+  -- not carry out background checks; she may ask him for an official
+  -- certificate. He may provide one or decline. While this is going on her
+  -- request stays open and its 30-day expiry is paused.
+  cert_requested_at timestamptz,    -- she asked
+  cert_request_sent_at timestamptz, -- the team sent him the request (R22)
+  cert_request_sent_by text,
+  cert_response text,               -- provided | declined
+  cert_responded_at timestamptz,
+  cert_path text,                   -- <client_id>/certificate/<uuid>.<ext> in client-documents
+  cert_seen_at timestamptz,         -- the team has looked at it; only then is it shown to her
+  cert_seen_by text,
+  expiry_paused_at timestamptz,
+
   -- The introduction itself, and closing states.
   introduced_at timestamptz,
   introduced_by text,
@@ -462,6 +483,7 @@ create table if not exists public.introductions (
   updated_at timestamptz not null default now(),
 
   constraint introductions_status_check check (status in ('queued', 'ready', 'sent', 'opened', 'accepted', 'introduced', 'declined', 'expired', 'cancelled')),
+  constraint introductions_cert_response_check check (cert_response is null or cert_response in ('provided', 'declined')),
   constraint introductions_reason_length check (decline_reason is null or char_length(decline_reason) <= 2000),
   constraint introductions_one_per_pair unique (client_id, candidate_id)
 );
@@ -494,6 +516,17 @@ create table if not exists public.introduction_questions (
 
 create index if not exists introduction_questions_intro_idx on public.introduction_questions (introduction_id);
 alter table public.introduction_questions enable row level security;
+
+-- 3. For a project where an earlier draft of this file was already applied.
+alter table public.introductions add column if not exists cert_requested_at timestamptz;
+alter table public.introductions add column if not exists cert_request_sent_at timestamptz;
+alter table public.introductions add column if not exists cert_request_sent_by text;
+alter table public.introductions add column if not exists cert_response text;
+alter table public.introductions add column if not exists cert_responded_at timestamptz;
+alter table public.introductions add column if not exists cert_path text;
+alter table public.introductions add column if not exists cert_seen_at timestamptz;
+alter table public.introductions add column if not exists cert_seen_by text;
+alter table public.introductions add column if not exists expiry_paused_at timestamptz;
 
 -- ============================================================
 -- Clients, phase 4. Identical copy of

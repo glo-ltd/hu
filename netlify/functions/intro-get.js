@@ -1,7 +1,8 @@
 // Her decision page loads from here (/vi/gioi-thieu and /introduction).
 // POST { token, lang }. Marks the request "opened" the first time.
 // Returns only what she needs: his first name, age, country, city, summary,
-// photos, message and background declaration in her language; her own
+// photos, message and his own signed background declaration (which Heritage
+// Union does not check) in her language; any certificate she asked him for; her own
 // contact details to pre-fill the form; and the state of her answer.
 const { json } = require('../shared/request-utils');
 const I = require('../shared/introductions');
@@ -27,6 +28,9 @@ exports.handler = async function (event) {
       lang,
       status: intro.status,
       expiresAt: intro.decision_token_expires_at,
+      expiryPaused: !!intro.expiry_paused_at,
+      // An official certificate she asked him for, if any (his choice).
+      certificate: await I.certStateForHer(sb, intro),
       name: (herProf.data && herProf.data.display_name) || P.givenName(candidate.full_name),
       him,
       prefill: { zalo: candidate.zalo_number, email: candidate.email || '', phone: candidate.zalo_number },

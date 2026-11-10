@@ -184,3 +184,9 @@ html { background: var(--cream-100); }
 .fb-star { min-width: 52px; justify-content: center; font-family: var(--font-display); font-size: 20px; }
 .fb-perm { display: grid; gap: 4px; }
 .fb-perm input[type="radio"] { width: 20px; height: 20px; accent-color: var(--burgundy-700); }
+
+.cl-field--confirm .cl-affirm { padding: 14px; border: 1px solid var(--gold-300); border-radius: var(--radius-sm); background: #FFFBF0; font-weight: 500; }
+
+/* A certificate a woman asked him for (optional) */
+.cl-certcard .cl-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 4px; }
+.cl-certcard .cl-actions .btn { cursor: pointer; }

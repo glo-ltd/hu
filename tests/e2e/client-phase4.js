@@ -53,7 +53,7 @@ const ago = (d) => new Date(Date.now() - d * DAY).toISOString();
     await plain.close();
 
     // ------------------------------------------------------------ an active client, 12 months on, with an open request
-    const client = S.activeClient({ engagement_starts_at: ago(366), engagement_ends_at: ago(1), paid_at: ago(366), id_checked_at: ago(370), certificate_checked_at: ago(370) });
+    const client = S.activeClient({ engagement_starts_at: ago(366), engagement_ends_at: ago(1), paid_at: ago(366) });
     fake.tables.client_profiles.push({ client_id: client.id, questions_version: 'x', display_name: 'Michael', photo_paths: [], answers: {}, submitted_at: ago(300), summary_html: '<p>x</p>', summary_approved_at: ago(299), summary_vi_html: '<p>x</p>', declaration_vi: {} });
     const hoa = S.seedWoman({ email: null }, { display_name: 'Hoa' });
     const lan = S.seedWoman({ zalo_number: '0933333333' }, { display_name: 'Lan' });

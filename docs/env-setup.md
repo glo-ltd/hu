@@ -72,7 +72,8 @@ does these by hand:
 Run `supabase/migrations/2026-12-client-phase-1.sql` once (James asks Claude in
 chat to apply it). It is safe to run more than once. It adds the `clients`,
 `client_events`, `client_invoices` and `general_enquiries` tables (RLS on, no
-policies) and the private `client-documents` Storage bucket (10 MB; PDF, JPEG,
+policies) and the private `client-documents` Storage bucket for his photos and
+any certificate he chooses to give when a woman asks (10 MB; PDF, JPEG,
 PNG). A new project gets the same from `supabase/schema.sql`.
 
 | Variable | Value |

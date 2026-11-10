@@ -75,10 +75,10 @@ Thank you for speaking with me. I enjoyed our conversation, and I would be glad 
 
 WHAT HAPPENS NEXT
 
-- Application: a short form about you, with a copy of your photo ID.
-- Background declaration: a plain, honest declaration about your history, with an official criminal record certificate from your country of residence, issued within the last 6 months. Any woman you are introduced to will read this declaration in her own language.
+- Application: a short form about you.
+- Background declaration: a plain, honest declaration about your history, which you sign as a sworn statement. Heritage Union does not carry out background checks; instead, every woman you choose reads your declaration in her own language before she decides, and she may ask you for an official background check.
 - Agreement: our client agreement, to read and accept.
-- We check your documents, then send your invoice. Payment is by bank transfer.
+- I read your application and declaration, then send your invoice. Payment is by bank transfer.
 - Once payment is received, you write your profile, and we prepare your introductions within 2–4 weeks.
 
 Our Service & Investment Structure is attached again for reference. You can also download it at heritage-union.com/assets/documents/heritage-union-fee-structure.pdf.
@@ -131,7 +131,7 @@ Heritage Union · heritage-union.com
 ```text
 Dear Michael,
 
-Here is your new private link to continue your application. Anything you have already saved is still there.
+Here is your new private link to continue your application. Anything you have already saved is still there. Your application has three parts: about you, your sworn background declaration, and the client agreement.
 
 Continue your application: https://heritage-union.com/client#t=EXAMPLE
 
@@ -156,9 +156,9 @@ Heritage Union · heritage-union.com
 ```text
 Dear Michael,
 
-Thank you. Your application, background declaration and documents have reached us safely.
+Thank you. Your application and signed background declaration have reached us safely.
 
-We will check your documents and be in touch within 3 working days. If everything is in order, the next email you receive from me will be your invoice.
+I will read them personally and be in touch within 3 working days. If everything is in order, the next email you receive from me will be your invoice.
 
 If anything in your application changes in the meantime, simply reply to this email.
 
@@ -175,13 +175,13 @@ Heritage Union · heritage-union.com
 ## R7 — Invoice
 
 - **To:** the client
-- **When:** When James sends the invoice (only after both documents are checked). The PDF invoice is attached.
+- **When:** When James sends the invoice (only after he has read the application and sworn declaration and marked them as read). The PDF invoice is attached.
 - **Subject:** Invoice HU-2026-0001 — Heritage Union
 
 ```text
 Dear Michael,
 
-Thank you for your patience while we checked your documents. Everything is in order, and I am delighted to welcome you to the next step.
+Thank you for your application and your background declaration. I have read them, and I am delighted to welcome you to the next step.
 
 Your invoice is attached as a PDF, and summarised below.
 
@@ -360,11 +360,11 @@ Chào Hoa,
 
 Heritage Union xin báo với bạn: một khách hàng đã đọc hồ sơ của bạn và mong được làm quen với bạn.
 
-Bạn có thể xem hồ sơ, ảnh, lời nhắn và bản khai lý lịch của anh ấy, bằng tiếng Việt, qua đường link riêng này:
+Bạn có thể xem hồ sơ, ảnh, lời nhắn và bản khai lý lịch do chính anh ấy ký, bằng tiếng Việt, qua đường link riêng này:
 
 Xem hồ sơ của anh ấy: https://heritage-union.com/vi/gioi-thieu#t=EXAMPLE
 
-Bạn hoàn toàn không có nghĩa vụ gì. Bạn có thể đồng ý, từ chối mà không cần nêu lý do, hoặc hỏi chúng tôi trước khi quyết định. Bạn không bao giờ phải trả bất kỳ khoản tiền nào.
+Heritage Union không kiểm tra bản khai này. Trước khi quyết định, bạn có thể yêu cầu anh ấy cung cấp phiếu lý lịch tư pháp. Bạn hoàn toàn không có nghĩa vụ gì: bạn có thể đồng ý, từ chối mà không cần nêu lý do, hoặc hỏi chúng tôi trước khi quyết định. Bạn không bao giờ phải trả bất kỳ khoản tiền nào.
 
 Đường link chỉ dành riêng cho bạn và dùng được đến ngày 8/1/2027. Vui lòng không chia sẻ đường link này.
 
@@ -389,11 +389,11 @@ Dear Hoa,
 
 A Heritage Union client has read your profile and would like to be introduced to you.
 
-You can read his profile, his photos, his message and his background declaration through this private link:
+You can read his profile, his photos, his message and his own signed background declaration through this private link:
 
 Read his profile: https://heritage-union.com/introduction#t=EXAMPLE
 
-You are under no obligation at all. You can say yes, say no without giving any reason, or ask us a question first. You never pay anything.
+Heritage Union does not check his declaration. Before you decide, you can ask him for an official background check. You are under no obligation at all: you can say yes, say no without giving any reason, or ask us a question first. You never pay anything.
 
 This link is just for you and works until 8 January 2027. Please don't share it.
 
@@ -666,7 +666,7 @@ Your 12-month engagement with Heritage Union is now complete. Thank you for the 
 
 To confirm: nothing more is owed. No further fees are due from you.
 
-As promised in our Privacy Policy, your identity documents will be deleted 6 months from today.
+As promised in our Privacy Policy, your photos, and any certificate you provided at a woman's request, will be deleted 6 months from today.
 
 I wish you every happiness, and you are always welcome to write to me.
 
@@ -698,6 +698,35 @@ We will only ever publish what you write if you give us written permission on th
 This link is private to you and works until 8 March 2027.
 
 Thank you,
+
+James
+Founder, Heritage Union
+
+--
+If anything ever worries you, tell us in confidence: https://heritage-union.com/contact?concern=1
+Heritage Union · heritage-union.com
+```
+
+## R22 — A woman would like an official certificate
+
+- **To:** the client
+- **When:** When the team taps "Send certificate request", after a woman asked for an official background check on her decision page.
+- **Subject:** Hoa would like an official certificate — Heritage Union
+
+```text
+Dear Michael,
+
+Hoa has read your profile and your background declaration. Before she decides, she would like you to provide an official criminal record certificate from your country of residence (for example a DBS check in the UK, a national police certificate in Australia, or an FBI Identity History Summary in the US).
+
+This is entirely your choice. You may provide one, or decline; either way, she will be told your answer, and you don't need to give a reason. Her request to you stays open in the meantime.
+
+If you provide one, it is kept privately, shown only to Hoa through a short-lived link, and deleted 6 months after your engagement closes.
+
+Provide a certificate, or decline: https://heritage-union.com/client#t=EXAMPLE
+
+This link is private to you and works until 10 January 2027.
+
+Warm regards,
 
 James
 Founder, Heritage Union
@@ -742,6 +771,45 @@ Heritage Union · heritage-union.com
 
 ```text
 A woman has said no. He has been told kindly (R17), with no reason. Reference I-9F8E7D6C.
+
+Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
+
+Heritage Union · heritage-union.com
+```
+
+## Team — A woman asked for an official background check
+
+- **To:** everyone in ADMIN_EMAILS
+- **Subject:** A woman asked for an official background check (I-9F8E7D6C)
+
+```text
+A woman has asked the client for an official criminal record certificate before she decides. Open his page and tap "Send certificate request". Reference I-9F8E7D6C.
+
+Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
+
+Heritage Union · heritage-union.com
+```
+
+## Team — A client provided a certificate
+
+- **To:** everyone in ADMIN_EMAILS
+- **Subject:** A client provided a certificate (I-9F8E7D6C)
+
+```text
+A client has uploaded a certificate a woman asked for. Open it, then tap "Mark as seen" so she can see it. Reference I-9F8E7D6C.
+
+Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
+
+Heritage Union · heritage-union.com
+```
+
+## Team — A client chose not to provide a certificate
+
+- **To:** everyone in ADMIN_EMAILS
+- **Subject:** A client chose not to provide a certificate (I-9F8E7D6C)
+
+```text
+A client chose not to provide the certificate a woman asked for. Her decision page now tells her so; you may want to message her on Zalo. Reference I-9F8E7D6C.
 
 Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
 
@@ -819,7 +887,7 @@ Heritage Union · heritage-union.com
 - **Subject:** Client application submitted (C-1A2B3C4D)
 
 ```text
-An application is ready for document checks. Reference C-1A2B3C4D.
+An application and sworn background declaration are ready for you to read. Reference C-1A2B3C4D.
 
 Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
 

@@ -1,6 +1,6 @@
 {
-  "version": "2026-12-v1",
-  "declarationText": "Everything above is true and complete. I agree that Heritage Union may share this declaration with any woman I am introduced to.",
+  "version": "2026-12-v2",
+  "declarationText": "I solemnly declare that everything above is true and complete. I understand that Heritage Union does not check it, that each woman I choose will read it before deciding, and that a false declaration ends my agreement without refund.",
   "sections": [
     {
       "id": "application",
@@ -12,7 +12,7 @@
       "id": "declaration",
       "step": 2,
       "title": "Background declaration",
-      "intro": "Please answer plainly and honestly. Any woman you are introduced to will read this declaration in her own language before she decides whether to share her contact details. Answering “yes” to a question does not automatically end your application; not telling us would."
+      "intro": "Please answer plainly and honestly. Heritage Union does not carry out background checks: this is your own sworn declaration. Any woman you are introduced to will read it in her own language before she decides whether to share her contact details, and she may ask you for an official background check. Answering “yes” to a question does not automatically end your application; not telling us would."
     },
     {
       "id": "agreement",
@@ -266,13 +266,16 @@
       }
     },
     {
-      "id": "id_document",
-      "section": "application",
-      "type": "document",
+      "id": "legally_free",
+      "section": "declaration",
+      "type": "confirm",
       "required": true,
-      "label": "Photo ID",
-      "help": "Your passport, national ID card or driving licence. A clear photo or scan of the page with your photo. PDF, JPEG or PNG, up to 10 MB.",
-      "kind": "id"
+      "label": "I am legally free to enter this agreement and I am not married or in a registered partnership.",
+      "help": "Tick to confirm. If this isn't true for you, please don't continue, and reply to James's email instead.",
+      "forHer": {
+        "vi": "Anh ấy xác nhận mình được tự do về mặt pháp lý để ký thỏa thuận này, và hiện không kết hôn hay có quan hệ đối tác đã đăng ký.",
+        "en": "He confirms he is legally free to enter this agreement, and is not married or in a registered partnership."
+      }
     },
     {
       "id": "conviction",
@@ -472,49 +475,18 @@
         "vi": "Chi tiết",
         "en": "Details"
       }
-    },
-    {
-      "id": "certificate",
-      "section": "declaration",
-      "type": "document",
-      "required": true,
-      "label": "Criminal record certificate",
-      "help": "An official criminal record certificate from your country of residence (for example a DBS check in the UK, a national police certificate in Australia, or an FBI Identity History Summary in the US), issued in the last 6 months. PDF, JPEG or PNG, up to 10 MB.",
-      "kind": "certificate"
-    },
-    {
-      "id": "certificate_country",
-      "section": "declaration",
-      "type": "text",
-      "required": true,
-      "label": "Country that issued the certificate",
-      "max": 80,
-      "forHer": {
-        "vi": "Quốc gia cấp giấy xác nhận lý lịch tư pháp",
-        "en": "Country that issued his criminal record certificate"
-      }
-    },
-    {
-      "id": "certificate_issued_on",
-      "section": "declaration",
-      "type": "date",
-      "required": true,
-      "label": "Date the certificate was issued",
-      "help": "It must be dated within the last 6 months.",
-      "forHer": {
-        "vi": "Ngày cấp giấy xác nhận lý lịch tư pháp",
-        "en": "Date his criminal record certificate was issued"
-      }
     }
   ],
   "yesNoForHer": {
     "vi": {
       "yes": "Có",
-      "no": "Không"
+      "no": "Không",
+      "confirmed": "Có, anh ấy xác nhận"
     },
     "en": {
       "yes": "Yes",
-      "no": "No"
+      "no": "No",
+      "confirmed": "Yes, he confirms"
     }
   }
 }

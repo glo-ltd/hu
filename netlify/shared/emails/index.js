@@ -22,5 +22,6 @@ module.exports = {
   R19: require('./r19-congratulations'),
   R20: require('./r20-twelve-months'),
   R21: require('./r21-feedback'),
+  R22: require('./r22-certificate-request'),
   team: require('./team-client'),
 };

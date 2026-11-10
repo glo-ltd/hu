@@ -79,35 +79,17 @@ const ACTIONS = {
     if (c.status !== 'paused') return 'He isn\'t paused.';
     await CC.setStatus(sb, c.id, 'active', { paused_at: null, paused_reason: null });
   },
-  // Stage 3: document checks. Both checked -> ready for an invoice.
-  async check_id(sb, c, email) { return check(sb, c, email, 'id'); },
-  async check_certificate(sb, c, email) { return check(sb, c, email, 'certificate'); },
-  async uncheck_id(sb, c) { return uncheck(sb, c, 'id'); },
-  async uncheck_certificate(sb, c) { return uncheck(sb, c, 'certificate'); },
+  // Stage 3: James reads his application and sworn declaration. Heritage
+  // Union does not check them; reading them is what unlocks the invoice.
+  async mark_read(sb, c, email) {
+    if (c.status !== 'submitted') return 'He hasn\'t sent his application yet, or it is already marked as read.';
+    await CC.setStatus(sb, c.id, 'checked', { declaration_read_at: new Date().toISOString(), declaration_read_by: email });
+  },
+  async unmark_read(sb, c) {
+    if (c.status !== 'checked') return 'Too late to change: an invoice has been sent.';
+    await CC.setStatus(sb, c.id, 'submitted', { declaration_read_at: null, declaration_read_by: null });
+  },
 };
-
-async function check(sb, c, email, kind) {
-  if (['submitted', 'checked'].indexOf(c.status) === -1) return 'Documents are checked after he sends his application.';
-  const pathCol = kind === 'id' ? 'id_document_path' : 'certificate_path';
-  if (!c[pathCol]) return 'No document uploaded.';
-  if (kind === 'certificate' && !CC.certificateFresh((c.declaration || {}).certificate_issued_on || '')) {
-    return 'The certificate is dated more than ' + CC.C.CERTIFICATE_MAX_AGE_MONTHS + ' months ago. Ask him for a new one.';
-  }
-  const now = new Date().toISOString();
-  const fields = kind === 'id' ? { id_checked_at: now, id_checked_by: email } : { certificate_checked_at: now, certificate_checked_by: email };
-  const r = await sb.from('clients').update(fields).eq('id', c.id);
-  if (r.error) throw r.error;
-  const other = kind === 'id' ? c.certificate_checked_at : c.id_checked_at;
-  if (other && c.status === 'submitted') await CC.setStatus(sb, c.id, 'checked');
-}
-
-async function uncheck(sb, c, kind) {
-  if (['submitted', 'checked'].indexOf(c.status) === -1) return 'Too late to change: an invoice has been sent.';
-  const fields = kind === 'id' ? { id_checked_at: null, id_checked_by: null } : { certificate_checked_at: null, certificate_checked_by: null };
-  const r = await sb.from('clients').update(fields).eq('id', c.id);
-  if (r.error) throw r.error;
-  if (c.status === 'checked') await CC.setStatus(sb, c.id, 'submitted');
-}
 
 exports.handler = async function (event) {
   const ctx = await requireAdmin(event);

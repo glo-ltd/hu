@@ -16,7 +16,7 @@
 
   var STATUS = {
     enquiry: 'New enquiry', call_booked: 'Call booked', call_held: 'Call held', thinking: 'Thinking it over',
-    invited: 'Invited to apply', applying: 'Applying', submitted: 'Documents to check', checked: 'Ready to invoice',
+    invited: 'Invited to apply', applying: 'Applying', submitted: 'To read', checked: 'Ready to invoice',
     invoiced: 'Awaiting payment', active: 'Active', paused: 'Paused', not_a_fit: 'Not the right fit', closed: 'Closed',
   };
   var SOURCES = { search: 'Search engine', social: 'Social media', friend: 'A friend or family member', press: 'Press or an article', facebook_group: 'Facebook group', other: 'Other', fee_document: 'Fee document request' };
@@ -24,7 +24,7 @@
     ['enquiry', 'New enquiries', ['enquiry']],
     ['call', 'Call booked', ['call_booked', 'call_held', 'thinking']],
     ['applying', 'Applying', ['invited', 'applying']],
-    ['documents', 'Documents to check', ['submitted']],
+    ['documents', 'To read', ['submitted']],
     ['payment', 'Awaiting payment', ['checked', 'invoiced']],
     ['active', 'Active', ['active', 'paused']],
     ['closed', 'Closed', ['closed', 'not_a_fit']],
@@ -33,16 +33,20 @@
   var EVENT_LABEL = {
     enquiry: 'Enquiry received', added_by_team: 'Added by the team (got in touch directly)', enquiry_again: 'Wrote again through the enquiry form', fee_document_sent: 'Fee document sent (R2)',
     call_booked: 'Call booked', call_held: 'Call held', thinking: 'Thinking it over', invite: 'Invited to apply (R3)', not_a_fit: 'Not the right fit (R4)',
-    resend_link: 'New private link sent (R5)', application_started: 'Started his application', id_uploaded: 'Uploaded photo ID',
-    certificate_uploaded: 'Uploaded criminal record certificate', declaration_signed: 'Signed background declaration', agreement_accepted: 'Accepted client agreement',
-    application_submitted: 'Sent his application (R6)', profile_submitted: 'Sent his profile', profile_summary_save: 'Summary saved',
+    resend_link: 'New private link sent (R5)', application_started: 'Started his application',
+    declaration_signed: 'Signed his sworn background declaration', agreement_accepted: 'Accepted client agreement',
+    application_submitted: 'Sent his application (R6)', mark_read: 'Application and declaration read', unmark_read: '"Read" undone',
+    profile_submitted: 'Sent his profile', profile_summary_save: 'Summary saved',
     profile_summary_send: 'Summary sent for approval (R9)', profile_translate: 'Translations saved', summary_approved: 'Approved his summary (R10)',
     summary_changes_requested: 'Asked for changes to his summary', intro_send: 'Request sent to her (R13)', intro_resend: 'New decision link made',
     intro_introduce: 'Introduced (R15, R16)', intro_cancel: 'Request cancelled', intro_answered: 'Her question answered', intro_accepted: 'She said yes',
     intro_declined: 'She said no (R17 to him)', intro_reminder: '14-day reminder (R14)', intro_expired: 'Request expired at 30 days (R17 to him)', intro_reminder_copy: 'Reminder copied for Zalo',
     pause: 'Paused', unpause: 'Unpaused', closed_success: 'Closed: relationship success (R19, honour invoice, R21)', closed_completed: 'Closed: 12 months complete (R20, R21)', closed_closed: 'Closed (R21)',
-    checkin_sent: '3-month check-in (R18)', engagement_12_months: 'Reached 12 months', documents_deleted: 'Documents deleted (6 months after closing)', feedback_received: 'Feedback received', concern_linked: 'A concern was linked to him', intro_question: 'She asked a question', replacement_chosen: 'He chose a replacement', shortlist_sent: 'Shortlist sent (R11)', choices_submitted: 'Sent his choices (R12)', check_id: 'Photo ID checked', check_certificate: 'Certificate checked',
-    uncheck_id: 'Photo ID check undone', uncheck_certificate: 'Certificate check undone', invoice_create: 'Invoice drafted', invoice_update: 'Invoice draft changed',
+    checkin_sent: '3-month check-in (R18)', engagement_12_months: 'Reached 12 months', documents_deleted: 'Documents deleted (6 months after closing)', feedback_received: 'Feedback received', concern_linked: 'A concern was linked to him', intro_question: 'She asked a question', replacement_chosen: 'He chose a replacement', shortlist_sent: 'Shortlist sent (R11)', choices_submitted: 'Sent his choices (R12)',
+    intro_cert_requested: 'She asked for an official certificate', intro_cert_request: 'Certificate request sent to him (R22)',
+    intro_cert_provided: 'He provided a certificate', intro_cert_declined: 'He chose not to provide a certificate',
+    intro_cert_view: 'Certificate opened', intro_cert_seen: 'Certificate marked as seen',
+    invoice_create: 'Invoice drafted', invoice_update: 'Invoice draft changed',
     invoice_send: 'Invoice sent (R7)', invoice_paid: 'Payment received (R8 welcome)', invoice_void: 'Invoice voided',
   };
 
@@ -169,7 +173,7 @@
     var days = H.daysSince(c.status_changed_at || c.created_at);
     var badges = [el('span', { class: 'ad-badge ad-badge--status', text: STATUS[c.status] || c.status })];
     if (c.fee_document_sent_at) badges.push(el('span', { class: 'ad-badge', text: 'Fee document sent' }));
-    if (c.status === 'submitted') badges.push(el('span', { class: 'ad-badge ad-badge--warn', text: (c.id_checked_at ? '✓ ID' : 'ID to check') + ' · ' + (c.certificate_checked_at ? '✓ certificate' : 'certificate to check') }));
+    if (c.status === 'submitted') badges.push(el('span', { class: 'ad-badge ad-badge--warn', text: 'Application and declaration to read' }));
     if (c.status === 'active' && c.engagement_ends_at && !c.engagement_flagged_at) badges.push(el('span', { class: 'ad-badge ad-badge--ok', text: 'Until ' + H.fmtDate(c.engagement_ends_at) }));
     if (c.engagement_flagged_at && ['active', 'paused'].indexOf(c.status) !== -1) badges.push(el('span', { class: 'ad-badge ad-badge--danger', text: '12 months reached: decide how to close' }));
     if (c.status === 'closed' && c.closed_kind) badges.push(el('span', { class: 'ad-badge', text: { success: 'Relationship success', completed: '12 months complete', closed: 'Closed' }[c.closed_kind] }));
@@ -215,6 +219,7 @@
     if (f.type === 'single') { var o = f.options.filter(function (x) { return x.value === v; })[0]; return o ? o.label : v; }
     if (f.type === 'languages') return v.map(function (x) { return x.language + ' (' + x.level + ')'; }).join(', ');
     if (f.type === 'date') return H.fmtDate(v + 'T00:00:00Z');
+    if (f.type === 'confirm') return v === true ? '✓ Confirmed' : null;
     return String(v);
   }
 
@@ -263,7 +268,7 @@
         hasApp ? answersBlock(d.form, 'application', c.application) : el('p', { class: 'ad-empty', text: 'Not started yet.' }),
       ]));
       left.appendChild(el('section', { class: 'ad-section' }, [
-        el('h2', { text: 'Background declaration (F3)' }),
+        el('h2', { text: 'Sworn background declaration (F3)' }),
         c.declaration && Object.keys(c.declaration).length ? answersBlock(d.form, 'declaration', c.declaration) : el('p', { class: 'ad-empty', text: 'Not started yet.' }),
         dl([
           ['Signed', c.declaration_signed_at ? H.fmtDateTime(c.declaration_signed_at) + ' as "' + c.declaration_typed_name + '"' : 'Not signed'],
@@ -290,7 +295,7 @@
     }
     if (['active', 'paused', 'closed'].indexOf(c.status) !== -1) right.appendChild(engagementSection(c, d));
     right.appendChild(actionsSection(c, d));
-    if (['submitted', 'checked', 'invoiced', 'active', 'paused', 'closed'].indexOf(c.status) !== -1 || c.id_document_path || c.certificate_path) right.appendChild(documentsSection(c, d));
+    if (['submitted', 'checked'].indexOf(c.status) !== -1) right.appendChild(readSection(c));
     if (['submitted', 'checked', 'invoiced', 'active', 'paused', 'closed'].indexOf(c.status) !== -1 || d.invoices.length) right.appendChild(invoicesSection(c, d));
     right.appendChild(timelineSection(d.events));
   }
@@ -325,34 +330,17 @@
     return sec;
   }
 
-  function documentsSection(c, d) {
-    var sec = el('section', { class: 'ad-section' }, [el('h2', { text: 'Documents' })]);
-    [['id', 'Photo ID', c.id_document_path, c.id_checked_at, c.id_checked_by], ['certificate', 'Criminal record certificate', c.certificate_path, c.certificate_checked_at, c.certificate_checked_by]].forEach(function (x) {
-      var kind = x[0];
-      var row = el('div', { class: 'ad-answer' }, [el('span', { class: 'ad-q', text: x[1] })]);
-      if (!x[2]) { row.appendChild(el('span', { class: 'ad-empty', text: 'Not uploaded' })); sec.appendChild(row); return; }
-      if (kind === 'certificate') {
-        var dec = c.declaration || {};
-        row.appendChild(el('span', { class: 'ad-a', text: 'Issued ' + (dec.certificate_issued_on ? H.fmtDate(dec.certificate_issued_on + 'T00:00:00Z') : '?') + ' in ' + (dec.certificate_country || '?') }));
-      }
-      var open = el('button', { type: 'button', class: 'btn btn--secondary btn--sm', text: 'Open (10-minute link)' });
-      open.addEventListener('click', function () {
-        // Open the tab first so pop-up blockers allow it, then point it at the signed URL.
-        var w = window.open('', '_blank');
-        H.api('admin-client-doc', { id: c.id, kind: kind }).then(function (r) { if (w) { w.opener = null; w.location = r.url; } else location.href = r.url; }, function (err) { if (w) w.close(); H.flash(err.message, true); });
-      });
-      var actions = el('div', { class: 'ad-translate-row' }, [open]);
-      var checked = !!x[3];
-      if (['submitted', 'checked'].indexOf(c.status) !== -1) {
-        actions.appendChild(el('button', { type: 'button', class: 'btn ' + (checked ? 'btn--secondary' : 'btn--primary') + ' btn--sm', text: checked ? 'Undo check' : 'Mark checked', onclick: function () {
-          act(c.id, (checked ? 'uncheck_' : 'check_') + kind, checked ? 'Check undone.' : 'Marked checked.');
-        } }));
-      }
-      actions.appendChild(el('span', { text: checked ? '✓ Checked by ' + x[4] + ', ' + H.fmtDateTime(x[3]) : 'Not checked yet' }));
-      row.appendChild(actions);
-      sec.appendChild(row);
-    });
-    sec.appendChild(el('p', { class: 'form-note', text: 'Check that the ID matches his legal name and date of birth, and that the certificate is official, from his country of residence and issued within the last ' + d.certificateMaxAgeMonths + ' months. Then mark each as checked. The invoice can only be sent once both are checked.' }));
+  // Heritage Union does not carry out background checks. James reads the
+  // application and sworn declaration; marking them read unlocks the invoice.
+  function readSection(c) {
+    var sec = el('section', { class: 'ad-section' }, [el('h2', { text: 'Read his application' })]);
+    sec.appendChild(el('p', { class: 'form-note', text: 'Heritage Union does not check his declaration. Read his application and sworn background declaration (any "yes" is in red, and he must have confirmed he is legally free to enter the agreement). You can still send "Not the right fit" at this stage. When you\'re ready, mark them as read: the invoice can then be sent.' }));
+    if (c.status === 'submitted') {
+      sec.appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--md', text: 'I have read his application and declaration', onclick: function () { act(c.id, 'mark_read', 'Marked as read. You can now send the invoice.'); } }));
+    } else {
+      sec.appendChild(el('p', { class: 'cl-tick-row', text: '✓ Read by ' + c.declaration_read_by + ', ' + H.fmtDateTime(c.declaration_read_at) }));
+      sec.appendChild(el('button', { type: 'button', class: 'ad-link', text: 'Undo "read"', onclick: function () { act(c.id, 'unmark_read', 'Undone.'); } }));
+    }
     return sec;
   }
 
@@ -370,7 +358,7 @@
       if (inv.status === 'draft') {
         actions.appendChild(el('button', { type: 'button', class: 'btn btn--secondary btn--sm', text: 'Change amount', onclick: function () { editAmount(c, inv); } }));
         var canSend = c.status === 'checked' && d.paymentDetailsSet;
-        actions.appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--sm', text: 'Send invoice (R7)', disabled: !canSend, title: canSend ? null : 'Check both documents (and set INVOICE_PAYMENT_DETAILS) first', onclick: function () {
+        actions.appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--sm', text: 'Send invoice (R7)', disabled: !canSend, title: canSend ? null : 'Mark his application as read (and set INVOICE_PAYMENT_DETAILS) first', onclick: function () {
           modal('Send invoice to ' + c.full_name.split(' ')[0] + '?', 'It gets the next invoice number and is emailed with the PDF attached: ' + inv.description + ', ' + money(inv.amount_cents, inv.currency) + '.', 'Send invoice', function () { invoiceOp(c.id, 'send', inv.id, 'Invoice sent.'); });
         } }));
       }
@@ -614,10 +602,30 @@
       x.questions.forEach(function (q) {
         row.appendChild(el('div', { class: 'cl-question' }, [el('span', { class: 'ad-card-sub', text: 'Her question, ' + H.fmtDateTime(q.at) + (q.answeredAt ? ' · answered by ' + q.answeredBy : '') }), el('p', { lang: 'vi', text: q.message })]));
       });
+      if (x.cert) {
+        var cs = x.cert;
+        var line = cs.response === 'declined' ? 'He chose not to provide one (' + H.fmtDate(cs.respondedAt) + '). Her page tells her so.'
+          : cs.seenAt ? 'He provided one. Seen by ' + cs.seenBy + ' ' + H.fmtDate(cs.seenAt) + '; her page shows it with a 10-minute link.'
+          : cs.response === 'provided' ? 'He uploaded one ' + H.fmtDate(cs.respondedAt) + '. Open it, then mark it as seen so she can see it.'
+          : cs.sentAt ? 'Request sent to him ' + H.fmtDate(cs.sentAt) + ' by ' + cs.sentBy + '. Waiting for his answer.'
+          : 'Tap "Send certificate request" to email him (R22).';
+        row.appendChild(el('div', { class: 'cl-consent-record cl-certreq' }, [
+          el('strong', { text: 'She asked for an official background check (' + H.fmtDate(cs.requestedAt) + ')' }),
+          el('span', { text: line }),
+          cs.paused ? el('span', { class: 'ad-card-sub', text: 'Her 30-day expiry is paused until he answers or the certificate is marked as seen.' }) : null,
+        ].filter(Boolean)));
+      }
       var acts = el('div', { class: 'ad-translate-row' });
       function op(name, done, confirmText) {
         var go = function () {
           H.api('admin-intro', { id: c.id, op: name, introId: x.id }).then(function (r) {
+            if (r.url) {
+              var o2 = $('cl-intro-out');
+              o2.innerHTML = '';
+              o2.appendChild(el('p', { class: 'form-note', role: 'status' }, [el('a', { class: 'btn btn--secondary btn--sm', href: r.url, target: '_blank', rel: 'noopener', text: 'Open ' + x.name + '\u2019s requested certificate' }), el('span', { text: ' The link works for 10 minutes.' })]));
+              o2.scrollIntoView({ block: 'center' });
+              return;
+            }
             H.flash(done);
             loadDetail(c.id, r.zalo ? function () {
               var o = $('cl-intro-out');
@@ -637,6 +645,11 @@
       if (x.status === 'accepted') acts.appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--sm', text: 'Introduce (R15 to him, R16 to her)', onclick: op('introduce', 'Introduced. Copy her message into Zalo.', ['Introduce them?', 'He receives R15 with the details she chose. She receives R16 with his email and phone, and you get the message to paste into Zalo.', 'Introduce']) }));
       if (['queued', 'ready', 'sent', 'opened'].indexOf(x.status) !== -1) acts.appendChild(el('button', { type: 'button', class: 'ad-link', text: 'Cancel request', onclick: op('cancel', 'Request cancelled.', ['Cancel this request?', 'He will see "No longer available". Her link stops working.', 'Cancel request']) }));
       if (x.questions.some(function (q) { return !q.answeredAt; })) acts.appendChild(el('button', { type: 'button', class: 'btn btn--secondary btn--sm', text: 'Mark question answered', onclick: op('answered', 'Marked answered.') }));
+      if (x.cert && !x.cert.response && (x.status === 'sent' || x.status === 'opened')) acts.appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--sm', text: x.cert.sentAt ? 'Send certificate request again' : 'Send certificate request', onclick: op('cert_request', 'Certificate request sent to him (R22).', ['Send him the certificate request?', 'He receives R22: ' + x.name + ' would like him to provide an official criminal record certificate before she decides. He may agree or decline. The email has a fresh link to his page; his old link stops working.', 'Send request']) }));
+      if (x.cert && x.cert.response === 'provided') {
+        acts.appendChild(el('button', { type: 'button', class: 'btn btn--secondary btn--sm', text: 'Open certificate (10 minutes)', onclick: op('cert_view', '') }));
+        if (!x.cert.seenAt) acts.appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--sm', text: 'Mark as seen', onclick: op('cert_seen', 'Marked as seen. Her page now shows it.', ['Mark the certificate as seen?', 'Her page will show "He has provided an official certificate", with a 10-minute link to it, and her 30-day expiry runs again.', 'Mark as seen']) }));
+      }
       if (acts.firstChild) row.appendChild(acts);
       sec.appendChild(row);
     });

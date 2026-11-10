@@ -8,19 +8,26 @@
 //              one, plus a Zalo message to copy). Status "introduced".
 //   cancel     the team withdraws a request that hasn't been answered.
 //   answered   mark her question answered.
+//   cert_request  "Send certificate request": after she asked for an official
+//              background check, emails him R22 with a fresh private link to
+//              his page, where he may upload one or decline.
+//   cert_view  a 10-minute link to the certificate he uploaded.
+//   cert_seen  "Mark as seen": her page then shows that he provided one,
+//              with a 10-minute link, and her 30-day expiry runs again.
 const P = require('../shared/profile-common');
 const CC = require('../shared/client-common');
 const I = require('../shared/introductions');
 const E = require('../shared/emails');
 const { sendEmail } = require('../shared/emails/send');
 const { requireAdmin, logAction, isUuid } = require('../shared/admin-auth');
+const { clientPageLink } = require('../shared/emails/refs');
 
 exports.handler = async function (event) {
   const ctx = await requireAdmin(event);
   if (ctx.response) return ctx.response;
   const sb = ctx.supabase;
   const { id, op, introId } = ctx.data;
-  if (!isUuid(id) || !isUuid(introId) || ['send', 'resend', 'introduce', 'cancel', 'answered', 'reminder'].indexOf(op) === -1) return P.json(400, { error: 'Invalid request.' });
+  if (!isUuid(id) || !isUuid(introId) || ['send', 'resend', 'introduce', 'cancel', 'answered', 'cert_request', 'cert_view', 'cert_seen', 'reminder'].indexOf(op) === -1) return P.json(400, { error: 'Invalid request.' });
   try {
     const ir = await sb.from('introductions').select('*').eq('id', introId).eq('client_id', id).maybeSingle();
     if (ir.error) throw ir.error;
@@ -75,6 +82,30 @@ exports.handler = async function (event) {
     } else if (op === 'answered') {
       const q = await sb.from('introduction_questions').update({ answered_at: now, answered_by: ctx.email }).eq('introduction_id', intro.id).is('answered_at', null);
       if (q.error) throw q.error;
+    } else if (op === 'cert_request') {
+      if (!intro.cert_requested_at) return P.json(409, { error: 'She hasn\'t asked for a certificate.' });
+      if (['sent', 'opened'].indexOf(intro.status) === -1) return P.json(409, { error: 'Her request is no longer open.' });
+      if (intro.cert_response) return P.json(409, { error: 'He has already answered.' });
+      if (c.status !== 'active') return P.json(409, { error: 'His engagement isn\'t active.' });
+      const t = CC.newClientToken(CC.C.CLIENT_LINK_DAYS);
+      const a = c.application || {};
+      const sent = await sendEmail(a.email || c.email, E.R22.build({ firstName: CC.firstName(c.full_name), herName, link: clientPageLink(t.token), expiresOn: CC.fmtDate(t.expiresAt) }));
+      if (!sent) return P.json(502, { error: 'The email to him could not be sent, so nothing was changed. Try again.' });
+      const cu = await sb.from('clients').update({ access_token_hash: t.hash, access_token_expires_at: t.expiresAt, link_sent_at: now }).eq('id', c.id);
+      if (cu.error) throw cu.error;
+      const u = await sb.from('introductions').update({ cert_request_sent_at: now, cert_request_sent_by: ctx.email }).eq('id', intro.id);
+      if (u.error) throw u.error;
+    } else if (op === 'cert_view') {
+      if (!intro.cert_path) return P.json(409, { error: 'He hasn\'t uploaded a certificate.' });
+      const r = await sb.storage.from(CC.DOC_BUCKET).createSignedUrl(intro.cert_path, CC.DOC_SIGNED_SECONDS);
+      if (r.error) throw r.error;
+      out.url = r.data.signedUrl;
+    } else if (op === 'cert_seen') {
+      if (intro.cert_response !== 'provided' || !intro.cert_path) return P.json(409, { error: 'He hasn\'t uploaded a certificate.' });
+      if (!intro.cert_seen_at) {
+        const u = await sb.from('introductions').update(Object.assign({ cert_seen_at: now, cert_seen_by: ctx.email }, I.resumedExpiryFields(intro))).eq('id', intro.id);
+        if (u.error) throw u.error;
+      }
     }
     await CC.logEvent(sb, id, 'intro_' + op, ctx.email, I.introRef(intro.id));
     logAction(ctx.email, 'intro_' + op, id);

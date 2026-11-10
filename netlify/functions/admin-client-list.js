@@ -8,7 +8,7 @@ exports.handler = async function (event) {
   if (ctx.response) return ctx.response;
   try {
     const c = await ctx.supabase.from('clients')
-      .select('id, full_name, email, country, age, status, status_changed_at, created_at, fee_document_sent_at, submitted_at, id_checked_at, certificate_checked_at, paid_at, engagement_ends_at, source, engagement_flagged_at, closed_kind, paused_at')
+      .select('id, full_name, email, country, age, status, status_changed_at, created_at, fee_document_sent_at, submitted_at, declaration_read_at, paid_at, engagement_ends_at, source, engagement_flagged_at, closed_kind, paused_at')
       .order('created_at', { ascending: false }).limit(2000);
     if (c.error) throw c.error;
     const g = await ctx.supabase.from('general_enquiries').select('id, full_name, email, country, message, created_at').order('created_at', { ascending: false }).limit(200);
