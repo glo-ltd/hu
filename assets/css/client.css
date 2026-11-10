@@ -168,3 +168,4 @@ html { background: var(--cream-100); }
 .cl-confirm-box { background: var(--white); border-radius: var(--radius-sm); padding: 22px; max-width: 460px; width: 100%; display: grid; gap: 12px; }
 .cl-confirm-box h2 { font-size: 26px; }
 .cl-pre { white-space: pre-line; font-size: 17px; }
+.cl-field--confirm .cl-confirm { padding: 14px; border: 1px solid var(--gold-300); border-radius: var(--radius-sm); background: #FFFBF0; font-weight: 500; }

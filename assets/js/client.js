@@ -141,11 +141,8 @@
   // ------------------------------------------------------------------ validation
   function validateField(f, vals) {
     if (!isShown(f, vals)) return '';
-    if (f.type === 'document') {
-      var doc = S.documents[f.kind];
-      return f.required && !doc ? 'Please upload this document.' : '';
-    }
     var v = vals[f.id];
+    if (f.type === 'confirm') return f.required && v !== true ? 'Please tick to confirm.' : '';
     if (isEmpty(v) || (typeof v === 'string' && !v.trim())) return f.required ? 'Please answer this question.' : '';
     if ((f.type === 'text' || f.type === 'textarea') && v.length > f.max) return 'This answer is too long.';
     if (f.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return 'Please check this email address.';
@@ -153,10 +150,6 @@
     if (f.id === 'date_of_birth') {
       var dob = new Date(v + 'T00:00:00Z'); var cut = new Date(); cut.setUTCFullYear(cut.getUTCFullYear() - 18);
       if (!(dob <= cut)) return 'You must be 18 or over to apply.';
-    }
-    if (f.id === 'certificate_issued_on') {
-      var d = new Date(v + 'T00:00:00Z'); var lim = new Date(); lim.setUTCMonth(lim.getUTCMonth() - 6); lim.setUTCDate(lim.getUTCDate() - 1);
-      if (d > new Date() || d < lim) return 'The certificate must have been issued within the last 6 months.';
     }
     if (f.type === 'languages' && !v.some(function (x) { return x.language && x.level; })) return 'Please add at least one language.';
     return '';
@@ -196,7 +189,14 @@
   // ------------------------------------------------------------------ field rendering
   function fieldBox(f, section, control) {
     var lid = 'f-' + f.id + '-label';
-    var labelTag = (f.type === 'single' || f.type === 'languages' || f.type === 'document') ? 'span' : 'label';
+    if (f.type === 'confirm') {
+      return el('div', { class: 'cl-field cl-field--confirm', 'data-f': f.id, hidden: !isShown(f, values[section]) }, [
+        control,
+        f.help ? el('p', { class: 'cl-help', id: 'f-' + f.id + '-help', text: f.help }) : null,
+        el('p', { class: 'cl-error', 'aria-live': 'polite' }),
+      ]);
+    }
+    var labelTag = (f.type === 'single' || f.type === 'languages') ? 'span' : 'label';
     return el('div', { class: 'cl-field', 'data-f': f.id, hidden: !isShown(f, values[section]) }, [
       el(labelTag, { class: 'cl-label', id: lid, for: labelTag === 'label' ? 'f-' + f.id : null }, [
         f.label, f.required ? el('span', { class: 'cl-req', 'aria-hidden': 'true', text: '*' }) : el('span', { class: 'cl-opt', text: '(optional)' }),
@@ -260,7 +260,12 @@
       return group;
     }
     if (f.type === 'languages') return renderLanguages(f, section);
-    if (f.type === 'document') return renderDocument(f);
+    if (f.type === 'confirm') {
+      var cb = el('input', { type: 'checkbox', id: 'f-' + f.id, 'aria-describedby': f.help ? 'f-' + f.id + '-help' : null });
+      cb.checked = v === true;
+      cb.addEventListener('change', function () { setValue(section, f.id, cb.checked ? true : null); save(section); });
+      return el('label', { class: 'cl-check cl-confirm', for: 'f-' + f.id }, [cb, el('span', null, [f.label, f.required ? el('span', { class: 'cl-req', 'aria-hidden': 'true', text: ' *' }) : null])]);
+    }
     return null;
   }
 
@@ -290,59 +295,6 @@
     }
     draw();
     return wrap;
-  }
-
-  function renderDocument(f) {
-    var doc = S.documents[f.kind];
-    var status = el('p', { class: 'cl-doc-status', role: 'status', 'aria-live': 'polite',
-      text: doc ? '✓ Uploaded (' + doc.name + ')' + (doc.checked ? ', checked by Heritage Union' : '') + '.' : 'No file uploaded yet.' });
-    var input = el('input', { type: 'file', accept: '.pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png', 'aria-label': 'Upload ' + f.label.toLowerCase(), id: 'doc-' + f.kind });
-    var label = el('span', { class: 'btn btn--secondary btn--md', 'aria-hidden': 'true', text: doc ? 'Replace file' : 'Choose file' });
-    var box = el('div', { class: 'cl-doc' + (doc ? ' is-uploaded' : '') }, [status, el('div', { class: 'cl-file' }, [label, input])]);
-    input.addEventListener('change', function () {
-      var file = input.files && input.files[0];
-      input.value = '';
-      if (file) uploadDocument(f, file, status, box);
-    });
-    return box;
-  }
-
-  function fileType(file) {
-    if (file.type === 'application/pdf' || file.type === 'image/jpeg' || file.type === 'image/png') return file.type;
-    var ext = (file.name.split('.').pop() || '').toLowerCase();
-    return { pdf: 'application/pdf', jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png' }[ext] || '';
-  }
-
-  function uploadDocument(f, file, status, box) {
-    var type = fileType(file);
-    if (!type) { status.textContent = 'Please choose a PDF, JPEG or PNG file.'; return; }
-    if (file.size > 10 * 1024 * 1024) { status.textContent = 'That file is larger than 10 MB. Please choose a smaller file or a lower-resolution scan.'; return; }
-    status.textContent = 'Uploading… 0%';
-    var path;
-    api('client-doc-upload-url', { kind: f.kind, type: type }).then(function (r) {
-      path = r.path;
-      return new Promise(function (resolve, reject) {
-        var x = new XMLHttpRequest();
-        x.open('PUT', r.signedUrl);
-        x.setRequestHeader('Content-Type', type);
-        x.setRequestHeader('x-upsert', 'false');
-        x.upload.onprogress = function (e) { if (e.lengthComputable) status.textContent = 'Uploading… ' + Math.round((e.loaded / e.total) * 100) + '%'; };
-        x.onload = function () { x.status >= 200 && x.status < 300 ? resolve() : reject(new Error('The upload didn\'t complete. Please try again.')); };
-        x.onerror = function () { reject(new Error('The upload didn\'t complete. Please check your connection and try again.')); };
-        x.send(file);
-      });
-    }).then(function () {
-      status.textContent = 'Checking the file…';
-      return api('client-doc-confirm', { kind: f.kind, path: path });
-    }).then(function (d) {
-      S = d;
-      box.classList.add('is-uploaded');
-      status.textContent = '✓ Uploaded (' + d.documents[f.kind].name + ').';
-      box.querySelector('.btn').textContent = 'Replace file';
-      fieldError(f.id, '');
-    }, function (err) {
-      if (!err.fatal) status.textContent = err.message;
-    });
   }
 
   // ------------------------------------------------------------------ steps
@@ -435,7 +387,7 @@
     var box = el('div', { class: 'cl-sign', 'data-f': 'declaration_signature' });
     function draw() {
       box.innerHTML = '';
-      box.appendChild(el('h3', { text: 'Your declaration' }));
+      box.appendChild(el('h3', { text: 'Your sworn declaration' }));
       box.appendChild(el('p', { class: 'cl-sign-text', text: '“' + FORM.declarationText + '”' }));
       if (S.declarationSigned) {
         box.appendChild(el('p', { class: 'cl-signed', text: '✓ Signed by ' + S.declarationTypedName + '. If you change an answer above, you will be asked to sign again.' }));
@@ -455,7 +407,7 @@
           return api('client-sign', { what: 'declaration', agreed: true, typedName: name.value });
         }).then(function (d) { S = d; draw(); }, function (e) { if (!e.fatal) err.textContent = e.message; }).then(function () { btn.disabled = false; });
       });
-      box.appendChild(el('label', { class: 'cl-check', for: 'decl-agree' }, [cb, el('span', { text: 'I confirm the declaration above.' })]));
+      box.appendChild(el('label', { class: 'cl-check', for: 'decl-agree' }, [cb, el('span', { text: 'I make this declaration.' })]));
       box.appendChild(el('label', { class: 'cl-label', for: 'decl-name', text: 'Type your full legal name to sign' }));
       box.appendChild(name);
       box.appendChild(err);
@@ -509,6 +461,7 @@
     if (f.type === 'single') { var o = f.options.filter(function (x) { return x.value === v; })[0]; return o ? o.label : v; }
     if (f.type === 'languages') return v.map(function (x) { var l = f.levels.filter(function (y) { return y.value === x.level; })[0]; return x.language + ' (' + (l ? l.label.toLowerCase() : x.level) + ')'; }).join(', ');
     if (f.type === 'date') return fmtDate(v + 'T00:00:00Z');
+    if (f.type === 'confirm') return v === true ? '✓ Confirmed' : null;
     return String(v);
   }
 
@@ -518,7 +471,7 @@
       var dl = el('dl');
       fieldsFor(sec).forEach(function (f) {
         if (!isShown(f, values[sec])) return;
-        var txt = f.type === 'document' ? (S.documents[f.kind] ? '✓ Uploaded' : null) : answerText(f, values[sec][f.id]);
+        var txt = answerText(f, values[sec][f.id]);
         dl.appendChild(el('dt', { text: f.label }));
         dl.appendChild(el('dd', { class: txt ? '' : 'cl-cross', text: txt || (f.required ? 'Missing' : '—') }));
       });
@@ -559,8 +512,8 @@
     var st = S.status;
     var steps = [
       { t: 'Application received', d: S.submittedAt ? fmtDate(S.submittedAt) : '', done: true },
-      { t: 'Documents checked', d: (S.documents.id && S.documents.id.checked && S.documents.certificate && S.documents.certificate.checked) ? 'Your photo ID and certificate are in order' : 'We check them within 3 working days', done: ['checked', 'invoiced', 'active', 'paused'].indexOf(st) !== -1 },
-      { t: 'Invoice', d: st === 'invoiced' ? 'Sent to your email' : st === 'active' || st === 'paused' ? 'Paid, thank you' : 'Sent once your documents are checked', done: ['active', 'paused'].indexOf(st) !== -1, now: st === 'invoiced' },
+      { t: 'Read by James', d: S.declarationRead ? 'Your application and declaration have been read' : 'Within 3 working days', done: ['checked', 'invoiced', 'active', 'paused'].indexOf(st) !== -1 },
+      { t: 'Invoice', d: st === 'invoiced' ? 'Sent to your email' : st === 'active' || st === 'paused' ? 'Paid, thank you' : 'Sent once James has read your application', done: ['active', 'paused'].indexOf(st) !== -1, now: st === 'invoiced' },
       { t: 'Your profile', d: st === 'active' ? 'Coming next' : 'After payment', now: st === 'active' },
     ];
     var tl = el('ol', { class: 'cl-timeline', 'aria-label': 'Progress' });
@@ -607,7 +560,7 @@
     invited: 'Thank you for applying to Heritage Union. There are four short steps. Everything saves as you go, so you can stop and come back with the same link.',
     applying: 'Welcome back. Everything you have entered so far is saved.',
     submitted: 'Thank you. Your application has reached us, and we will be in touch within 3 working days.',
-    checked: 'Your documents are in order. Your invoice will follow shortly by email.',
+    checked: 'James has read your application and declaration. Your invoice will follow shortly by email.',
     invoiced: 'Your invoice has been sent to your email. Once payment arrives, you will begin your profile.',
     active: 'Welcome to Heritage Union.',
     paused: 'Your engagement is paused for the moment. James will be in touch with you directly.',

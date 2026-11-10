@@ -21,7 +21,7 @@ function teamEmail(subjectText, line) {
 module.exports = {
   newEnquiry: teamEmail('New client enquiry', 'A new client enquiry has arrived.'),
   feeRequest: teamEmail('Fee document requested', 'The fee document was requested and sent automatically.'),
-  applicationSubmitted: teamEmail('Client application submitted', 'An application is ready for document checks.'),
+  applicationSubmitted: teamEmail('Client application submitted', 'An application and sworn background declaration are ready for you to read.'),
   thinkingReminder: teamEmail('Client still thinking it over', 'It has been a week since this client said he was thinking it over.'),
   profileSubmitted: teamEmail('Client profile ready for a summary', 'A client has sent his profile. It is ready for you to write his summary.'),
   changesRequested: teamEmail('Client asked for changes to his summary', 'A client has asked for changes to his profile summary.'),

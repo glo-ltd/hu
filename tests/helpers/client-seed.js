@@ -14,7 +14,7 @@ const APPLICATION = {
 };
 const DECLARATION = {
   conviction: 'no', protection_order: 'no', domestic_violence: 'no', previous_marriages: 1, previous_marriages_details: '2003 to 2014, divorced.',
-  countries_lived: 'United Kingdom', agency_or_visa: 'no', certificate_country: 'United Kingdom', certificate_issued_on: dateDaysAgo(20),
+  countries_lived: 'United Kingdom', agency_or_visa: 'no', legally_free: true,
 };
 
 function seedClient(over) {
@@ -31,24 +31,15 @@ function seedClient(over) {
 const PDF = Buffer.from('%PDF-1.4\n%test\n');
 const JPG = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0, 0x10, 0x4a, 0x46]);
 
-async function uploadDoc(c, kind, bytes, type) {
-  const up = await call('client-doc-upload-url', { token: c.token, kind, type: type || 'application/pdf' });
-  if (up.status !== 200) return up;
-  fake.addObject(up.body.path, bytes || PDF, 'client-documents');
-  return call('client-doc-confirm', { token: c.token, kind, path: up.body.path });
-}
-
 // A client who has completed everything and sent his application.
 async function submittedClient(over) {
   const c = seedClient(Object.assign({ application: APPLICATION, declaration: DECLARATION }, over || {}));
-  await uploadDoc(c, 'id', JPG, 'image/jpeg');
-  await uploadDoc(c, 'certificate');
   const r = fake.tables.clients.find((x) => x.id === c.id);
   Object.assign(r, { declaration_signed_at: new Date().toISOString(), declaration_typed_name: APPLICATION.legal_name, agreement_version: 'FINAL-TEST', agreement_accepted_at: new Date().toISOString(), status: 'submitted', submitted_at: new Date().toISOString() });
   return c;
 }
 
-module.exports = { fake, sentEmails, call, adminToken, CC, seedClient, uploadDoc, submittedClient, APPLICATION, DECLARATION, PDF, JPG, isoDaysAgo, dateDaysAgo };
+module.exports = { fake, sentEmails, call, adminToken, CC, seedClient, submittedClient, APPLICATION, DECLARATION, PDF, JPG, isoDaysAgo, dateDaysAgo };
 
 // ------------------------------------------------------------------ phase 2
 const P = require('../../netlify/shared/profile-common');

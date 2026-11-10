@@ -3,7 +3,7 @@
 //            for the founding-member discount)
 //   update   change a draft's amount or description
 //   send     give it the next HU-YYYY-NNNN number, email R7 with the PDF.
-//            Only after both documents are checked.
+//            Only after James has marked his application and declaration as read.
 //   paid     mark received: client becomes active, 12-month engagement starts,
 //            new private link, R8 welcome.
 //   void     cancel a draft or unpaid invoice.
@@ -71,7 +71,7 @@ exports.handler = async function (event) {
       result.invoice = u.data;
     } else if (op === 'send') {
       if (inv.status !== 'draft') return P.json(409, { error: 'This invoice has already been sent.' });
-      if (!c.id_checked_at || !c.certificate_checked_at || c.status !== 'checked') return P.json(409, { error: 'Check his photo ID and criminal record certificate first.' });
+      if (!c.declaration_read_at || c.status !== 'checked') return P.json(409, { error: 'Read his application and background declaration first, then mark them as read.' });
       if (!process.env.INVOICE_PAYMENT_DETAILS) return P.json(409, { error: 'INVOICE_PAYMENT_DETAILS is not set in Netlify, so the invoice would have no bank details. Set it, redeploy, then send.' });
       const number = await I.nextInvoiceNumber(sb, new Date().getUTCFullYear());
       const u = await sb.from('client_invoices').update({ number, status: 'sent', sent_at: now, sent_by: ctx.email }).eq('id', inv.id).eq('status', 'draft').select('*').single();

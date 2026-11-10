@@ -75,10 +75,10 @@ Thank you for speaking with me. I enjoyed our conversation, and I would be glad 
 
 WHAT HAPPENS NEXT
 
-- Application: a short form about you, with a copy of your photo ID.
-- Background declaration: a plain, honest declaration about your history, with an official criminal record certificate from your country of residence, issued within the last 6 months. Any woman you are introduced to will read this declaration in her own language.
+- Application: a short form about you.
+- Background declaration: a plain, honest declaration about your history, which you sign as a sworn statement. Heritage Union does not carry out background checks; instead, every woman you choose reads your declaration in her own language before she decides, and she may ask you for an official background check.
 - Agreement: our client agreement, to read and accept.
-- We check your documents, then send your invoice. Payment is by bank transfer.
+- I read your application and declaration, then send your invoice. Payment is by bank transfer.
 - Once payment is received, you write your profile, and we prepare your introductions within 2–4 weeks.
 
 Our Service & Investment Structure is attached again for reference.
@@ -131,7 +131,7 @@ Heritage Union · heritage-union.com
 ```text
 Dear Michael,
 
-Here is your new private link to continue your application. Anything you have already saved is still there.
+Here is your new private link to continue your application. Anything you have already saved is still there. Your application has three parts: about you, your sworn background declaration, and the client agreement.
 
 Continue your application: https://heritage-union.com/client#t=EXAMPLE
 
@@ -156,9 +156,9 @@ Heritage Union · heritage-union.com
 ```text
 Dear Michael,
 
-Thank you. Your application, background declaration and documents have reached us safely.
+Thank you. Your application and signed background declaration have reached us safely.
 
-We will check your documents and be in touch within 3 working days. If everything is in order, the next email you receive from me will be your invoice.
+I will read them personally and be in touch within 3 working days. If everything is in order, the next email you receive from me will be your invoice.
 
 If anything in your application changes in the meantime, simply reply to this email.
 
@@ -175,13 +175,13 @@ Heritage Union · heritage-union.com
 ## R7 — Invoice
 
 - **To:** the client
-- **When:** When James sends the invoice (only after both documents are checked). The PDF invoice is attached.
+- **When:** When James sends the invoice (only after he has read the application and sworn declaration and marked them as read). The PDF invoice is attached.
 - **Subject:** Invoice HU-2026-0001 — Heritage Union
 
 ```text
 Dear Michael,
 
-Thank you for your patience while we checked your documents. Everything is in order, and I am delighted to welcome you to the next step.
+Thank you for your application and your background declaration. I have read them, and I am delighted to welcome you to the next step.
 
 Your invoice is attached as a PDF, and summarised below.
 
@@ -383,7 +383,7 @@ Heritage Union · heritage-union.com
 - **Subject:** Client application submitted (C-1A2B3C4D)
 
 ```text
-An application is ready for document checks. Reference C-1A2B3C4D.
+An application and sworn background declaration are ready for you to read. Reference C-1A2B3C4D.
 
 Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
 
