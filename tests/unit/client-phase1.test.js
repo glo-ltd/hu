@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const crypto = require('crypto');
-const { fake, sentEmails, call, adminToken, CC, seedClient, uploadDoc, submittedClient, APPLICATION, DECLARATION, PDF, JPG, dateDaysAgo } = require('../helpers/client-seed');
+const { fake, sentEmails, call, adminToken, CC, seedClient, submittedClient, APPLICATION, DECLARATION, dateDaysAgo } = require('../helpers/client-seed');
 const P = require('../../netlify/shared/profile-common');
 
 const H = () => adminToken('james@heritage-union.com');
@@ -133,7 +133,7 @@ test('CLIENT_SIGNUPS_OPEN off: private page says not available yet', async () =>
 });
 
 // ------------------------------------------------------------------ F2/F3 saving
-test('save: validates types, options, lengths, 18+, certificate age; moves invited -> applying', async () => {
+test('save: validates types, options, lengths, 18+, the legally-free confirmation; moves invited -> applying', async () => {
   const c = seedClient();
   let r = await call('client-save', { token: c.token, section: 'application', answers: { occupation: 'Engineer' } });
   assert.equal(r.status, 200, r.raw);
@@ -145,8 +145,10 @@ test('save: validates types, options, lengths, 18+, certificate age; moves invit
     ['application', { email: 'nope' }, 'email'],
     ['application', { languages: [{ language: 'English', level: 'expert' }] }, 'invalid'],
     ['application', { conviction: 'no' }, 'invalid'],            // wrong section
-    ['application', { id_document: 'x' }, 'invalid'],           // documents only via upload
-    ['declaration', { certificate_issued_on: dateDaysAgo(200) }, 'certificateOld'],
+    ['application', { id_document: 'x' }, 'invalid'],           // no document uploads any more
+    ['declaration', { certificate_issued_on: dateDaysAgo(20) }, 'invalid'],
+    ['declaration', { legally_free: false }, 'invalid'],
+    ['declaration', { legally_free: 'yes' }, 'invalid'],
     ['declaration', { previous_marriages: 11 }, 'invalid'],
     ['declaration', { secret_notes: 'x' }, 'invalid'],
   ];
@@ -166,38 +168,28 @@ test('save: conditional details are dropped when the answer changes to "no"', as
 });
 
 // ------------------------------------------------------------------ documents
-test('documents: own folder only, real PDF/JPEG/PNG only, replacement deletes the old file and resets the check', async () => {
-  const c = seedClient();
-  const other = seedClient({ email: 'o@x.com' });
-  let r = await uploadDoc(c, 'id', JPG, 'image/jpeg');
-  assert.equal(r.status, 200, r.raw);
-  const first = fake.tables.clients.find((x) => x.id === c.id).id_document_path;
-  assert.ok(first.startsWith(c.id + '/id/'));
-  // wrong type
-  assert.equal((await call('client-doc-upload-url', { token: c.token, kind: 'id', type: 'image/gif' })).status, 400);
-  // bytes that aren't what the extension claims
-  r = await uploadDoc(c, 'certificate', Buffer.from('not a pdf'));
-  assert.equal(r.status, 400);
-  assert.equal(r.body.code, 'type');
-  // a path in another client's folder
-  const foreign = other.id + '/id/' + crypto.randomUUID() + '.pdf';
-  fake.addObject(foreign, PDF, 'client-documents');
-  r = await call('client-doc-confirm', { token: c.token, kind: 'id', path: foreign });
-  assert.equal(r.status, 400);
-  // replacement
-  fake.tables.clients.find((x) => x.id === c.id).id_checked_at = new Date().toISOString();
-  r = await uploadDoc(c, 'id', PDF);
-  assert.equal(r.status, 200);
-  const row = fake.tables.clients.find((x) => x.id === c.id);
-  assert.notEqual(row.id_document_path, first);
-  assert.equal(fake.hasObject(first, 'client-documents'), false, 'old file deleted');
-  assert.equal(row.id_checked_at, null, 'check reset');
+test('no background checks: no ID or certificate upload, and the declaration is a sworn statement that Heritage Union does not check', () => {
+  const ids = CC.FORM.fields.map((f) => f.id);
+  for (const gone of ['id_document', 'certificate', 'certificate_country', 'certificate_issued_on']) assert.ok(ids.indexOf(gone) === -1, gone);
+  assert.ok(!CC.FORM.fields.some((f) => f.type === 'document'));
+  const lf = CC.FIELD_BY_ID.legally_free;
+  assert.equal(lf.type, 'confirm'); assert.equal(lf.required, true); assert.equal(lf.section, 'declaration');
+  assert.equal(lf.label, 'I am legally free to enter this agreement and I am not married or in a registered partnership.');
+  assert.equal(CC.FORM.declarationText, 'I solemnly declare that everything above is true and complete. I understand that Heritage Union does not check it, that each woman I choose will read it before deciding, and that a false declaration ends my agreement without refund.');
+  for (const id of ['conviction', 'protection_order', 'domestic_violence', 'previous_marriages', 'previous_marriages_details', 'countries_lived', 'agency_or_visa']) assert.ok(CC.FIELD_BY_ID[id], id);
+  assert.equal(CC.C.DECLARATION_VERSION, 'en-2026-12-declaration-v2');
+  for (const f of ['client-doc-upload-url', 'client-doc-confirm', 'admin-client-doc']) assert.ok(!require('fs').existsSync(require('path').join(__dirname, '../../netlify/functions', f + '.js')), f + ' removed');
 });
 
-// ------------------------------------------------------------------ signing and submit
+test('signing needs the legally-free confirmation', async () => {
+  const decl = Object.assign({}, DECLARATION); delete decl.legally_free;
+  const c = seedClient({ application: APPLICATION, declaration: decl });
+  const r = await call('client-sign', { token: c.token, what: 'declaration', agreed: true, typedName: APPLICATION.legal_name });
+  assert.equal(r.body.code, 'incomplete'); assert.equal(r.body.field, 'legally_free');
+});
+
 test('declaration: typed name must match legal name; stores name, time, IP hash, version; editing un-signs', async () => {
   const c = seedClient({ application: APPLICATION, declaration: DECLARATION });
-  await uploadDoc(c, 'certificate');
   let r = await call('client-sign', { token: c.token, what: 'declaration', agreed: true, typedName: 'M Thompson' });
   assert.equal(r.body.code, 'nameMismatch');
   r = await call('client-sign', { token: c.token, what: 'declaration', agreed: false, typedName: APPLICATION.legal_name });
@@ -238,10 +230,9 @@ test('agreement files: html data-version matches the json version, and the shipp
 
 test('submit: refuses until everything is complete; then submitted, R6 to him, reference-only team email; locked afterwards', async () => {
   const c = seedClient({ application: APPLICATION, declaration: DECLARATION });
-  let r = await call('client-submit', { token: c.token });
-  assert.equal(r.body.code, 'incomplete'); assert.equal(r.body.field, 'id_document');
-  await uploadDoc(c, 'id', JPG, 'image/jpeg');
-  await uploadDoc(c, 'certificate');
+  const bare = seedClient({ email: 'bare@x.com', application: APPLICATION });
+  let r = await call('client-submit', { token: bare.token });
+  assert.equal(r.body.code, 'incomplete'); assert.equal(r.body.step, 2);
   r = await call('client-submit', { token: c.token });
   assert.equal(r.body.code, 'unsigned');
   await call('client-sign', { token: c.token, what: 'declaration', agreed: true, typedName: APPLICATION.legal_name });
@@ -261,7 +252,7 @@ test('submit: refuses until everything is complete; then submitted, R6 to him, r
 // ------------------------------------------------------------------ admin
 test('every admin-client endpoint rejects missing, expired and non-team tokens before touching data', async () => {
   const id = crypto.randomUUID();
-  for (const [name, body] of [['admin-client-list', {}], ['admin-client-get', { id }], ['admin-client-doc', { id, kind: 'id' }], ['admin-client-action', { id, action: 'call_held' }], ['admin-client-invoice', { id, op: 'create' }]]) {
+  for (const [name, body] of [['admin-client-list', {}], ['admin-client-get', { id }], ['admin-client-action', { id, action: 'call_held' }], ['admin-client-invoice', { id, op: 'create' }]]) {
     assert.equal((await call(name, body, { headers: {} })).status, 401, name);
     assert.equal((await call(name, body, { headers: adminToken('james@heritage-union.com', { expiresAt: Date.now() - 1000 }) })).status, 401, name);
     assert.equal((await call(name, body, { headers: adminToken('intruder@example.com') })).status, 403, name);
@@ -316,7 +307,7 @@ test('resend link (R5) replaces the old link', async () => {
   assert.equal((await call('client-get', { token: tok })).status, 200);
 });
 
-test('invoice order: only after both documents are checked; numbering HU-YYYY-0001; amount editable; R7 with PDF and payment details', async () => {
+test('invoice order: only after James has read his application and declaration; numbering HU-YYYY-0001; amount editable; R7 with PDF and payment details', async () => {
   const c = await submittedClient();
   const h = H();
   let r = await call('admin-client-invoice', { id: c.id, op: 'create', kind: 'initiation' }, { headers: h });
@@ -326,12 +317,12 @@ test('invoice order: only after both documents are checked; numbering HU-YYYY-00
   r = await call('admin-client-invoice', { id: c.id, op: 'update', invoiceId: inv.id, amountCents: 1200000, description: 'Concierge Initiation (founding member)' }, { headers: h });
   assert.equal(r.body.invoice.amount_cents, 1200000);
   r = await call('admin-client-invoice', { id: c.id, op: 'send', invoiceId: inv.id }, { headers: h });
-  assert.equal(r.status, 409, 'not before documents are checked');
-  await call('admin-client-action', { id: c.id, action: 'check_id' }, { headers: h });
-  assert.equal(fake.tables.clients[0].status, 'submitted');
-  await call('admin-client-action', { id: c.id, action: 'check_certificate' }, { headers: h });
+  assert.equal(r.status, 409, 'not before his application has been read');
+  assert.match(r.body.error, /Read his application/);
+  await call('admin-client-action', { id: c.id, action: 'mark_read' }, { headers: h });
   assert.equal(fake.tables.clients[0].status, 'checked');
-  assert.equal(fake.tables.clients[0].id_checked_by, 'james@heritage-union.com');
+  assert.equal(fake.tables.clients[0].declaration_read_by, 'james@heritage-union.com');
+  assert.ok(fake.tables.clients[0].declaration_read_at);
   delete process.env.INVOICE_PAYMENT_DETAILS;
   r = await call('admin-client-invoice', { id: c.id, op: 'send', invoiceId: inv.id }, { headers: h });
   assert.equal(r.status, 409, 'needs payment details');
@@ -355,25 +346,30 @@ test('invoice order: only after both documents are checked; numbering HU-YYYY-00
   assert.equal((await call('client-invoice-pdf', { token: other.token, invoiceId: inv.id })).status, 404);
   // second invoice the same year numbers on
   const c2 = await submittedClient({ email: 'second@x.com' });
-  await call('admin-client-action', { id: c2.id, action: 'check_id' }, { headers: h });
-  await call('admin-client-action', { id: c2.id, action: 'check_certificate' }, { headers: h });
+  await call('admin-client-action', { id: c2.id, action: 'mark_read' }, { headers: h });
   const i2 = (await call('admin-client-invoice', { id: c2.id, op: 'create', kind: 'initiation' }, { headers: h })).body.invoice;
   r = await call('admin-client-invoice', { id: c2.id, op: 'send', invoiceId: i2.id }, { headers: h });
   assert.equal(r.body.invoice.number, 'HU-' + year + '-0002');
 });
 
-test('certificate older than 6 months cannot be marked checked', async () => {
+test('mark as read: only after he submits; can be undone until an invoice is sent', async () => {
+  const applying = seedClient({ status: 'applying', email: 'a@x.com' });
+  assert.equal((await call('admin-client-action', { id: applying.id, action: 'mark_read' }, { headers: H() })).status, 409);
   const c = await submittedClient();
-  fake.tables.clients[0].declaration = Object.assign({}, DECLARATION, { certificate_issued_on: dateDaysAgo(200) });
-  const r = await call('admin-client-action', { id: c.id, action: 'check_certificate' }, { headers: H() });
-  assert.equal(r.status, 409);
+  await call('admin-client-action', { id: c.id, action: 'mark_read' }, { headers: H() });
+  assert.equal(fake.tables.clients.find((x) => x.id === c.id).status, 'checked');
+  await call('admin-client-action', { id: c.id, action: 'unmark_read' }, { headers: H() });
+  const row = fake.tables.clients.find((x) => x.id === c.id);
+  assert.equal(row.status, 'submitted'); assert.equal(row.declaration_read_at, null);
+  const g = await call('client-get', { token: c.token });
+  assert.equal(g.body.declarationRead, false);
+  assert.ok(!('documents' in g.body));
 });
 
 test('payment received: active, 12-month engagement, new link, R8 welcome; decline (R4) no longer possible', async () => {
   const c = await submittedClient();
   const h = H();
-  await call('admin-client-action', { id: c.id, action: 'check_id' }, { headers: h });
-  await call('admin-client-action', { id: c.id, action: 'check_certificate' }, { headers: h });
+  await call('admin-client-action', { id: c.id, action: 'mark_read' }, { headers: h });
   const inv = (await call('admin-client-invoice', { id: c.id, op: 'create', kind: 'initiation' }, { headers: h })).body.invoice;
   await call('admin-client-invoice', { id: c.id, op: 'send', invoiceId: inv.id }, { headers: h });
   assert.equal((await call('admin-client-action', { id: c.id, action: 'not_a_fit' }, { headers: h })).status, 409);

@@ -14,10 +14,10 @@ module.exports = {
         'Thank you for speaking with me. I enjoyed our conversation, and I would be glad to invite you to apply to Heritage Union.',
         { h: 'What happens next' },
         { list: [
-          'Application: a short form about you, with a copy of your photo ID.',
-          'Background declaration: a plain, honest declaration about your history, with an official criminal record certificate from your country of residence, issued within the last ' + C.CERTIFICATE_MAX_AGE_MONTHS + ' months. Any woman you are introduced to will read this declaration in her own language.',
+          'Application: a short form about you.',
+          'Background declaration: a plain, honest declaration about your history, which you sign as a sworn statement. Heritage Union does not carry out background checks; instead, every woman you choose reads your declaration in her own language before she decides, and she may ask you for an official background check.',
           'Agreement: our client agreement, to read and accept.',
-          'We check your documents, then send your invoice. Payment is by bank transfer.',
+          'I read your application and declaration, then send your invoice. Payment is by bank transfer.',
           'Once payment is received, you write your profile, and we prepare your introductions ' + C.MATCHING_TIME_TEXT + '.',
         ] },
         'Our Service & Investment Structure is attached again for reference.',

@@ -4,7 +4,7 @@ const { render } = require('./layout');
 const C = require('../client-config');
 module.exports = {
   id: 'R7', name: 'Invoice', audience: 'client',
-  when: 'When James sends the invoice (only after both documents are checked). The PDF invoice is attached.',
+  when: 'When James sends the invoice (only after he has read the application and sworn declaration and marked them as read). The PDF invoice is attached.',
   sample: { firstName: 'Michael', number: 'HU-2026-0001', description: 'Concierge Initiation', amount: 'USD 15,000.00', dueOn: '23 December 2026',
     paymentDetails: 'Account name: Heritage Union\nBank: (from INVOICE_PAYMENT_DETAILS)\nIBAN / account number: …' },
   build(d) {
@@ -13,7 +13,7 @@ module.exports = {
       preheader: 'Your invoice for the ' + d.description + ', payable by bank transfer.',
       blocks: [
         'Dear ' + d.firstName + ',',
-        'Thank you for your patience while we checked your documents. Everything is in order, and I am delighted to welcome you to the next step.',
+        'Thank you for your application and your background declaration. I have read them, and I am delighted to welcome you to the next step.',
         'Your invoice is attached as a PDF, and summarised below.',
         { box: { title: 'Invoice ' + d.number, lines: [d.description, d.amount, 'Due by ' + d.dueOn] } },
         { box: { title: 'Payment by ' + C.PAYMENT_METHOD.toLowerCase(), lines: String(d.paymentDetails).split('\n').concat(['Reference: ' + d.number]) } },

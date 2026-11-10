@@ -32,6 +32,20 @@ create table if not exists public.introductions (
   consent_ip_hash text,
   decline_reason text,              -- private: never shown to him
 
+  -- "Ask him for an official background check first". Heritage Union does
+  -- not carry out background checks; she may ask him for an official
+  -- certificate. He may provide one or decline. While this is going on her
+  -- request stays open and its 30-day expiry is paused.
+  cert_requested_at timestamptz,    -- she asked
+  cert_request_sent_at timestamptz, -- the team sent him the request (R22)
+  cert_request_sent_by text,
+  cert_response text,               -- provided | declined
+  cert_responded_at timestamptz,
+  cert_path text,                   -- <client_id>/certificate/<uuid>.<ext> in client-documents
+  cert_seen_at timestamptz,         -- the team has looked at it; only then is it shown to her
+  cert_seen_by text,
+  expiry_paused_at timestamptz,
+
   -- The introduction itself, and closing states.
   introduced_at timestamptz,
   introduced_by text,
@@ -45,6 +59,7 @@ create table if not exists public.introductions (
   updated_at timestamptz not null default now(),
 
   constraint introductions_status_check check (status in ('queued', 'ready', 'sent', 'opened', 'accepted', 'introduced', 'declined', 'expired', 'cancelled')),
+  constraint introductions_cert_response_check check (cert_response is null or cert_response in ('provided', 'declined')),
   constraint introductions_reason_length check (decline_reason is null or char_length(decline_reason) <= 2000),
   constraint introductions_one_per_pair unique (client_id, candidate_id)
 );
@@ -77,3 +92,14 @@ create table if not exists public.introduction_questions (
 
 create index if not exists introduction_questions_intro_idx on public.introduction_questions (introduction_id);
 alter table public.introduction_questions enable row level security;
+
+-- 3. For a project where an earlier draft of this file was already applied.
+alter table public.introductions add column if not exists cert_requested_at timestamptz;
+alter table public.introductions add column if not exists cert_request_sent_at timestamptz;
+alter table public.introductions add column if not exists cert_request_sent_by text;
+alter table public.introductions add column if not exists cert_response text;
+alter table public.introductions add column if not exists cert_responded_at timestamptz;
+alter table public.introductions add column if not exists cert_path text;
+alter table public.introductions add column if not exists cert_seen_at timestamptz;
+alter table public.introductions add column if not exists cert_seen_by text;
+alter table public.introductions add column if not exists expiry_paused_at timestamptz;

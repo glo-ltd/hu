@@ -17,5 +17,6 @@ module.exports = {
   R15: require('./r15-she-accepted'),
   R16: require('./r16-his-details'),
   R17: require('./r17-not-this-time'),
+  R22: require('./r22-certificate-request'),
   team: require('./team-client'),
 };

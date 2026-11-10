@@ -15,9 +15,10 @@ module.exports = {
     honour: { label: 'Honour payment', amountCents: 10000 * 100 },
   },
 
-  // Proof of background: photo ID + an official criminal record certificate
-  // from his country of residence, issued within this many months.
-  CERTIFICATE_MAX_AGE_MONTHS: 6,
+  // Heritage Union does not carry out background checks. Each client signs a
+  // sworn background declaration, which every woman he chooses reads before
+  // deciding. A woman may ask him for an official certificate (phase 3);
+  // that upload is optional for him.
   DOCUMENT_MAX_BYTES: 10 * 1024 * 1024,
   DOCUMENT_TYPES: { 'application/pdf': 'pdf', 'image/jpeg': 'jpg', 'image/png': 'png' },
 
@@ -49,7 +50,7 @@ module.exports = {
   CHECK_IN_MONTHS: 3,
 
   // Text versions stored with what he signs.
-  DECLARATION_VERSION: 'en-2026-12-declaration-v1',
+  DECLARATION_VERSION: 'en-2026-12-declaration-v2',   // sworn statement, no background check
   ENQUIRY_CONSENT_VERSION: 'en-2026-12-enquiry-v1',
 
   // Who signs client emails.

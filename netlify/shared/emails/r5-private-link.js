@@ -12,7 +12,7 @@ module.exports = {
       preheader: 'Your new private link to ' + purpose + '.',
       blocks: [
         'Dear ' + d.firstName + ',',
-        'Here is your new private link to ' + purpose + '. Anything you have already saved is still there.',
+        'Here is your new private link to ' + purpose + '. Anything you have already saved is still there.' + (d.purpose === 'application' ? ' Your application has three parts: about you, your sworn background declaration, and the client agreement.' : ''),
         { button: { label: d.purpose === 'application' ? 'Continue your application' : 'Open your page', href: d.link } },
         { small: 'This link is private to you and works until ' + d.expiresOn + '. Any earlier link no longer works. Please don\'t forward it.' },
         'Warm regards,',

@@ -178,3 +178,4 @@ html { background: var(--cream-100); }
 .cl-intro.is-introduced { border-color: #B8D2B0; background: #F3F8F1; }
 .cl-intro.is-introduced .cl-intro-status { color: #2F5B2A; font-weight: 600; }
 .cl-intro.is-not_this_time, .cl-intro.is-unavailable { opacity: 0.75; }
+.cl-field--confirm .cl-affirm { padding: 14px; border: 1px solid var(--gold-300); border-radius: var(--radius-sm); background: #FFFBF0; font-weight: 500; }

@@ -19,7 +19,7 @@ exports.handler = async function (event) {
   const now = new Date().toISOString();
   let fields;
   if (data.what === 'declaration') {
-    const missing = CC.firstMissing('declaration', client.declaration || {}, { certificate: client.certificate_path });
+    const missing = CC.firstMissing('declaration', client.declaration || {});
     if (missing) return json(400, { error: 'Please answer every question in the declaration first.', code: 'incomplete', field: missing.id, step: 2 });
     fields = { declaration_typed_name: typed, declaration_signed_at: now, declaration_ip_hash: ipHash(event), declaration_version: CC.C.DECLARATION_VERSION };
   } else if (data.what === 'agreement') {

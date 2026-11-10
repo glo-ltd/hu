@@ -131,6 +131,7 @@ async function hisViewForHer(sb, client, prof, lang) {
     if (v === undefined || v === null || v === '') return;
     let text;
     if (f.type === 'single') text = yesNo[v] || v;
+    else if (f.type === 'confirm') text = v === true ? yesNo.confirmed : '—';
     else if (f.type === 'number') text = String(v);
     else if (f.type === 'date') text = new Date(v + 'T00:00:00Z').toLocaleDateString(vi ? 'vi-VN' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
     else text = vi ? (dv[f.id] || v) : v;
@@ -146,11 +147,35 @@ async function hisViewForHer(sb, client, prof, lang) {
     message: vi ? (prof.message_vi || prof.message_to_women) : prof.message_to_women,
     photos,
     declaration: items,
-    checked: { id: client.id_checked_at, certificate: client.certificate_checked_at },
+    // Heritage Union does not carry out background checks; the page says so.
+    declarationChecked: false,
   };
 }
 
+// ------------------------------------------------------------------ certificate on request
+// She may ask him for an official criminal record certificate before she
+// decides. While that is going on, her 30-day expiry is paused.
+
+function resumedExpiryFields(intro, now) {
+  if (!intro.expiry_paused_at || !intro.decision_token_expires_at) return { expiry_paused_at: null };
+  const paused = (now || Date.now()) - Date.parse(intro.expiry_paused_at);
+  return { expiry_paused_at: null, decision_token_expires_at: new Date(Date.parse(intro.decision_token_expires_at) + Math.max(0, paused)).toISOString() };
+}
+
+// What she sees: whether she asked, and his answer once the team has looked
+// at what he sent. The certificate itself only through a 10-minute link.
+async function certStateForHer(sb, intro) {
+  if (!intro.cert_requested_at) return { requested: false };
+  if (intro.cert_response === 'declined') return { requested: true, status: 'declined' };
+  if (intro.cert_response === 'provided' && intro.cert_seen_at && intro.cert_path) {
+    const r = await sb.storage.from(CC.DOC_BUCKET).createSignedUrl(intro.cert_path, CC.DOC_SIGNED_SECONDS);
+    return { requested: true, status: 'provided', url: r.error ? null : r.data.signedUrl };
+  }
+  return { requested: true, status: 'waiting' };
+}
+
 module.exports = {
+  resumedExpiryFields, certStateForHer,
   OPEN, BLOCKING, PENDING, FAILED, CONSENT_VERSION, CONTACT_METHODS,
   introRef, newDecisionToken, decisionLink, createRequests, releaseQueue, setIntroStatus, cancelForCandidate, cancelForClient, usedCount,
   translationGaps, hisViewForHer, introsForWoman,
@@ -190,7 +215,8 @@ async function decisionFromRequest(event) {
   const cand = await sb.from('candidates').select('id, full_name, status, preferred_language, zalo_number, email').eq('id', intro.candidate_id).maybeSingle();
   if (cand.error || !cand.data || ['withdrawn', 'deleted'].indexOf(cand.data.status) !== -1) return { response: herErr(401, 'invalid') };
   const decided = ['accepted', 'introduced', 'declined', 'expired'].indexOf(intro.status) !== -1;
-  if (!decided && (!intro.decision_token_expires_at || Date.parse(intro.decision_token_expires_at) <= Date.now())) return { response: herErr(401, 'expired') };
+  // While she waits for his certificate the 30-day clock is paused.
+  if (!decided && !intro.expiry_paused_at && (!intro.decision_token_expires_at || Date.parse(intro.decision_token_expires_at) <= Date.now())) return { response: herErr(401, 'expired') };
   if (P.rateLimited('i:' + hash)) return { response: herErr(429, 'rate') };
   const lang = data.lang === 'en' ? 'en' : data.lang === 'vi' ? 'vi' : cand.data.preferred_language === 'en' ? 'en' : 'vi';
   return { sb, data, intro, candidate: cand.data, lang, tokenHash: hash };

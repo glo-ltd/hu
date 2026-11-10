@@ -10,8 +10,8 @@ module.exports = {
       preheader: 'We\'ll be in touch within 3 working days.',
       blocks: [
         'Dear ' + d.firstName + ',',
-        'Thank you. Your application, background declaration and documents have reached us safely.',
-        'We will check your documents and be in touch within 3 working days. If everything is in order, the next email you receive from me will be your invoice.',
+        'Thank you. Your application and signed background declaration have reached us safely.',
+        'I will read them personally and be in touch within 3 working days. If everything is in order, the next email you receive from me will be your invoice.',
         'If anything in your application changes in the meantime, simply reply to this email.',
         'Warm regards,',
       ],

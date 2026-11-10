@@ -72,7 +72,6 @@ exports.handler = async function (event) {
       signupsOpen: CC.C.clientSignupsOpen(),
       paymentDetailsSet: !!process.env.INVOICE_PAYMENT_DETAILS,
       fees: CC.C.FEES,
-      certificateMaxAgeMonths: CC.C.CERTIFICATE_MAX_AGE_MONTHS,
       profile: pr.data || null,
       profilePhotos: photos,
       profileQuestions: CP.PQ,
