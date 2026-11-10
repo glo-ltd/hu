@@ -421,3 +421,30 @@ test('invoice PDF builder: valid structure and xref offsets', () => {
   offsets.forEach((o, i) => assert.equal(s.slice(o, o + String(i + 1).length + 6), (i + 1) + ' 0 obj'));
   assert.ok(s.includes('(Nguyen Van A)'), 'accents simplified for the built-in font');
 });
+
+// ------------------------------------------------------------------ Add client (team)
+test('Add client: team adds a man who got in touch directly; nothing is sent to him; duplicates open the existing record', async () => {
+  const body = { fullName: 'Wlodek Test', email: 'Wlodek@Example.com', country: 'Poland', age: '55', phone: '', channel: 'email', message: 'Asked about Polish or Russian speakers.' };
+  assert.equal((await call('admin-client-create', body)).status, 401, 'signed-in team only');
+  assert.equal((await call('admin-client-create', body, { headers: adminToken('stranger@example.com') })).status, 403);
+  assert.equal((await call('admin-client-create', Object.assign({}, body, { channel: '' }), { headers: H() })).status, 400);
+  assert.equal((await call('admin-client-create', Object.assign({}, body, { age: '17' }), { headers: H() })).status, 400);
+  const r = await call('admin-client-create', body, { headers: H() });
+  assert.equal(r.status, 200, r.raw);
+  assert.equal(r.body.existing, false);
+  const c = fake.tables.clients[0];
+  assert.equal(c.id, r.body.id);
+  assert.equal(c.status, 'enquiry');
+  assert.equal(c.email, 'wlodek@example.com');
+  assert.equal(c.age, 55);
+  assert.equal(c.source, 'direct_email');
+  assert.match(c.enquiry_message, /^Added by the team\. Got in touch by email\. Asked about/);
+  assert.equal(sentEmails.length, 0, 'nothing sent to him or the team');
+  assert.ok(fake.tables.client_events.some((e) => e.client_id === c.id && e.kind === 'added_by_team' && e.actor === 'james@heritage-union.com'));
+  const again = await call('admin-client-create', Object.assign({}, body, { email: 'WLODEK@example.com' }), { headers: H() });
+  assert.equal(again.body.existing, true);
+  assert.equal(again.body.id, c.id);
+  assert.equal(fake.tables.clients.length, 1);
+  // He then moves through the normal journey.
+  assert.equal((await call('admin-client-action', { id: c.id, action: 'call_booked' }, { headers: H() })).status, 200);
+});
