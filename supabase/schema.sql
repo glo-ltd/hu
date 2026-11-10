@@ -174,6 +174,11 @@ on conflict (id) do nothing;
 -- so only the service role (Netlify Functions) can read or write. Client
 -- documents live in a PRIVATE bucket with no storage policies; every upload
 -- and view goes through a short-lived signed URL made by a function.
+--
+-- If an earlier draft of this file was already applied, nothing needs
+-- dropping: its document columns (id_document_path, certificate_path,
+-- id_checked_*, certificate_checked_*) are simply no longer used, and the
+-- two new columns are added by the "add column if not exists" lines below.
 
 -- 1. Clients: one row per man, from first enquiry to the end of his engagement.
 create table if not exists public.clients (
@@ -220,13 +225,10 @@ create table if not exists public.clients (
   agreement_accepted_at timestamptz,
   submitted_at timestamptz,
 
-  -- Documents (paths in the client-documents bucket) and the team's check.
-  id_document_path text,
-  certificate_path text,
-  id_checked_at timestamptz,
-  id_checked_by text,
-  certificate_checked_at timestamptz,
-  certificate_checked_by text,
+  -- Heritage Union does not carry out background checks. James reads the
+  -- application and sworn declaration before the invoice can be sent.
+  declaration_read_at timestamptz,
+  declaration_read_by text,
 
   -- Engagement
   paid_at timestamptz,
@@ -322,8 +324,13 @@ create table if not exists public.general_enquiries (
 
 alter table public.general_enquiries enable row level security;
 
--- 5. Private bucket for his photo ID and criminal record certificate
---    (and, from phase 2, his profile photos). 10 MB; PDF, JPEG or PNG.
+-- 5. Private bucket for his profile photos (phase 2) and any official
+--    certificate he chooses to provide when a woman asks for one (phase 3).
+--    10 MB; PDF, JPEG or PNG.
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('client-documents', 'client-documents', false, 10485760, array['application/pdf', 'image/jpeg', 'image/png'])
 on conflict (id) do nothing;
+
+-- 6. For a project where an earlier draft of this file was already applied.
+alter table public.clients add column if not exists declaration_read_at timestamptz;
+alter table public.clients add column if not exists declaration_read_by text;

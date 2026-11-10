@@ -33,7 +33,6 @@ exports.handler = async function (event) {
       signupsOpen: CC.C.clientSignupsOpen(),
       paymentDetailsSet: !!process.env.INVOICE_PAYMENT_DETAILS,
       fees: CC.C.FEES,
-      certificateMaxAgeMonths: CC.C.CERTIFICATE_MAX_AGE_MONTHS,
     });
   } catch (e) {
     console.error('admin-client-get failed:', e);

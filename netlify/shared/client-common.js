@@ -41,8 +41,8 @@ const TOKEN_PATTERN = /^[A-Za-z0-9_-]{43}$/;
 // Columns his own page may read about him. Never the token hash, IP hashes
 // or which team member checked what.
 const OWN_COLUMNS = 'id, full_name, email, status, application, declaration, declaration_typed_name, declaration_signed_at, declaration_version, ' +
-  'agreement_version, agreement_typed_name, agreement_accepted_at, submitted_at, id_document_path, certificate_path, id_checked_at, ' +
-  'certificate_checked_at, paid_at, engagement_starts_at, engagement_ends_at, paused_at, access_token_expires_at';
+  'agreement_version, agreement_typed_name, agreement_accepted_at, submitted_at, declaration_read_at, ' +
+  'paid_at, engagement_starts_at, engagement_ends_at, paused_at, access_token_expires_at';
 
 // Validates the token in the body and loads his row.
 // Returns { supabase, client, data, tokenHash } or { response }.
@@ -120,18 +120,11 @@ function isAdult(dateString) {
   return dob <= cutoff && new Date(dob).getUTCFullYear() > 1900;
 }
 
-function certificateFresh(dateString) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return false;
-  const d = Date.parse(dateString + 'T00:00:00Z');
-  if (isNaN(d) || d > Date.now()) return false;
-  return d >= addMonths(new Date(), -C.CERTIFICATE_MAX_AGE_MONTHS).getTime() - 86400000;
-}
 
 const FIELD_ERRORS = {
   invalid: 'Please check this answer.',
   tooLong: 'This answer is too long.',
   under18: 'You must be 18 or over to apply.',
-  certificateOld: 'The certificate must have been issued within the last ' + C.CERTIFICATE_MAX_AGE_MONTHS + ' months.',
   email: 'Please check this email address.',
   required: 'Please answer this question.',
 };
@@ -153,9 +146,12 @@ function cleanValue(f, raw) {
     case 'date': {
       if (typeof raw !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(raw) || isNaN(Date.parse(raw + 'T00:00:00Z'))) return { error: 'invalid' };
       if (f.id === 'date_of_birth' && !isAdult(raw)) return { error: 'under18' };
-      if (f.id === 'certificate_issued_on' && !certificateFresh(raw)) return { error: 'certificateOld' };
       return { value: raw };
     }
+    case 'confirm':
+      // A statement he confirms by ticking (e.g. "legally free to enter this agreement").
+      if (raw !== true) return { error: 'invalid' };
+      return { value: true };
     case 'single':
       if (typeof raw !== 'string' || optionValues.indexOf(raw) === -1) return { error: 'invalid' };
       return { value: raw };
@@ -198,8 +194,7 @@ function mergeSection(section, existing, incoming) {
   return { values };
 }
 
-// First required field in a section that is missing or no longer valid
-// (e.g. a certificate date that has aged past 6 months).
+// First required field in a section that is missing or no longer valid.
 function firstMissing(section, values, docs) {
   for (const f of FORM.fields) {
     if (f.section !== section || !isShown(f, values)) continue;
@@ -224,8 +219,10 @@ function normName(s) {
 }
 
 // ------------------------------------------------------------------ documents
-
-const DOC_KINDS = { id: 'id_document_path', certificate: 'certificate_path' };
+// Heritage Union does not carry out background checks. The only documents a
+// client uploads are an official certificate a woman asks him for (phase 3,
+// optional) and his profile photos (phase 2), under <client_id>/certificate/
+// and <client_id>/photos/ in the private client-documents bucket.
 const EXT_BY_TYPE = C.DOCUMENT_TYPES;
 
 function docPath(clientId, kind, ext) {
@@ -251,7 +248,7 @@ function sniffMatches(bytes, path) {
 async function deleteClientFolder(supabase, clientId) {
   const bucket = supabase.storage.from(DOC_BUCKET);
   let removed = 0;
-  for (const sub of ['id', 'certificate', 'photos']) {
+  for (const sub of ['certificate', 'photos']) {
     const listed = await bucket.list(clientId + '/' + sub, { limit: 100 });
     if (listed.error) throw listed.error;
     const paths = (listed.data || []).filter((o) => o && o.name).map((o) => clientId + '/' + sub + '/' + o.name);
@@ -283,10 +280,7 @@ function ownView(client, invoices) {
       acceptedVersion: client.agreement_version || null,
       acceptedAt: client.agreement_accepted_at || null,
     },
-    documents: {
-      id: client.id_document_path ? { uploaded: true, checked: !!client.id_checked_at, name: client.id_document_path.split('.').pop().toUpperCase() } : null,
-      certificate: client.certificate_path ? { uploaded: true, checked: !!client.certificate_checked_at, name: client.certificate_path.split('.').pop().toUpperCase() } : null,
-    },
+    declarationRead: !!client.declaration_read_at,
     submittedAt: client.submitted_at || null,
     paidAt: client.paid_at || null,
     engagementEndsAt: client.engagement_ends_at || null,
@@ -306,8 +300,8 @@ async function ownState(supabase, clientId) {
 }
 
 module.exports = {
-  C, FORM, AGREEMENT, FIELD_BY_ID, DOC_BUCKET, DOC_SIGNED_SECONDS, DOC_KINDS, EXT_BY_TYPE, PAGE_STATUSES, STATUSES, MSG, FIELD_ERRORS,
+  C, FORM, AGREEMENT, FIELD_BY_ID, DOC_BUCKET, DOC_SIGNED_SECONDS, EXT_BY_TYPE, PAGE_STATUSES, STATUSES, MSG, FIELD_ERRORS,
   err, hashToken, newClientToken, clientFromRequest, logEvent, setStatus, firstName, fmtDate, addMonths,
-  isShown, isAdult, certificateFresh, cleanValue, mergeSection, firstMissing, agreementIsDraft, normName,
+  isShown, isAdult, cleanValue, mergeSection, firstMissing, agreementIsDraft, normName,
   docPath, isOwnDocPath, sniffMatches, deleteClientFolder, ownView, ownState, OWN_COLUMNS,
 };

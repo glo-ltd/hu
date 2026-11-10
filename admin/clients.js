@@ -16,7 +16,7 @@
 
   var STATUS = {
     enquiry: 'New enquiry', call_booked: 'Call booked', call_held: 'Call held', thinking: 'Thinking it over',
-    invited: 'Invited to apply', applying: 'Applying', submitted: 'Documents to check', checked: 'Ready to invoice',
+    invited: 'Invited to apply', applying: 'Applying', submitted: 'To read', checked: 'Ready to invoice',
     invoiced: 'Awaiting payment', active: 'Active', paused: 'Paused', not_a_fit: 'Not the right fit', closed: 'Closed',
   };
   var SOURCES = { search: 'Search engine', social: 'Social media', friend: 'A friend or family member', press: 'Press or an article', facebook_group: 'Facebook group', other: 'Other', fee_document: 'Fee document request' };
@@ -24,7 +24,7 @@
     ['enquiry', 'New enquiries', ['enquiry']],
     ['call', 'Call booked', ['call_booked', 'call_held', 'thinking']],
     ['applying', 'Applying', ['invited', 'applying']],
-    ['documents', 'Documents to check', ['submitted']],
+    ['documents', 'To read', ['submitted']],
     ['payment', 'Awaiting payment', ['checked', 'invoiced']],
     ['active', 'Active', ['active', 'paused']],
     ['closed', 'Closed', ['closed', 'not_a_fit']],
@@ -34,9 +34,9 @@
     enquiry: 'Enquiry received', enquiry_again: 'Wrote again through the enquiry form', fee_document_sent: 'Fee document sent (R2)',
     call_booked: 'Call booked', call_held: 'Call held', thinking: 'Thinking it over', invite: 'Invited to apply (R3)', not_a_fit: 'Not the right fit (R4)',
     resend_link: 'New private link sent (R5)', application_started: 'Started his application', id_uploaded: 'Uploaded photo ID',
-    certificate_uploaded: 'Uploaded criminal record certificate', declaration_signed: 'Signed background declaration', agreement_accepted: 'Accepted client agreement',
-    application_submitted: 'Sent his application (R6)', check_id: 'Photo ID checked', check_certificate: 'Certificate checked',
-    uncheck_id: 'Photo ID check undone', uncheck_certificate: 'Certificate check undone', invoice_create: 'Invoice drafted', invoice_update: 'Invoice draft changed',
+    declaration_signed: 'Signed his sworn background declaration', agreement_accepted: 'Accepted client agreement',
+    application_submitted: 'Sent his application (R6)', mark_read: 'Application and declaration read', unmark_read: '"Read" undone',
+    invoice_create: 'Invoice drafted', invoice_update: 'Invoice draft changed',
     invoice_send: 'Invoice sent (R7)', invoice_paid: 'Payment received (R8 welcome)', invoice_void: 'Invoice voided',
   };
 
@@ -125,7 +125,7 @@
     var days = H.daysSince(c.status_changed_at || c.created_at);
     var badges = [el('span', { class: 'ad-badge ad-badge--status', text: STATUS[c.status] || c.status })];
     if (c.fee_document_sent_at) badges.push(el('span', { class: 'ad-badge', text: 'Fee document sent' }));
-    if (c.status === 'submitted') badges.push(el('span', { class: 'ad-badge ad-badge--warn', text: (c.id_checked_at ? '✓ ID' : 'ID to check') + ' · ' + (c.certificate_checked_at ? '✓ certificate' : 'certificate to check') }));
+    if (c.status === 'submitted') badges.push(el('span', { class: 'ad-badge ad-badge--warn', text: 'Application and declaration to read' }));
     if (c.status === 'active' && c.engagement_ends_at) badges.push(el('span', { class: 'ad-badge ad-badge--ok', text: 'Until ' + H.fmtDate(c.engagement_ends_at) }));
     return el('button', { type: 'button', class: 'ad-card', onclick: function () { location.hash = 'client-' + c.id; } }, [
       el('div', { class: 'ad-card-top' }, [el('span', { class: 'ad-card-name', text: c.full_name }), el('span', { class: 'ad-card-sub', text: 'Enquired ' + H.fmtDate(c.created_at) })]),
@@ -169,6 +169,7 @@
     if (f.type === 'single') { var o = f.options.filter(function (x) { return x.value === v; })[0]; return o ? o.label : v; }
     if (f.type === 'languages') return v.map(function (x) { return x.language + ' (' + x.level + ')'; }).join(', ');
     if (f.type === 'date') return H.fmtDate(v + 'T00:00:00Z');
+    if (f.type === 'confirm') return v === true ? '✓ Confirmed' : null;
     return String(v);
   }
 
@@ -217,7 +218,7 @@
         hasApp ? answersBlock(d.form, 'application', c.application) : el('p', { class: 'ad-empty', text: 'Not started yet.' }),
       ]));
       left.appendChild(el('section', { class: 'ad-section' }, [
-        el('h2', { text: 'Background declaration (F3)' }),
+        el('h2', { text: 'Sworn background declaration (F3)' }),
         c.declaration && Object.keys(c.declaration).length ? answersBlock(d.form, 'declaration', c.declaration) : el('p', { class: 'ad-empty', text: 'Not started yet.' }),
         dl([
           ['Signed', c.declaration_signed_at ? H.fmtDateTime(c.declaration_signed_at) + ' as "' + c.declaration_typed_name + '"' : 'Not signed'],
@@ -234,7 +235,7 @@
     }
 
     right.appendChild(actionsSection(c, d));
-    if (['submitted', 'checked', 'invoiced', 'active', 'paused', 'closed'].indexOf(c.status) !== -1 || c.id_document_path || c.certificate_path) right.appendChild(documentsSection(c, d));
+    if (['submitted', 'checked'].indexOf(c.status) !== -1) right.appendChild(readSection(c));
     if (['submitted', 'checked', 'invoiced', 'active', 'paused', 'closed'].indexOf(c.status) !== -1 || d.invoices.length) right.appendChild(invoicesSection(c, d));
     right.appendChild(timelineSection(d.events));
   }
@@ -269,34 +270,17 @@
     return sec;
   }
 
-  function documentsSection(c, d) {
-    var sec = el('section', { class: 'ad-section' }, [el('h2', { text: 'Documents' })]);
-    [['id', 'Photo ID', c.id_document_path, c.id_checked_at, c.id_checked_by], ['certificate', 'Criminal record certificate', c.certificate_path, c.certificate_checked_at, c.certificate_checked_by]].forEach(function (x) {
-      var kind = x[0];
-      var row = el('div', { class: 'ad-answer' }, [el('span', { class: 'ad-q', text: x[1] })]);
-      if (!x[2]) { row.appendChild(el('span', { class: 'ad-empty', text: 'Not uploaded' })); sec.appendChild(row); return; }
-      if (kind === 'certificate') {
-        var dec = c.declaration || {};
-        row.appendChild(el('span', { class: 'ad-a', text: 'Issued ' + (dec.certificate_issued_on ? H.fmtDate(dec.certificate_issued_on + 'T00:00:00Z') : '?') + ' in ' + (dec.certificate_country || '?') }));
-      }
-      var open = el('button', { type: 'button', class: 'btn btn--secondary btn--sm', text: 'Open (10-minute link)' });
-      open.addEventListener('click', function () {
-        // Open the tab first so pop-up blockers allow it, then point it at the signed URL.
-        var w = window.open('', '_blank');
-        H.api('admin-client-doc', { id: c.id, kind: kind }).then(function (r) { if (w) { w.opener = null; w.location = r.url; } else location.href = r.url; }, function (err) { if (w) w.close(); H.flash(err.message, true); });
-      });
-      var actions = el('div', { class: 'ad-translate-row' }, [open]);
-      var checked = !!x[3];
-      if (['submitted', 'checked'].indexOf(c.status) !== -1) {
-        actions.appendChild(el('button', { type: 'button', class: 'btn ' + (checked ? 'btn--secondary' : 'btn--primary') + ' btn--sm', text: checked ? 'Undo check' : 'Mark checked', onclick: function () {
-          act(c.id, (checked ? 'uncheck_' : 'check_') + kind, checked ? 'Check undone.' : 'Marked checked.');
-        } }));
-      }
-      actions.appendChild(el('span', { text: checked ? '✓ Checked by ' + x[4] + ', ' + H.fmtDateTime(x[3]) : 'Not checked yet' }));
-      row.appendChild(actions);
-      sec.appendChild(row);
-    });
-    sec.appendChild(el('p', { class: 'form-note', text: 'Check that the ID matches his legal name and date of birth, and that the certificate is official, from his country of residence and issued within the last ' + d.certificateMaxAgeMonths + ' months. Then mark each as checked. The invoice can only be sent once both are checked.' }));
+  // Heritage Union does not carry out background checks. James reads the
+  // application and sworn declaration; marking them read unlocks the invoice.
+  function readSection(c) {
+    var sec = el('section', { class: 'ad-section' }, [el('h2', { text: 'Read his application' })]);
+    sec.appendChild(el('p', { class: 'form-note', text: 'Heritage Union does not check his declaration. Read his application and sworn background declaration (any "yes" is in red, and he must have confirmed he is legally free to enter the agreement). You can still send "Not the right fit" at this stage. When you\'re ready, mark them as read: the invoice can then be sent.' }));
+    if (c.status === 'submitted') {
+      sec.appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--md', text: 'I have read his application and declaration', onclick: function () { act(c.id, 'mark_read', 'Marked as read. You can now send the invoice.'); } }));
+    } else {
+      sec.appendChild(el('p', { class: 'cl-tick-row', text: '✓ Read by ' + c.declaration_read_by + ', ' + H.fmtDateTime(c.declaration_read_at) }));
+      sec.appendChild(el('button', { type: 'button', class: 'ad-link', text: 'Undo "read"', onclick: function () { act(c.id, 'unmark_read', 'Undone.'); } }));
+    }
     return sec;
   }
 
@@ -314,7 +298,7 @@
       if (inv.status === 'draft') {
         actions.appendChild(el('button', { type: 'button', class: 'btn btn--secondary btn--sm', text: 'Change amount', onclick: function () { editAmount(c, inv); } }));
         var canSend = c.status === 'checked' && d.paymentDetailsSet;
-        actions.appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--sm', text: 'Send invoice (R7)', disabled: !canSend, title: canSend ? null : 'Check both documents (and set INVOICE_PAYMENT_DETAILS) first', onclick: function () {
+        actions.appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--sm', text: 'Send invoice (R7)', disabled: !canSend, title: canSend ? null : 'Mark his application as read (and set INVOICE_PAYMENT_DETAILS) first', onclick: function () {
           modal('Send invoice to ' + c.full_name.split(' ')[0] + '?', 'It gets the next invoice number and is emailed with the PDF attached: ' + inv.description + ', ' + money(inv.amount_cents, inv.currency) + '.', 'Send invoice', function () { invoiceOp(c.id, 'send', inv.id, 'Invoice sent.'); });
         } }));
       }
