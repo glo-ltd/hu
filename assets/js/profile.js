@@ -83,9 +83,9 @@
       notSaved: 'Chưa lưu được câu trả lời. Bạn vui lòng bấm “Thử lại” ở trên rồi gửi lại nhé.',
       openFailed: 'Chưa mở được hồ sơ. Bạn kiểm tra mạng rồi thử lại nhé.',
       retry: 'Thử lại',
-      // TODO(James): counsel to approve these three consent texts (version vi-2026-11-profile-v1).
+      // TODO(James): counsel to approve these three consent texts (version vi-2026-11-profile-v2).
       confirmTrue: 'Tôi xác nhận những thông tin trên là đúng sự thật và do chính tôi viết.',
-      profileSharing: 'Không bắt buộc: Tôi đồng ý để Heritage Union cho khách hàng đã hoàn thành bản khai lý lịch xem hồ sơ của tôi, gồm tên hiển thị, tuổi, thành phố/tỉnh và các câu trả lời ở trên. Không bao giờ kèm họ, ngày sinh, số Zalo hay email của tôi. Tôi có thể thay đổi ý định bất cứ lúc nào.',
+      profileSharing: 'Không bắt buộc: Tôi đồng ý để Heritage Union cho khách hàng đã ký bản khai lý lịch xem hồ sơ của tôi, gồm tên hiển thị, tuổi, thành phố/tỉnh và các câu trả lời ở trên. Không bao giờ kèm họ, ngày sinh, số Zalo hay email của tôi. Tôi có thể thay đổi ý định bất cứ lúc nào.',
       photoSharing: 'Không bắt buộc: Tôi đồng ý để những khách hàng nói trên xem ảnh của tôi.',
     },
     en: {
@@ -143,9 +143,9 @@
       notSaved: "Your answers haven't saved yet. Please tap “Try again” above, then send again.",
       openFailed: "We couldn't open your profile. Please check your internet connection and try again.",
       retry: 'Try again',
-      // TODO(James): counsel to approve these three consent texts (version en-2026-11-profile-v1).
+      // TODO(James): counsel to approve these three consent texts (version en-2026-11-profile-v2).
       confirmTrue: 'I confirm the information above is true and written by me.',
-      profileSharing: 'Optional: I agree that Heritage Union may show my profile, meaning my display name, age, city or province and my answers above, to clients who have completed their background disclosure. My surname, date of birth, Zalo number and email are never shown. I can change my mind at any time.',
+      profileSharing: 'Optional: I agree that Heritage Union may show my profile, meaning my display name, age, city or province and my answers above, to clients who have signed their background declaration. My surname, date of birth, Zalo number and email are never shown. I can change my mind at any time.',
       photoSharing: 'Optional: I agree that those clients may also see my photos.',
     },
   };

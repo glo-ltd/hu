@@ -255,7 +255,7 @@ print(json.dumps({"format": im.format, "w": w, "h": h, "exif": len(im.getexif())
     const cand = fake.tables.candidates[0];
     assert.equal(cand.status, 'profile_complete');
     assert.ok(prof.submitted_at && prof.confirmed_true_at && prof.consent_photo_sharing_at);
-    assert.equal(prof.consent_profile_text_version, 'vi-2026-11-profile-v1');
+    assert.equal(prof.consent_profile_text_version, 'vi-2026-11-profile-v2');
     assert.equal(prof.photo_paths.length, 2);
     const team = sentEmails.filter((m) => /Candidate profile submitted/.test(m.subject));
     assert.equal(team.length, 1);

@@ -213,7 +213,7 @@ test('submit: photos without photo consent are deleted; status, timestamps, vers
   assert.equal(fake.hasObject(stray), false);
   assert.equal(prof.consent_photo_sharing_at, null);
   assert.ok(prof.submitted_at && prof.confirmed_true_at);
-  assert.equal(prof.consent_profile_text_version, 'vi-2026-11-profile-v1');
+  assert.equal(prof.consent_profile_text_version, 'vi-2026-11-profile-v2');
   assert.equal(cand.status, 'profile_complete');
   assert.ok(cand.consent_profile_sharing_at);
   assert.equal(sentEmails.length, 1);
@@ -316,7 +316,7 @@ test('English form: submit records the English consent version; errors come in b
   assert.ok(!/[ăâđêôơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ]/.test(r.body.error_en), 'error_en is English');
   r = await call('profile-submit', { token: c.token, lang: 'en', consents: { confirmTrue: true, profileSharing: true } });
   assert.equal(r.status, 200, r.raw);
-  assert.equal(fake.tables.candidate_profiles[0].consent_profile_text_version, 'en-2026-11-profile-v1');
+  assert.equal(fake.tables.candidate_profiles[0].consent_profile_text_version, 'en-2026-11-profile-v2');
 });
 
 test('question set: every question, option and step has natural English for the candidate and a short team label', () => {
