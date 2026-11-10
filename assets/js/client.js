@@ -264,7 +264,7 @@
       var cb = el('input', { type: 'checkbox', id: 'f-' + f.id, 'aria-describedby': f.help ? 'f-' + f.id + '-help' : null });
       cb.checked = v === true;
       cb.addEventListener('change', function () { setValue(section, f.id, cb.checked ? true : null); save(section); });
-      return el('label', { class: 'cl-check cl-confirm', for: 'f-' + f.id }, [cb, el('span', null, [f.label, f.required ? el('span', { class: 'cl-req', 'aria-hidden': 'true', text: ' *' }) : null])]);
+      return el('label', { class: 'cl-check cl-affirm', for: 'f-' + f.id }, [cb, el('span', null, [f.label, f.required ? el('span', { class: 'cl-req', 'aria-hidden': 'true', text: ' *' }) : null])]);
     }
     return null;
   }

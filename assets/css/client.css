@@ -109,4 +109,4 @@ html { background: var(--cream-100); }
   .cl-main { padding-top: 40px; }
 }
 #cl-step-title, #cl-hello { outline: none; }
-.cl-field--confirm .cl-confirm { padding: 14px; border: 1px solid var(--gold-300); border-radius: var(--radius-sm); background: #FFFBF0; font-weight: 500; }
+.cl-field--confirm .cl-affirm { padding: 14px; border: 1px solid var(--gold-300); border-radius: var(--radius-sm); background: #FFFBF0; font-weight: 500; }
