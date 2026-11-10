@@ -1,5 +1,6 @@
-// One client for the team page: details, timeline, documents (as flags;
-// signed links come from admin-client-doc), declaration, agreement, invoices.
+// One client for the team page: details, timeline, declaration, agreement,
+// invoices, his profile, choices and introductions (with any certificate a
+// woman asked him for: links come from admin-intro op cert_view).
 // POST { id }.
 const P = require('../shared/profile-common');
 const CC = require('../shared/client-common');
@@ -56,6 +57,11 @@ exports.handler = async function (event) {
         introducedAt: x.introduced_at, introducedBy: x.introduced_by, cancelReason: x.cancel_reason,
         consent: x.consent, consentTypedName: x.consent_typed_name, consentVersion: x.consent_text_version, decisionLang: x.decision_lang,
         declineReason: x.decline_reason,
+        cert: x.cert_requested_at ? {
+          requestedAt: x.cert_requested_at, sentAt: x.cert_request_sent_at, sentBy: x.cert_request_sent_by,
+          response: x.cert_response, respondedAt: x.cert_responded_at, seenAt: x.cert_seen_at, seenBy: x.cert_seen_by,
+          paused: !!x.expiry_paused_at,
+        } : null,
         questions: qs.filter((q) => q.introduction_id === x.id).map((q) => ({ message: q.message, at: q.created_at, answeredAt: q.answered_at, answeredBy: q.answered_by })),
         otherOpen: otherOpen[x.candidate_id],
         translationGaps: I.translationGaps(c.data, pr.data, lang),

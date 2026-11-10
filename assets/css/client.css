@@ -179,3 +179,7 @@ html { background: var(--cream-100); }
 .cl-intro.is-introduced .cl-intro-status { color: #2F5B2A; font-weight: 600; }
 .cl-intro.is-not_this_time, .cl-intro.is-unavailable { opacity: 0.75; }
 .cl-field--confirm .cl-affirm { padding: 14px; border: 1px solid var(--gold-300); border-radius: var(--radius-sm); background: #FFFBF0; font-weight: 500; }
+
+/* A certificate a woman asked him for (optional) */
+.cl-certcard .cl-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 4px; }
+.cl-certcard .cl-actions .btn { cursor: pointer; }

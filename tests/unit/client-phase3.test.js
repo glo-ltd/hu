@@ -13,12 +13,12 @@ test.beforeEach(() => { fake.reset(); sentEmails.length = 0; P._resetRateLimits(
 
 // A client whose profile is approved and translated, with a shortlist.
 function readyClient(over, women) {
-  const c = activeClient(Object.assign({ id_checked_at: isoDaysAgo(20), certificate_checked_at: isoDaysAgo(20), shortlist_sent_at: isoDaysAgo(3),
+  const c = activeClient(Object.assign({ shortlist_sent_at: isoDaysAgo(3),
     declaration: Object.assign({}, S.DECLARATION, { conviction: 'yes', conviction_details: 'Speeding, UK, 2001' }) }, over || {}));
   fake.tables.client_profiles.push({ client_id: c.id, questions_version: 'x', display_name: 'Michael', photo_paths: [], answers: { country: 'United Kingdom', city: 'Bristol' },
     message_to_women: 'Hello, I hope to meet you.', submitted_at: isoDaysAgo(9), summary_html: '<p>Michael is kind.</p>', summary_approved_at: isoDaysAgo(8),
     summary_vi_html: '<p>Michael là người tốt bụng.</p>', message_vi: 'Xin chào, mong được gặp bạn.',
-    declaration_vi: { conviction_details: 'Chạy quá tốc độ, Anh, 2001', previous_marriages_details: '2003 đến 2014, đã ly hôn.', countries_lived: 'Vương quốc Anh', certificate_country: 'Vương quốc Anh' } });
+    declaration_vi: { conviction_details: 'Chạy quá tốc độ, Anh, 2001', previous_marriages_details: '2003 đến 2014, đã ly hôn.', countries_lived: 'Vương quốc Anh' } });
   (women || []).forEach((w) => fake.tables.client_shortlists.push({ client_id: c.id, candidate_id: w.id, added_by: 'x', sent_at: isoDaysAgo(3) }));
   return c;
 }
@@ -93,7 +93,10 @@ test('her decision link works only for that one request; shows him in her langua
   const conv = r.body.him.declaration.find((x) => x.id === 'conviction');
   assert.equal(conv.text, 'Có'); assert.equal(conv.flag, true);
   assert.equal(r.body.him.declaration.find((x) => x.id === 'conviction_details').text, 'Chạy quá tốc độ, Anh, 2001');
-  assert.ok(r.body.him.checked.id && r.body.him.checked.certificate);
+  assert.equal(r.body.him.declarationChecked, false, 'Heritage Union does not check his declaration');
+  assert.equal(r.body.him.checked, undefined);
+  assert.equal(r.body.him.declaration.find((x) => x.id === 'legally_free').text, 'Có, anh ấy xác nhận');
+  assert.deepEqual(r.body.certificate, { requested: false });
   assert.equal(r.body.prefill.zalo, '0912345678', 'her own details, to pre-fill her form');
   for (const s of ['Thompson', APPLICATION.date_of_birth, 'michael@example.com', '+44 7700', 'Rose Lane', 'client-iphash', 'access_token']) assert.ok(!r.raw.includes(s), 'leaks ' + s);
   assert.equal(fake.tables.introductions.find((x) => x.id === intros[0].id).status, 'opened');
@@ -245,4 +248,118 @@ test('admin-intro rejects missing, expired and non-team tokens', async () => {
     const r = await call('admin-intro', { id, op: 'send', introId: id }, { headers: h });
     assert.ok(r.status === 401 || r.status === 403);
   }
+});
+
+// ------------------------------------------------------------------ certificate on request
+const PDF = Buffer.concat([Buffer.from('%PDF-1.7\n'), Buffer.alloc(200, 32)]);
+
+test('she asks for an official background check: recorded, expiry paused, team told (reference only)', async () => {
+  const w = seedWoman();
+  const c = readyClient({}, [w]);
+  const [intro] = await choose(c, [w.id]);
+  const { token } = await send(c, intro);
+  sentEmails.length = 0;
+  const r = await call('intro-cert-request', { token });
+  assert.equal(r.status, 200, r.raw);
+  assert.deepEqual(r.body.certificate, { requested: true, status: 'waiting' });
+  const row = fake.tables.introductions.find((x) => x.id === intro.id);
+  assert.ok(row.cert_requested_at && row.expiry_paused_at);
+  assert.equal(row.status, 'sent', 'her request stays open');
+  assert.equal(sentEmails.length, 1);
+  assert.match(sentEmails[0].subject, /official background check/);
+  for (const s of ['Hoa', 'Michael', 'Thompson', '0912345678']) assert.ok(!JSON.stringify(sentEmails[0]).includes(s), 'team email leaks ' + s);
+  // asking twice changes nothing
+  await call('intro-cert-request', { token });
+  assert.equal(sentEmails.length, 1);
+  // a paused request still opens after its 30 days
+  row.decision_token_expires_at = isoDaysAgo(1);
+  const g = await call('intro-get', { token });
+  assert.equal(g.status, 200, g.raw);
+  assert.equal(g.body.expiryPaused, true);
+  assert.deepEqual(g.body.certificate, { requested: true, status: 'waiting' });
+});
+
+test('team sends the request (R22); he uploads; the team marks it seen; her page shows it with a 10-minute link', async () => {
+  const w = seedWoman();
+  const c = readyClient({}, [w]);
+  const [intro] = await choose(c, [w.id]);
+  const { token } = await send(c, intro);
+  // nothing to send before she asks
+  let r = await call('admin-intro', { id: c.id, op: 'cert_request', introId: intro.id }, { headers: H() });
+  assert.equal(r.status, 409);
+  await call('intro-cert-request', { token });
+  // his page shows nothing until the team has sent the request
+  assert.deepEqual((await call('client-get', { token: c.token })).body.engagement.certificateRequests, []);
+  sentEmails.length = 0;
+  r = await call('admin-intro', { id: c.id, op: 'cert_request', introId: intro.id }, { headers: H() });
+  assert.equal(r.status, 200, r.raw);
+  const r22 = sentEmails.find((m) => m.to === 'michael@example.com');
+  assert.match(r22.subject, /Hoa would like an official certificate/);
+  assert.match(r22.text, /entirely your choice/);
+  const his = tokenOf(r22.text);
+  assert.equal((await call('client-get', { token: c.token })).status, 401, 'R22 carries a fresh link; the old one stops');
+  const st = (await call('client-get', { token: his })).body.engagement;
+  assert.deepEqual(st.certificateRequests, [{ introId: intro.id, name: 'Hoa', answered: null }]);
+  // upload: only PDF/JPEG/PNG, checked by content
+  assert.equal((await call('client-certificate', { token: his, introId: intro.id, op: 'upload-url', type: 'text/plain' })).status, 400);
+  const u = await call('client-certificate', { token: his, introId: intro.id, op: 'upload-url', type: 'application/pdf' });
+  assert.equal(u.status, 200, u.raw);
+  assert.match(u.body.path, new RegExp('^' + c.id + '/certificate/[0-9a-f-]{36}\\.pdf$'));
+  fake.addObject(u.body.path, Buffer.from('not a pdf at all'), 'client-documents');
+  let cf = await call('client-certificate', { token: his, introId: intro.id, op: 'confirm', path: u.body.path });
+  assert.equal(cf.status, 400); assert.equal(cf.body.code, 'type');
+  assert.ok(!fake.hasObject(u.body.path, 'client-documents'), 'a bad file is removed');
+  fake.addObject(u.body.path, PDF, 'client-documents');
+  sentEmails.length = 0;
+  cf = await call('client-certificate', { token: his, introId: intro.id, op: 'confirm', path: u.body.path });
+  assert.equal(cf.status, 200, cf.raw);
+  assert.equal(cf.body.state.engagement.certificateRequests[0].answered, 'provided');
+  assert.match(sentEmails[0].subject, /provided a certificate/);
+  // not visible to her until the team has seen it
+  assert.deepEqual((await call('intro-get', { token })).body.certificate, { requested: true, status: 'waiting' });
+  const view = await call('admin-intro', { id: c.id, op: 'cert_view', introId: intro.id }, { headers: H() });
+  assert.ok(view.body.url.includes('/certificate/'));
+  const before = fake.tables.introductions.find((x) => x.id === intro.id);
+  before.expiry_paused_at = new Date(Date.now() - 2 * 86400000).toISOString();
+  const expBefore = Date.parse(before.decision_token_expires_at);
+  r = await call('admin-intro', { id: c.id, op: 'cert_seen', introId: intro.id }, { headers: H() });
+  assert.equal(r.status, 200, r.raw);
+  const row = fake.tables.introductions.find((x) => x.id === intro.id);
+  assert.equal(row.cert_seen_by, 'james@heritage-union.com');
+  assert.equal(row.expiry_paused_at, null, 'the 30-day clock runs again');
+  const added = (Date.parse(row.decision_token_expires_at) - expBefore) / 86400000;
+  assert.ok(added > 1.99 && added < 2.01, 'extended by the paused time');
+  const g = await call('intro-get', { token });
+  assert.equal(g.body.certificate.status, 'provided');
+  assert.ok(g.body.certificate.url.includes(c.id + '/certificate/'));
+  // he can't answer twice; team detail shows the record
+  assert.equal((await call('client-certificate', { token: his, introId: intro.id, op: 'decline' })).status, 409);
+  const d = await call('admin-client-get', { id: c.id }, { headers: H() });
+  assert.equal(d.body.introductions[0].cert.response, 'provided');
+  // and she still decides
+  assert.equal((await call('intro-decide', { token, decision: 'decline' })).status, 200);
+});
+
+test('he may decline: she is told he chose not to provide one, and her expiry resumes', async () => {
+  const w = seedWoman();
+  const c = readyClient({}, [w]);
+  const [intro] = await choose(c, [w.id]);
+  const { token } = await send(c, intro);
+  await call('intro-cert-request', { token });
+  // he can't answer before the team has sent him the request
+  assert.equal((await call('client-certificate', { token: c.token, introId: intro.id, op: 'decline' })).status, 400);
+  sentEmails.length = 0;
+  await call('admin-intro', { id: c.id, op: 'cert_request', introId: intro.id }, { headers: H() });
+  const his = tokenOf(sentEmails.find((m) => m.to === 'michael@example.com').text);
+  sentEmails.length = 0;
+  const r = await call('client-certificate', { token: his, introId: intro.id, op: 'decline' });
+  assert.equal(r.status, 200, r.raw);
+  assert.match(sentEmails[0].subject, /chose not to provide/);
+  const row = fake.tables.introductions.find((x) => x.id === intro.id);
+  assert.equal(row.cert_response, 'declined');
+  assert.equal(row.expiry_paused_at, null);
+  assert.deepEqual((await call('intro-get', { token })).body.certificate, { requested: true, status: 'declined' });
+  // another client's token can't touch this request
+  const other = readyClient({ email: 'o@x.com' }, []);
+  assert.equal((await call('client-certificate', { token: other.token, introId: intro.id, op: 'upload-url', type: 'application/pdf' })).status, 400);
 });

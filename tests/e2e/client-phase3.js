@@ -23,7 +23,7 @@ const ago = (d) => new Date(Date.now() - d * 86400000).toISOString();
   const call = S.call;
   try {
     // ------------------------------------------------------------ setup: his approved, translated profile, and a shortlist
-    const client = S.activeClient({ id_checked_at: ago(20), certificate_checked_at: ago(20), shortlist_sent_at: ago(3),
+    const client = S.activeClient({ shortlist_sent_at: ago(3),
       declaration: Object.assign({}, S.DECLARATION, { conviction: 'yes', conviction_details: 'Driving with excess alcohol, United Kingdom, 1999. Fined and disqualified for 12 months.' }) });
     const hisPhotos = [1, 2].map((i) => { const p = client.id + '/photos/' + crypto.randomUUID() + '.jpg'; fake.addObject(p, fs.readFileSync(path.join(__dirname, 'fixture-person-' + (i + 3) + '.jpg')), 'client-documents'); return p; });
     fake.tables.client_profiles.push({ client_id: client.id, questions_version: 'x', display_name: 'Michael', photo_paths: hisPhotos,
@@ -32,7 +32,7 @@ const ago = (d) => new Date(Date.now() - d * 86400000).toISOString();
       summary_approved_at: ago(8),
       summary_vi_html: '<p>Michael 48 tuổi, là kỹ sư xây dựng, sống ở Bristol, Vương quốc Anh. Anh ấy nói tiếng Anh và một chút tiếng Pháp.</p><p>Vợ anh ấy mất năm 2016, và anh ấy rất gần gũi với con gái. Anh ấy thích đi bộ đường dài và nấu ăn, và mong có một cuộc sống gia đình bình yên.</p>',
       message_vi: 'Xin chào. Cảm ơn bạn đã đọc hồ sơ của tôi. Tôi rất vui nếu được làm quen với bạn, theo nhịp độ mà bạn thấy thoải mái.',
-      declaration_vi: { conviction_details: 'Lái xe khi có nồng độ cồn vượt mức cho phép, Vương quốc Anh, năm 1999. Bị phạt tiền và tước bằng lái 12 tháng.', previous_marriages_details: 'Từ năm 2003 đến 2014, đã ly hôn.', countries_lived: 'Vương quốc Anh', certificate_country: 'Vương quốc Anh' } });
+      declaration_vi: { conviction_details: 'Lái xe khi có nồng độ cồn vượt mức cho phép, Vương quốc Anh, năm 1999. Bị phạt tiền và tước bằng lái 12 tháng.', previous_marriages_details: 'Từ năm 2003 đến 2014, đã ly hôn.', countries_lived: 'Vương quốc Anh' } });
     const names = [['Hoa', 'vi'], ['Lan', 'en'], ['Mai', 'vi'], ['Thu', 'vi'], ['Ngọc', 'vi'], ['Linh', 'vi']];
     const women = names.map((n, i) => {
       const w = S.seedWoman({ zalo_number: '09' + String(20000000 + i), preferred_language: n[1], email: i === 0 ? 'hoa@example.vn' : i === 1 ? 'lan@example.com' : null }, { display_name: n[0], photo_paths: [] });
@@ -72,6 +72,8 @@ const ago = (d) => new Date(Date.now() - d * 86400000).toISOString();
     for (const s of ['Thompson', '1978', 'michael@example.com', '+44 7700', 'Rose Lane']) assert.ok(!html.includes(s), 'decision page leaks ' + s);
     assert.match(await vp.textContent('.in-decl'), /Lái xe khi có nồng độ cồn/);
     assert.equal(await vp.locator('.in-decl dd.is-yes').count(), 1, 'his "yes" is highlighted');
+    assert.equal(await vp.textContent('#in-notchecked'), 'Đây là bản khai do chính anh ấy ký. Heritage Union không kiểm tra bản khai này.');
+    assert.equal(await vp.textContent('#in-cert'), 'Yêu cầu anh ấy cung cấp phiếu lý lịch tư pháp trước');
     await shot(vp, 'her-page-vi-full');
     await vp.click('#in-yes');
     await vp.locator('#in-share-zalo').waitFor();
@@ -104,6 +106,7 @@ const ago = (d) => new Date(Date.now() - d * 86400000).toISOString();
     await ep.goto(base + '/introduction#t=' + enToken);
     await ep.locator('.in-him').waitFor();
     assert.match(await ep.textContent('.in-summary'), /civil engineer/);
+    assert.equal(await ep.textContent('#in-notchecked'), 'This is his own signed declaration. Heritage Union has not checked it.');
     await shot(ep, 'her-page-en-full');
     await ep.click('#in-ask');
     await ep.fill('#in-question', 'Does he have any children living with him?');
@@ -157,12 +160,112 @@ const ago = (d) => new Date(Date.now() - d * 86400000).toISOString();
     assert.equal(fake.tables.introductions.find((x) => x.candidate_id === women[3].id).is_replacement, true);
     await cctx.close();
 
+    // ------------------------------------------------------------ she asks for an official background check (Mai, Vietnamese)
+    console.log('Certificate on request: provided');
+    const maiIntro = fake.tables.introductions.find((x) => x.candidate_id === women[2].id);
+    const s = await call('admin-intro', { id: client.id, op: 'send', introId: maiIntro.id }, { headers: S.adminToken('huyen@heritage-union.com') });
+    const maiToken = tokenFrom(s.body.zalo);
+    const mctx = await newContext(browser, MOBILE, 'vi-VN');
+    const mp = await mctx.newPage();
+    await mp.goto(base + '/vi/gioi-thieu#t=' + maiToken);
+    await mp.locator('#in-cert').click();
+    await mp.locator('#in-send-cert').waitFor();
+    await mp.locator('.in-actions').screenshot({ path: path.join(SHOTS, 'e20-her-page-vi-ask-for-certificate.png') });
+    await mp.click('#in-send-cert');
+    await mp.locator('.in-cert').waitFor();
+    assert.equal(await mp.locator('#in-cert').count(), 0, 'asked once');
+    assert.match(await mp.textContent('.in-actions'), /tạm dừng/);
+    await mp.locator('.in-cert').screenshot({ path: path.join(SHOTS, 'e21-her-page-vi-certificate-requested.png') });
+    assert.ok(fake.tables.introductions.find((x) => x.id === maiIntro.id).expiry_paused_at);
+    // team: send the request to him (R22)
+    ({ ctx: actx, page: ap } = await adminPage(browser, MOBILE, base, fake, '#client-' + client.id));
+    const maiRow = '.cl-introrow:has(a:text-is("3. Mai"))';
+    await ap.locator(maiRow + ' .cl-certreq').waitFor();
+    await ap.locator(maiRow).screenshot({ path: path.join(SHOTS, 'e22-team-certificate-requested-375.png') });
+    await ap.click(maiRow + ' button:has-text("Send certificate request")');
+    await ap.click('.ad-modal-box .btn--primary');
+    await ap.locator(maiRow + ' .cl-certreq:has-text("Waiting for his answer")').waitFor();
+    const r22 = sentEmails.filter((m) => m.to === 'michael@example.com' && /official certificate/.test(m.subject)).pop();
+    assert.ok(r22, 'R22 sent');
+    // his page: optional upload
+    const hctx = await newContext(browser, MOBILE);
+    const hp = await hctx.newPage();
+    hp.on('dialog', (d) => d.accept());
+    await hp.goto(base + '/client#t=' + tokenFrom(r22.text));
+    await hp.locator('.cl-certcard').waitFor();
+    await hp.locator('.cl-certcard').scrollIntoViewIfNeeded();
+    await hp.locator('.cl-certcard').screenshot({ path: path.join(SHOTS, 'e23-client-certificate-request.png') });
+    await hp.setInputFiles('.cl-certcard input[type=file]', { name: 'certificate.pdf', mimeType: 'application/pdf', buffer: Buffer.concat([Buffer.from('%PDF-1.7\n'), Buffer.alloc(400, 32)]) });
+    await hp.locator('.cl-certcard:has-text("reached us safely")').waitFor();
+    await hp.locator('.cl-certcard').screenshot({ path: path.join(SHOTS, 'e24-client-certificate-uploaded.png') });
+    // team: open it, then mark as seen
+    await ap.reload();
+    await ap.locator(maiRow + ' button:has-text("Mark as seen")').waitFor();
+    await ap.click(maiRow + ' button:has-text("Open certificate")');
+    await ap.locator('#cl-intro-out a:has-text("requested certificate")').waitFor();
+    await ap.locator(maiRow).screenshot({ path: path.join(SHOTS, 'e25-team-certificate-provided-375.png') });
+    await ap.click(maiRow + ' button:has-text("Mark as seen")');
+    await ap.click('.ad-modal-box .btn--primary');
+    await ap.locator(maiRow + ' .cl-certreq:has-text("Seen by")').waitFor();
+    // her page shows it, in both languages
+    await mp.reload();
+    await mp.locator('.in-cert-line.is-provided').waitFor();
+    assert.equal(await mp.textContent('.in-cert-line.is-provided'), '✓ Anh ấy đã cung cấp phiếu lý lịch tư pháp');
+    assert.ok((await mp.getAttribute('#in-cert-view', 'href')).includes('/certificate/'));
+    await mp.locator('.in-cert').screenshot({ path: path.join(SHOTS, 'e26-her-page-vi-certificate-provided.png') });
+    await mctx.close();
+    const mectx = await newContext(browser, MOBILE);
+    const mep = await mectx.newPage();
+    await mep.goto(base + '/introduction#t=' + maiToken);
+    await mep.locator('.in-cert-line.is-provided').waitFor();
+    assert.equal(await mep.textContent('.in-cert-line.is-provided'), '✓ He has provided an official certificate');
+    await mep.locator('.in-cert').screenshot({ path: path.join(SHOTS, 'e27-her-page-en-certificate-provided.png') });
+    await mectx.close();
+
+    // ------------------------------------------------------------ he declines (Thu, English page, then Vietnamese)
+    console.log('Certificate on request: declined');
+    const thuIntro = fake.tables.introductions.find((x) => x.candidate_id === women[3].id);
+    const st = await call('admin-intro', { id: client.id, op: 'send', introId: thuIntro.id }, { headers: S.adminToken('huyen@heritage-union.com') });
+    const thuToken = tokenFrom(st.body.zalo);
+    const tctx = await newContext(browser, MOBILE);
+    const tp = await tctx.newPage();
+    await tp.goto(base + '/introduction#t=' + thuToken);
+    await tp.locator('#in-cert').click();
+    await tp.locator('#in-send-cert').waitFor();
+    await tp.locator('.in-actions').screenshot({ path: path.join(SHOTS, 'e28-her-page-en-ask-for-certificate.png') });
+    await tp.click('#in-send-cert');
+    await tp.locator('.in-cert').waitFor();
+    await ap.reload();
+    const thuRow = '.cl-introrow:has(a:text-is("4. Thu"))';
+    await ap.click(thuRow + ' button:has-text("Send certificate request")');
+    await ap.click('.ad-modal-box .btn--primary');
+    await ap.locator(thuRow + ' .cl-certreq:has-text("Waiting for his answer")').waitFor();
+    const r22b = sentEmails.filter((m) => m.to === 'michael@example.com' && /Thu would like an official certificate/.test(m.subject)).pop();
+    await hp.goto('about:blank');
+    await hp.goto(base + '/client#t=' + tokenFrom(r22b.text));
+    await hp.locator('.cl-certcard:has-text("Thu") button:has-text("rather not")').click();
+    await hp.locator('.cl-certcard:has-text("You chose not to provide one")').waitFor();
+    await hctx.close();
+    await tp.reload();
+    await tp.locator('.in-cert-line.is-declined').waitFor();
+    assert.equal(await tp.textContent('.in-cert-line.is-declined'), 'He chose not to provide one.');
+    await tp.locator('.in-cert').screenshot({ path: path.join(SHOTS, 'e29-her-page-en-certificate-declined.png') });
+    await tctx.close();
+    const tvctx = await newContext(browser, MOBILE, 'vi-VN');
+    const tvp = await tvctx.newPage();
+    await tvp.goto(base + '/vi/gioi-thieu#t=' + thuToken);
+    await tvp.locator('.in-cert-line.is-declined').waitFor();
+    assert.equal(await tvp.textContent('.in-cert-line.is-declined'), 'Anh ấy đã chọn không cung cấp phiếu lý lịch tư pháp.');
+    await tvp.locator('.in-cert').screenshot({ path: path.join(SHOTS, 'e30-her-page-vi-certificate-declined.png') });
+    await tvctx.close();
+    await ap.reload();
+    await ap.locator(thuRow + ' .cl-certreq:has-text("chose not to provide")').waitFor();
+    await actx.close();
+
     // ------------------------------------------------------------ desktop: her page; expired link
     const dctx = await newContext(browser, DESKTOP, 'vi-VN');
     const dp = await dctx.newPage();
-    const maiIntro = fake.tables.introductions.find((x) => x.candidate_id === women[2].id);
-    const s = await call('admin-intro', { id: client.id, op: 'send', introId: maiIntro.id }, { headers: S.adminToken('huyen@heritage-union.com') });
-    await dp.goto(base + '/vi/gioi-thieu#t=' + tokenFrom(s.body.zalo));
+    await dp.goto(base + '/vi/gioi-thieu#t=' + maiToken);
     await dp.locator('.in-him').waitFor();
     await shot(dp, 'her-page-vi-desktop');
     fake.tables.introductions.find((x) => x.id === maiIntro.id).decision_token_expires_at = ago(1);

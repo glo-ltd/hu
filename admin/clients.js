@@ -40,7 +40,10 @@
     profile_summary_send: 'Summary sent for approval (R9)', profile_translate: 'Translations saved', summary_approved: 'Approved his summary (R10)',
     summary_changes_requested: 'Asked for changes to his summary', intro_send: 'Request sent to her (R13)', intro_resend: 'New decision link made',
     intro_introduce: 'Introduced (R15, R16)', intro_cancel: 'Request cancelled', intro_answered: 'Her question answered', intro_accepted: 'She said yes',
-    intro_declined: 'She said no (R17 to him)', intro_question: 'She asked a question', replacement_chosen: 'He chose a replacement', shortlist_sent: 'Shortlist sent (R11)', choices_submitted: 'Sent his choices (R12)',
+    intro_declined: 'She said no (R17 to him)', intro_question: 'She asked a question',
+    intro_cert_requested: 'She asked for an official certificate', intro_cert_request: 'Certificate request sent to him (R22)',
+    intro_cert_provided: 'He provided a certificate', intro_cert_declined: 'He chose not to provide a certificate',
+    intro_cert_view: 'Certificate opened', intro_cert_seen: 'Certificate marked as seen', replacement_chosen: 'He chose a replacement', shortlist_sent: 'Shortlist sent (R11)', choices_submitted: 'Sent his choices (R12)',
     invoice_create: 'Invoice drafted', invoice_update: 'Invoice draft changed',
     invoice_send: 'Invoice sent (R7)', invoice_paid: 'Payment received (R8 welcome)', invoice_void: 'Invoice voided',
   };
@@ -589,10 +592,30 @@
       x.questions.forEach(function (q) {
         row.appendChild(el('div', { class: 'cl-question' }, [el('span', { class: 'ad-card-sub', text: 'Her question, ' + H.fmtDateTime(q.at) + (q.answeredAt ? ' · answered by ' + q.answeredBy : '') }), el('p', { lang: 'vi', text: q.message })]));
       });
+      if (x.cert) {
+        var cs = x.cert;
+        var line = cs.response === 'declined' ? 'He chose not to provide one (' + H.fmtDate(cs.respondedAt) + '). Her page tells her so.'
+          : cs.seenAt ? 'He provided one. Seen by ' + cs.seenBy + ' ' + H.fmtDate(cs.seenAt) + '; her page shows it with a 10-minute link.'
+          : cs.response === 'provided' ? 'He uploaded one ' + H.fmtDate(cs.respondedAt) + '. Open it, then mark it as seen so she can see it.'
+          : cs.sentAt ? 'Request sent to him ' + H.fmtDate(cs.sentAt) + ' by ' + cs.sentBy + '. Waiting for his answer.'
+          : 'Tap "Send certificate request" to email him (R22).';
+        row.appendChild(el('div', { class: 'cl-consent-record cl-certreq' }, [
+          el('strong', { text: 'She asked for an official background check (' + H.fmtDate(cs.requestedAt) + ')' }),
+          el('span', { text: line }),
+          cs.paused ? el('span', { class: 'ad-card-sub', text: 'Her 30-day expiry is paused until he answers or the certificate is marked as seen.' }) : null,
+        ].filter(Boolean)));
+      }
       var acts = el('div', { class: 'ad-translate-row' });
       function op(name, done, confirmText) {
         var go = function () {
           H.api('admin-intro', { id: c.id, op: name, introId: x.id }).then(function (r) {
+            if (r.url) {
+              var o2 = $('cl-intro-out');
+              o2.innerHTML = '';
+              o2.appendChild(el('p', { class: 'form-note', role: 'status' }, [el('a', { class: 'btn btn--secondary btn--sm', href: r.url, target: '_blank', rel: 'noopener', text: 'Open ' + x.name + '\u2019s requested certificate' }), el('span', { text: ' The link works for 10 minutes.' })]));
+              o2.scrollIntoView({ block: 'center' });
+              return;
+            }
             H.flash(done);
             loadDetail(c.id, r.zalo ? function () {
               var o = $('cl-intro-out');
@@ -611,6 +634,11 @@
       if (x.status === 'accepted') acts.appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--sm', text: 'Introduce (R15 to him, R16 to her)', onclick: op('introduce', 'Introduced. Copy her message into Zalo.', ['Introduce them?', 'He receives R15 with the details she chose. She receives R16 with his email and phone, and you get the message to paste into Zalo.', 'Introduce']) }));
       if (['queued', 'ready', 'sent', 'opened'].indexOf(x.status) !== -1) acts.appendChild(el('button', { type: 'button', class: 'ad-link', text: 'Cancel request', onclick: op('cancel', 'Request cancelled.', ['Cancel this request?', 'He will see "No longer available". Her link stops working.', 'Cancel request']) }));
       if (x.questions.some(function (q) { return !q.answeredAt; })) acts.appendChild(el('button', { type: 'button', class: 'btn btn--secondary btn--sm', text: 'Mark question answered', onclick: op('answered', 'Marked answered.') }));
+      if (x.cert && !x.cert.response && (x.status === 'sent' || x.status === 'opened')) acts.appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--sm', text: x.cert.sentAt ? 'Send certificate request again' : 'Send certificate request', onclick: op('cert_request', 'Certificate request sent to him (R22).', ['Send him the certificate request?', 'He receives R22: ' + x.name + ' would like him to provide an official criminal record certificate before she decides. He may agree or decline. The email has a fresh link to his page; his old link stops working.', 'Send request']) }));
+      if (x.cert && x.cert.response === 'provided') {
+        acts.appendChild(el('button', { type: 'button', class: 'btn btn--secondary btn--sm', text: 'Open certificate (10 minutes)', onclick: op('cert_view', '') }));
+        if (!x.cert.seenAt) acts.appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--sm', text: 'Mark as seen', onclick: op('cert_seen', 'Marked as seen. Her page now shows it.', ['Mark the certificate as seen?', 'Her page will show "He has provided an official certificate", with a 10-minute link to it, and her 30-day expiry runs again.', 'Mark as seen']) }));
+      }
       if (acts.firstChild) row.appendChild(acts);
       sec.appendChild(row);
     });

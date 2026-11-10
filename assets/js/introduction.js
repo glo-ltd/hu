@@ -5,7 +5,8 @@
  * language switch carries it across.
  * She reads his profile, photos, message and background declaration in her
  * language, then chooses: yes (and exactly what to share), no (a private
- * reason is optional), or a question first.
+ * reason is optional), a question first, or to ask him for an official
+ * background check first. Heritage Union does not check his declaration.
  */
 (function () {
   'use strict';
@@ -27,13 +28,23 @@
       about: 'Giới thiệu về anh ấy', message: 'Lời nhắn của anh ấy gửi bạn', photos: 'Ảnh của anh ấy',
       decl: 'Bản khai lý lịch của anh ấy',
       declIntro: 'Anh ấy tự viết và ký bản khai này, đồng ý cho bạn đọc. Câu trả lời “Có” được đánh dấu để bạn dễ thấy.',
-      checked: function (d) { return 'Heritage Union đã kiểm tra giấy tờ tùy thân có ảnh và giấy xác nhận lý lịch tư pháp chính thức của anh ấy' + (d ? ' (ngày ' + d + ').' : '.'); },
+      notChecked: 'Đây là bản khai do chính anh ấy ký. Heritage Union không kiểm tra bản khai này.',
       rightsTitle: 'Quyền của bạn',
       rights: ['Hoàn toàn miễn phí. Bạn không bao giờ phải trả bất kỳ khoản tiền nào.', 'Bạn không có nghĩa vụ gì. Bạn có thể từ chối mà không cần nêu lý do.',
-        'Thông tin liên lạc của bạn chỉ được gửi cho anh ấy nếu bạn đồng ý, và chỉ những gì bạn chọn.', 'Bạn có thể rút đăng ký bất cứ lúc nào.'],
+        'Thông tin liên lạc của bạn chỉ được gửi cho anh ấy nếu bạn đồng ý, và chỉ những gì bạn chọn.', 'Trước khi quyết định, bạn có thể yêu cầu anh ấy cung cấp phiếu lý lịch tư pháp.', 'Bạn có thể rút đăng ký bất cứ lúc nào.'],
       concern: 'Nếu có điều gì khiến bạn lo ngại, hãy báo cho chúng tôi:', concernLink: 'Báo cáo một vấn đề',
       decide: 'Bạn muốn trả lời thế nào?',
-      yes: 'Có, tôi muốn được giới thiệu', no: 'Không, cảm ơn', ask: 'Tôi muốn hỏi trước',
+      yes: 'Có, tôi muốn được giới thiệu', no: 'Không, cảm ơn', ask: 'Tôi muốn hỏi trước', cert: 'Yêu cầu anh ấy cung cấp phiếu lý lịch tư pháp trước',
+      certHelp: 'Phiếu lý lịch tư pháp là giấy tờ chính thức do cơ quan nhà nước ở nước anh ấy cấp, cho biết anh ấy có tiền án hay không. Heritage Union sẽ chuyển yêu cầu của bạn đến anh ấy. Anh ấy có thể đồng ý hoặc từ chối, và chúng tôi sẽ cho bạn biết trên trang này. Trong lúc chờ, lời mời vẫn được giữ nguyên và thời hạn 30 ngày được tạm dừng.',
+      certSend: 'Gửi yêu cầu',
+      certTitle: 'Phiếu lý lịch tư pháp',
+      certWaiting: 'Bạn đã yêu cầu anh ấy cung cấp phiếu lý lịch tư pháp. Heritage Union sẽ chuyển yêu cầu đến anh ấy và cho bạn biết trên trang này khi anh ấy trả lời. Lời mời vẫn được giữ nguyên và thời hạn 30 ngày đang tạm dừng. Bạn vẫn có thể trả lời bất cứ lúc nào.',
+      certProvided: 'Anh ấy đã cung cấp phiếu lý lịch tư pháp',
+      certView: 'Xem phiếu lý lịch tư pháp',
+      certViewNote: 'Heritage Union đã xem phiếu này nhưng không xác minh với cơ quan cấp. Đường link chỉ dùng được trong 10 phút; nếu hết hạn, bạn hãy tải lại trang.',
+      certDeclined: 'Anh ấy đã chọn không cung cấp phiếu lý lịch tư pháp.',
+      certDeclinedNote: 'Bạn vẫn hoàn toàn tự do quyết định.',
+      paused: 'Thời hạn 30 ngày đang tạm dừng trong lúc chờ anh ấy trả lời.',
       shareTitle: 'Bạn muốn chia sẻ thông tin nào với anh ấy?', shareHelp: 'Chỉ những thông tin bạn đánh dấu mới được gửi cho anh ấy. Bạn có thể sửa lại.',
       zalo: 'Zalo', email: 'Email', phone: 'Điện thoại',
       contactTitle: 'Bạn muốn được liên lạc lần đầu bằng cách nào?', messages: 'Nhắn tin', voice: 'Gọi thoại', video: 'Gọi video',
@@ -65,13 +76,23 @@
       about: 'About him', message: 'His message to you', photos: 'His photos',
       decl: 'His background declaration',
       declIntro: 'He wrote and signed this declaration himself, and agreed that you may read it. Any “Yes” is highlighted so you can see it easily.',
-      checked: function (d) { return 'Heritage Union has checked his photo ID and his official criminal record certificate' + (d ? ' (' + d + ').' : '.'); },
+      notChecked: 'This is his own signed declaration. Heritage Union has not checked it.',
       rightsTitle: 'Your rights',
       rights: ['It is free. You never pay anything.', 'You are under no obligation. You can say no without giving any reason.',
-        'Your contact details are only sent to him if you agree, and only the ones you choose.', 'You can withdraw your registration at any time.'],
+        'Your contact details are only sent to him if you agree, and only the ones you choose.', 'Before you decide, you can ask him for an official background check.', 'You can withdraw your registration at any time.'],
       concern: 'If anything worries you, tell us:', concernLink: 'Report a concern',
       decide: 'How would you like to answer?',
-      yes: 'Yes, I\'d like to be introduced', no: 'No, thank you', ask: 'I have a question first',
+      yes: 'Yes, I\'d like to be introduced', no: 'No, thank you', ask: 'I have a question first', cert: 'Ask him for an official background check first',
+      certHelp: 'An official background check is a criminal record certificate issued by the authorities in his country, showing whether he has any convictions. Heritage Union will pass your request to him. He may agree or decline, and we will tell you on this page. Meanwhile your request stays open, and the 30-day limit is paused.',
+      certSend: 'Send my request',
+      certTitle: 'Official background check',
+      certWaiting: 'You asked him for an official criminal record certificate. Heritage Union will pass your request to him and tell you on this page when he answers. Your request stays open, and the 30-day limit is paused. You can still answer at any time.',
+      certProvided: 'He has provided an official certificate',
+      certView: 'View the certificate',
+      certViewNote: 'Heritage Union has looked at it but cannot confirm it with the authority that issued it. The link works for 10 minutes; if it expires, reload the page.',
+      certDeclined: 'He chose not to provide one.',
+      certDeclinedNote: 'You are still completely free to decide.',
+      paused: 'The 30-day limit is paused while we wait for his answer.',
       shareTitle: 'Which details would you like to share with him?', shareHelp: 'Only the details you tick are sent to him. You can edit them.',
       zalo: 'Zalo', email: 'Email', phone: 'Phone',
       contactTitle: 'How would you like the first contact to be?', messages: 'Messages', voice: 'Voice call', video: 'Video call',
@@ -170,8 +191,8 @@
     // Declaration
     var dl = el('dl', { class: 'in-decl' });
     h.declaration.forEach(function (it) { dl.appendChild(el('dt', { text: it.label })); dl.appendChild(el('dd', { class: it.flag ? 'is-yes' : '', text: it.text })); });
-    var checkedDate = h.checked && h.checked.id && h.checked.certificate ? fmt(h.checked.certificate > h.checked.id ? h.checked.certificate : h.checked.id) : '';
-    app.appendChild(section(TX.decl, [el('p', { class: 'pf-help', text: TX.declIntro }), dl, el('p', { class: 'in-checked', text: '✓ ' + TX.checked(checkedDate) })]));
+    app.appendChild(section(TX.decl, [el('p', { class: 'pf-help', text: TX.declIntro }), dl, el('p', { class: 'in-notchecked', id: 'in-notchecked', text: TX.notChecked })]));
+    if (D.certificate && D.certificate.requested) app.appendChild(certStatus());
 
     // Rights
     app.appendChild(section(TX.rightsTitle, [
@@ -180,6 +201,23 @@
     ], 'in-rights-box'));
 
     if (!D.decision) app.appendChild(actions());
+  }
+
+  // The official certificate she asked him for, if any.
+  function certStatus() {
+    var c = D.certificate;
+    var kids = [];
+    if (c.status === 'provided') {
+      kids.push(el('p', { class: 'in-cert-line is-provided', text: '✓ ' + TX.certProvided }));
+      if (c.url) kids.push(el('p', {}, [el('a', { class: 'btn btn--secondary btn--md', id: 'in-cert-view', href: c.url, target: '_blank', rel: 'noopener', text: TX.certView })]));
+      kids.push(el('p', { class: 'pf-help', text: TX.certViewNote }));
+    } else if (c.status === 'declined') {
+      kids.push(el('p', { class: 'in-cert-line is-declined', text: TX.certDeclined }));
+      kids.push(el('p', { class: 'pf-help', text: TX.certDeclinedNote }));
+    } else {
+      kids.push(el('p', { class: 'in-cert-line', text: TX.certWaiting }));
+    }
+    return section(TX.certTitle, kids, 'in-cert');
   }
 
   function outcome() {
@@ -198,12 +236,14 @@
   }
 
   function actions() {
-    var box = section(TX.decide, [el('p', { class: 'pf-help', text: TX.expires(fmt(D.expiresAt)) })], 'in-actions');
+    var box = section(TX.decide, [el('p', { class: 'pf-help', text: D.expiryPaused ? TX.paused : TX.expires(fmt(D.expiresAt)) })], 'in-actions');
     var panel = el('div', { class: 'in-panel' });
     var buttons = el('div', { class: 'in-choices' }, [
       el('button', { type: 'button', class: 'btn btn--primary btn--md in-btn', id: 'in-yes', 'aria-expanded': 'false', text: TX.yes, onclick: function (e) { open(e, yesForm()); } }),
       el('button', { type: 'button', class: 'btn btn--secondary btn--md in-btn', id: 'in-no', 'aria-expanded': 'false', text: TX.no, onclick: function (e) { open(e, noForm()); } }),
       el('button', { type: 'button', class: 'btn btn--secondary btn--md in-btn', id: 'in-ask', 'aria-expanded': 'false', text: TX.ask, onclick: function (e) { open(e, askForm()); } }),
+      D.certificate && D.certificate.requested ? null
+        : el('button', { type: 'button', class: 'btn btn--secondary btn--md in-btn', id: 'in-cert', 'aria-expanded': 'false', text: TX.cert, onclick: function (e) { open(e, certForm()); } }),
     ]);
     function open(e, form) {
       buttons.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-expanded', b === e.currentTarget ? 'true' : 'false'); });
@@ -284,6 +324,16 @@
       api('intro-question', { message: msg.value }).then(function () { wrap.innerHTML = ''; wrap.appendChild(el('p', { class: 'in-done', role: 'status', text: TX.askDone })); }, function (e) { if (!e.fatal) { err.textContent = e.message; send.disabled = false; } });
     });
     return wrap;
+  }
+
+  function certForm() {
+    var err = errorLine();
+    var send = el('button', { type: 'button', class: 'btn btn--primary btn--md in-btn', id: 'in-send-cert', text: TX.certSend });
+    send.addEventListener('click', function () {
+      send.disabled = true;
+      api('intro-cert-request', {}).then(function () { reload(); }, function (e) { if (!e.fatal) { err.textContent = e.message; send.disabled = false; } });
+    });
+    return el('div', { class: 'in-form' }, [el('p', { text: TX.certHelp }), err, send]);
   }
 
   function reload() { api('intro-get').then(function (d) { D = d; render(); window.scrollTo(0, 0); }, function () {}); }

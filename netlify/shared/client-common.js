@@ -310,7 +310,7 @@ async function engagementState(supabase, client) {
   const prof = pr.data;
   const ch = await supabase.from('client_choices').select('candidate_id, rank').eq('client_id', client.id);
   if (ch.error) throw ch.error;
-  const it = await supabase.from('introductions').select('candidate_id, rank, status, is_replacement').eq('client_id', client.id);
+  const it = await supabase.from('introductions').select('id, candidate_id, rank, status, is_replacement, cert_request_sent_at, cert_response').eq('client_id', client.id);
   if (it.error) throw it.error;
   const names = {};
   const ids = (it.data || []).map((x) => x.candidate_id);
@@ -319,8 +319,13 @@ async function engagementState(supabase, client) {
   const HIS_STATUS = { queued: 'waiting', ready: 'waiting', sent: 'waiting', opened: 'waiting', accepted: 'waiting', introduced: 'introduced', declined: 'not_this_time', expired: 'not_this_time', cancelled: 'unavailable' };
   const intros = (it.data || []).sort((a, b) => a.rank - b.rank).map((x) => ({ candidateId: x.candidate_id, name: names[x.candidate_id] || '', status: HIS_STATUS[x.status], replacement: x.is_replacement }));
   const used = (it.data || []).filter((x) => ['declined', 'expired', 'cancelled'].indexOf(x.status) === -1).length;
+  // A woman asked him for an official certificate (optional): only her first
+  // name, while her request is open, and whether he has answered.
+  const certificateRequests = (it.data || []).filter((x) => x.cert_request_sent_at && ['sent', 'opened'].indexOf(x.status) !== -1)
+    .map((x) => ({ introId: x.id, name: names[x.candidate_id] || '', answered: x.cert_response || null }));
   return {
     introductions: intros,
+    certificateRequests,
     introductionsUsed: used,
     canReplace: client.status === 'active' && !!client.choices_submitted_at && used < C.MAX_INTRODUCTIONS && intros.some((x) => x.status === 'not_this_time' || x.status === 'unavailable'),
     profile: {
