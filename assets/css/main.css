@@ -1776,3 +1776,30 @@ select.form-input { cursor: pointer; }
 }
 .ty-profile-cta[hidden] { display: none; }
 .ty-profile-cta .btn { width: 100%; max-width: 420px; text-transform: none; letter-spacing: 0.01em; }
+
+/* ============================================================
+   CLIENT ENQUIRY FORM (/contact)
+   ============================================================ */
+.enquiry-form fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.enq-choices { display: grid; gap: 8px; margin-top: 10px; }
+.enq-choice {
+  display: flex; gap: 12px; align-items: center; padding: 14px 16px; min-height: 52px;
+  background: var(--white); border: 1px solid var(--cream-300); border-radius: var(--radius-sm); cursor: pointer; font-size: 16px;
+}
+.enq-choice input { width: 20px; height: 20px; margin: 0; accent-color: var(--burgundy-700); flex: 0 0 auto; }
+.enq-choice:has(input:checked) { border-color: var(--burgundy-700); background: var(--burgundy-050); }
+.enq-choice:focus-within { box-shadow: var(--shadow-focus); }
+.enq-fields { display: grid; gap: 20px; }
+.enq-fields[hidden], .enq-woman[hidden], .enq-success[hidden], #enq-age-field[hidden] { display: none; }
+.enq-row { display: grid; grid-template-columns: 1fr 110px; gap: 14px; }
+.enq-optional { text-transform: none; letter-spacing: 0; color: var(--ink-400); }
+.enq-consent { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5; cursor: pointer; }
+.enq-consent input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--burgundy-700); flex: 0 0 auto; }
+.enq-woman { padding: 18px; background: var(--white); border: 1px solid var(--gold-300); border-radius: var(--radius-sm); display: grid; gap: 12px; }
+.enq-woman p:last-child { display: flex; flex-wrap: wrap; gap: 10px; }
+.enq-woman .btn { text-transform: none; }
+.enq-field-error { color: #8A3A36; font-size: 14px; }
+.form-input[aria-invalid="true"], .form-textarea[aria-invalid="true"] { border-color: #B9564F; }
+#enq-turnstile:empty { display: none; }
+.enq-success { text-align: left; background: var(--white); border: 1px solid var(--cream-300); border-top: 3px solid var(--gold-500); border-radius: var(--radius-sm); padding: 28px; }
+.enquiry-form[hidden] { display: none; }

@@ -9,11 +9,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/assets/css/main.css?v=5">
-  <link rel="stylesheet" href="/admin/admin.css?v=2">
+  <link rel="stylesheet" href="/admin/admin.css?v=3">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 44'%3E%3Ccircle cx='26' cy='22' r='12' fill='none' stroke='%235E2A2E' stroke-width='2'/%3E%3Ccircle cx='38' cy='22' r='12' fill='none' stroke='%23C2A35A' stroke-width='2'/%3E%3C/svg%3E">
   <!-- supabase-js pinned to an exact version; integrity hash computed from the npm package of the same version. -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous" defer></script>
-  <script src="/admin/admin.js?v=1" defer></script>
+  <script src="/admin/admin.js?v=3" defer></script>
+  <script src="/admin/clients.js?v=1" defer></script>
 </head>
 <body class="ad-body">
 <header class="ad-header">
@@ -24,6 +25,10 @@
   <span class="ad-me"><span id="ad-me"></span> <button type="button" id="ad-signout" class="ad-link" hidden>Sign out</button></span>
 </header>
 
+<nav id="ad-tabs" class="ad-tabs" aria-label="Team page sections" hidden>
+  <a class="ad-tab" data-tab="candidates" href="#">Candidates</a>
+  <a class="ad-tab" data-tab="clients" href="#clients">Clients</a>
+</nav>
 <main class="ad-main">
   <p id="ad-flash" class="ad-flash" role="status" aria-live="polite" hidden></p>
 
@@ -54,6 +59,8 @@
   </section>
 
   <section id="ad-detail" hidden></section>
+  <section id="ad-clients" hidden></section>
+  <section id="ad-client-detail" hidden></section>
 </main>
 
 <div id="ad-modal" class="ad-modal" hidden>

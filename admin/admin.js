@@ -79,11 +79,17 @@
   // ------------------------------------------------------------------ auth
 
   function show(id) {
-    ['ad-signin', 'ad-list', 'ad-detail'].forEach(function (x) { $(x).hidden = x !== id; });
+    ['ad-signin', 'ad-list', 'ad-detail', 'ad-clients', 'ad-client-detail'].forEach(function (x) { if ($(x)) $(x).hidden = x !== id; });
+    var clientsTab = id === 'ad-clients' || id === 'ad-client-detail';
+    document.querySelectorAll('.ad-tab').forEach(function (t) {
+      var on = (t.getAttribute('data-tab') === 'clients') === clientsTab;
+      if (on) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current');
+    });
   }
 
   function signedOut(message) {
     session = null;
+    if ($('ad-tabs')) $('ad-tabs').hidden = true;
     $('ad-me').textContent = '';
     $('ad-signout').hidden = true;
     show('ad-signin');
@@ -98,7 +104,7 @@
     // Remember which candidate the email link pointed to. localStorage (not
     // sessionStorage) because the sign-in link usually opens in a new tab.
     // Only her reference number is kept, and only for an hour.
-    try { if (/^[0-9a-f-]{36}$/i.test(target)) localStorage.setItem(NEXT_KEY, JSON.stringify({ id: target, at: Date.now() })); } catch (err) {}
+    try { if (/^(client-)?[0-9a-f-]{36}$|^clients$/i.test(target)) localStorage.setItem(NEXT_KEY, JSON.stringify({ id: target, at: Date.now() })); } catch (err) {}
     $('ad-signin-msg').textContent = 'Sending…';
     sb.auth.signInWithOtp({
       email: email,
@@ -124,9 +130,10 @@
     try {
       var saved = JSON.parse(localStorage.getItem(NEXT_KEY) || 'null');
       localStorage.removeItem(NEXT_KEY);
-      if (saved && /^[0-9a-f-]{36}$/i.test(saved.id) && Date.now() - saved.at < 3600000) next = saved.id;
+      if (saved && /^(client-)?[0-9a-f-]{36}$|^clients$/i.test(saved.id) && Date.now() - saved.at < 3600000) next = saved.id;
     } catch (err) {}
-    if (next && !/^#[0-9a-f-]{36}$/i.test(location.hash)) { location.hash = next; return; }
+    $('ad-tabs').hidden = false;
+    if (next && !/^#(client-)?[0-9a-f-]{36}$/i.test(location.hash)) { location.hash = next; return; }
     route();
   }
 
@@ -139,6 +146,7 @@
 
   function route() {
     if (!session) return;
+    if (/^#client/.test(location.hash) && window.HUClients) { window.HUClients.route(location.hash); return; }
     var id = currentId();
     if (id) loadDetail(id); else loadList();
   }
@@ -532,6 +540,9 @@
       $('ad-signin-msg').textContent = err.message || 'Sign-in is not available.';
     });
   }
+
+  // Shared with the Clients tab (admin/clients.js).
+  window.HUAdmin = { api: api, el: el, flash: flash, fmtDate: fmtDate, fmtDateTime: fmtDateTime, daysSince: daysSince, show: show, fold: fold, me: function () { return session && session.user ? session.user.email : ''; } };
 
   start();
 })();

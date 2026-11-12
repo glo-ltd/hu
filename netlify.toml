@@ -23,6 +23,14 @@
     Cache-Control = "no-store"
     Referrer-Policy = "no-referrer"
 
+# The client's private page: never indexed, never cached, no referrer.
+[[headers]]
+  for = "/client*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+    Referrer-Policy = "no-referrer"
+
 # Her private profile page: never indexed; no referrer ever leaves it.
 [[headers]]
   for = "/vi/ho-so*"

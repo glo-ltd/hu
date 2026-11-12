@@ -14,7 +14,7 @@ here is committed to the repo — these are secrets.
 
 | Variable | Value | Notes |
 | --- | --- | --- |
-| `CANDIDATE_SIGNUPS_OPEN` | `false` (default) or `true` | Keep this `false` until legal sign-off is confirmed. While `false`, the register page shows a waitlist form instead of the full registration form, and the function stores only name + contact + consent to be notified. Set to `true` only when told to by James. The full form only appears when this is `true` **and** both `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET` are set; if either key is missing, the page keeps showing the waitlist so women never meet a form they can't submit. |
+| `CANDIDATE_SIGNUPS_OPEN` | `false` (default) or `true` | Keep this `false` until legal sign-off is confirmed. While `false`, the register page shows a waitlist form instead of the full registration form, and the function stores only name + contact + consent to be notified. Set to `true` only when told to by James. The full form only appears when this is `true` **and** both `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET` are set (the same two keys also protect the client enquiry form on /contact whenever they are set); if either key is missing, the page keeps showing the waitlist so women never meet a form they can't submit. |
 
 ## 3. Supabase (candidate data storage)
 
@@ -67,6 +67,23 @@ does these by hand:
 3. **SMTP Settings**: turn on custom SMTP and use Resend (host `smtp.resend.com`, port `465`, user `resend`, password = a Resend API key, sender `team@heritage-union.com`). Without this, Supabase's built-in email is heavily rate-limited.
 4. **Users → Invite user**: invite James and Huyen by email. They follow the invite once; after that they sign in from `/admin/` with "Email me a sign-in link".
 
+### 3c. Clients (enquiry to payment)
+
+Run `supabase/migrations/2026-12-client-phase-1.sql` once (James asks Claude in
+chat to apply it). It is safe to run more than once. It adds the `clients`,
+`client_events`, `client_invoices` and `general_enquiries` tables (RLS on, no
+policies) and the private `client-documents` Storage bucket for his photos and
+any certificate he chooses to give when a woman asks (10 MB; PDF, JPEG,
+PNG). A new project gets the same from `supabase/schema.sql`.
+
+| Variable | Value |
+| --- | --- |
+| `CLIENT_SIGNUPS_OPEN` | `false` (default) or `true`. Keep it `false` until the client agreement is final. While it is off, the enquiry form still works, but the team page can't send application links and his private page (`/client`) shows "not available yet". |
+| `INVOICE_PAYMENT_DETAILS` | The bank details printed on every invoice and in the invoice email, several lines, e.g. `Account name: …`, `Bank: …`, `IBAN: …`, `SWIFT/BIC: …`. Never committed to the repo. Invoices can be drafted without it but not sent. |
+
+The fees, invoice numbering, link lengths and the other client-side
+decisions live in `netlify/shared/client-config.js`.
+
 ## 4. Cloudflare Turnstile (spam protection on the registration form)
 
 1. In the [Cloudflare dashboard](https://dash.cloudflare.com/), go to **Turnstile** and add a new site for `heritage-union.com` (and your Netlify preview domain, if you want previews to work too).
@@ -84,6 +101,8 @@ RESEND_API_KEY=            (existing)
 CANDIDATE_SIGNUPS_OPEN=false
 SUPABASE_URL=
 SUPABASE_SERVICE_ROLE_KEY=
+CLIENT_SIGNUPS_OPEN=false   (new: clients; true once the agreement is final)
+INVOICE_PAYMENT_DETAILS=    (new: bank details for invoices, multi-line)
 SUPABASE_ANON_KEY=         (new: publishable key, for /admin/ sign-in)
 ADMIN_EMAILS=              (new: e.g. james@heritage-union.com,huyen@heritage-union.com)
 TURNSTILE_SITE_KEY=

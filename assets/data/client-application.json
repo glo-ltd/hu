@@ -1,0 +1,424 @@
+{
+  "version": "2026-12-v2",
+  "declarationText": "I solemnly declare that everything above is true and complete. I understand that Heritage Union does not check it, that each woman I choose will read it before deciding, and that a false declaration ends my agreement without refund.",
+  "sections": [
+    {
+      "id": "application",
+      "step": 1,
+      "title": "Your application",
+      "intro": "Tell us about yourself. Your answers are saved each time you continue, so you can stop and come back with the same link."
+    },
+    {
+      "id": "declaration",
+      "step": 2,
+      "title": "Background declaration",
+      "intro": "Please answer plainly and honestly. Heritage Union does not carry out background checks: this is your own sworn declaration. Any woman you are introduced to will read it in her own language before she decides whether to share her contact details, and she may ask you for an official background check. Answering “yes” to a question does not automatically end your application; not telling us would."
+    },
+    {
+      "id": "agreement",
+      "step": 3,
+      "title": "Client agreement",
+      "intro": "Please read the agreement carefully."
+    },
+    {
+      "id": "review",
+      "step": 4,
+      "title": "Check and send",
+      "intro": "Check your answers, then send your application."
+    }
+  ],
+  "fields": [
+    {
+      "id": "legal_name",
+      "section": "application",
+      "type": "text",
+      "required": true,
+      "label": "Full legal name",
+      "max": 120,
+      "help": "As shown on your passport or photo ID.",
+      "autocomplete": "name"
+    },
+    {
+      "id": "date_of_birth",
+      "section": "application",
+      "type": "date",
+      "required": true,
+      "label": "Date of birth",
+      "help": "You must be 18 or over."
+    },
+    {
+      "id": "nationality",
+      "section": "application",
+      "type": "text",
+      "required": true,
+      "label": "Nationality",
+      "max": 80,
+      "autocomplete": "off"
+    },
+    {
+      "id": "country",
+      "section": "application",
+      "type": "text",
+      "required": true,
+      "label": "Country of residence",
+      "max": 80,
+      "autocomplete": "country-name"
+    },
+    {
+      "id": "city",
+      "section": "application",
+      "type": "text",
+      "required": true,
+      "label": "City or town",
+      "max": 80,
+      "autocomplete": "address-level2"
+    },
+    {
+      "id": "address",
+      "section": "application",
+      "type": "textarea",
+      "required": true,
+      "label": "Home address",
+      "max": 300,
+      "help": "Used only for your invoice. It is never shared.",
+      "autocomplete": "street-address"
+    },
+    {
+      "id": "phone",
+      "section": "application",
+      "type": "tel",
+      "required": true,
+      "label": "Phone",
+      "max": 40,
+      "autocomplete": "tel"
+    },
+    {
+      "id": "email",
+      "section": "application",
+      "type": "email",
+      "required": true,
+      "label": "Email",
+      "max": 200,
+      "autocomplete": "email"
+    },
+    {
+      "id": "preferred_contact",
+      "section": "application",
+      "type": "single",
+      "required": true,
+      "label": "How would you like us to contact you?",
+      "options": [
+        {
+          "value": "email",
+          "label": "Email"
+        },
+        {
+          "value": "phone",
+          "label": "Phone"
+        },
+        {
+          "value": "whatsapp",
+          "label": "WhatsApp"
+        },
+        {
+          "value": "video",
+          "label": "Video call"
+        }
+      ]
+    },
+    {
+      "id": "occupation",
+      "section": "application",
+      "type": "text",
+      "required": true,
+      "label": "Occupation",
+      "max": 120
+    },
+    {
+      "id": "education",
+      "section": "application",
+      "type": "single",
+      "required": true,
+      "label": "Highest education",
+      "options": [
+        {
+          "value": "secondary",
+          "label": "Secondary school"
+        },
+        {
+          "value": "vocational",
+          "label": "Vocational training"
+        },
+        {
+          "value": "college",
+          "label": "College"
+        },
+        {
+          "value": "university",
+          "label": "University degree"
+        },
+        {
+          "value": "postgraduate",
+          "label": "Postgraduate degree"
+        }
+      ]
+    },
+    {
+      "id": "languages",
+      "section": "application",
+      "type": "languages",
+      "required": true,
+      "label": "Languages you speak",
+      "help": "Add each language and your level. Include your first language.",
+      "max": 6,
+      "levels": [
+        {
+          "value": "basic",
+          "label": "Basic"
+        },
+        {
+          "value": "conversational",
+          "label": "Conversational"
+        },
+        {
+          "value": "fluent",
+          "label": "Fluent"
+        },
+        {
+          "value": "native",
+          "label": "Native"
+        }
+      ]
+    },
+    {
+      "id": "marital_status",
+      "section": "application",
+      "type": "single",
+      "required": true,
+      "label": "Marital status",
+      "options": [
+        {
+          "value": "never_married",
+          "label": "Never married"
+        },
+        {
+          "value": "divorced",
+          "label": "Divorced"
+        },
+        {
+          "value": "widowed",
+          "label": "Widowed"
+        },
+        {
+          "value": "separated",
+          "label": "Separated, divorce in progress"
+        }
+      ]
+    },
+    {
+      "id": "children_count",
+      "section": "application",
+      "type": "number",
+      "required": true,
+      "label": "Number of children",
+      "min": 0,
+      "max": 12
+    },
+    {
+      "id": "children_details",
+      "section": "application",
+      "type": "textarea",
+      "required": true,
+      "label": "Their ages, and who they live with",
+      "max": 500,
+      "showIf": {
+        "id": "children_count",
+        "min": 1
+      }
+    },
+    {
+      "id": "visited_vietnam",
+      "section": "application",
+      "type": "single",
+      "required": true,
+      "label": "Have you visited Vietnam before?",
+      "options": [
+        {
+          "value": "no",
+          "label": "No"
+        },
+        {
+          "value": "yes",
+          "label": "Yes"
+        }
+      ]
+    },
+    {
+      "id": "visited_vietnam_details",
+      "section": "application",
+      "type": "text",
+      "required": false,
+      "label": "When, and for how long?",
+      "max": 200,
+      "showIf": {
+        "id": "visited_vietnam",
+        "equals": "yes"
+      }
+    },
+    {
+      "id": "legally_free",
+      "section": "declaration",
+      "type": "confirm",
+      "required": true,
+      "label": "I am legally free to enter this agreement and I am not married or in a registered partnership.",
+      "help": "Tick to confirm. If this isn't true for you, please don't continue, and reply to James's email instead."
+    },
+    {
+      "id": "conviction",
+      "section": "declaration",
+      "type": "single",
+      "required": true,
+      "label": "Have you ever been convicted of a criminal offence, in any country?",
+      "options": [
+        {
+          "value": "no",
+          "label": "No"
+        },
+        {
+          "value": "yes",
+          "label": "Yes"
+        }
+      ],
+      "help": "Include spent convictions and offences outside your country of residence."
+    },
+    {
+      "id": "conviction_details",
+      "section": "declaration",
+      "type": "textarea",
+      "required": true,
+      "label": "Please give details: the offence, the country and the year",
+      "max": 1000,
+      "showIf": {
+        "id": "conviction",
+        "equals": "yes"
+      }
+    },
+    {
+      "id": "protection_order",
+      "section": "declaration",
+      "type": "single",
+      "required": true,
+      "label": "Has a protection order or restraining order ever been made against you?",
+      "options": [
+        {
+          "value": "no",
+          "label": "No"
+        },
+        {
+          "value": "yes",
+          "label": "Yes"
+        }
+      ]
+    },
+    {
+      "id": "protection_order_details",
+      "section": "declaration",
+      "type": "textarea",
+      "required": true,
+      "label": "Please give details",
+      "max": 1000,
+      "showIf": {
+        "id": "protection_order",
+        "equals": "yes"
+      }
+    },
+    {
+      "id": "domestic_violence",
+      "section": "declaration",
+      "type": "single",
+      "required": true,
+      "label": "Have you ever been investigated for, or accused of, domestic violence?",
+      "options": [
+        {
+          "value": "no",
+          "label": "No"
+        },
+        {
+          "value": "yes",
+          "label": "Yes"
+        }
+      ]
+    },
+    {
+      "id": "domestic_violence_details",
+      "section": "declaration",
+      "type": "textarea",
+      "required": true,
+      "label": "Please give details, including the outcome",
+      "max": 1000,
+      "showIf": {
+        "id": "domestic_violence",
+        "equals": "yes"
+      }
+    },
+    {
+      "id": "previous_marriages",
+      "section": "declaration",
+      "type": "number",
+      "required": true,
+      "label": "How many times have you been married before?",
+      "min": 0,
+      "max": 10
+    },
+    {
+      "id": "previous_marriages_details",
+      "section": "declaration",
+      "type": "textarea",
+      "required": true,
+      "label": "How did each marriage end?",
+      "max": 1000,
+      "help": "For example: “2008 to 2015, divorced”.",
+      "showIf": {
+        "id": "previous_marriages",
+        "min": 1
+      }
+    },
+    {
+      "id": "countries_lived",
+      "section": "declaration",
+      "type": "textarea",
+      "required": true,
+      "label": "Which countries have you lived in since you turned 18?",
+      "max": 500
+    },
+    {
+      "id": "agency_or_visa",
+      "section": "declaration",
+      "type": "single",
+      "required": true,
+      "label": "Have you ever used an introduction or marriage agency, or sponsored a partner’s visa?",
+      "options": [
+        {
+          "value": "no",
+          "label": "No"
+        },
+        {
+          "value": "yes",
+          "label": "Yes"
+        }
+      ]
+    },
+    {
+      "id": "agency_or_visa_details",
+      "section": "declaration",
+      "type": "textarea",
+      "required": true,
+      "label": "Please give details: which agency or visa, and when",
+      "max": 1000,
+      "showIf": {
+        "id": "agency_or_visa",
+        "equals": "yes"
+      }
+    }
+  ]
+}
