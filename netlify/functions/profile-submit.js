@@ -1,6 +1,6 @@
 // Final step. POST { token, consents: { confirmTrue, profileSharing, photoSharing } }.
-// TODO(James): counsel to approve the consent texts on /vi/ho-so (vi-2026-11-profile-v1)
-// and /my-profile (en-2026-11-profile-v1).
+// TODO(James): counsel to approve the consent texts on /vi/ho-so (vi-2026-11-profile-v2)
+// and /my-profile (en-2026-11-profile-v2).
 const { Resend } = require('resend');
 const P = require('../shared/profile-common');
 const { profileState } = require('../shared/profile-state');
