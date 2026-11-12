@@ -1,6 +1,5 @@
-const fs = require('fs');
-const path = require('path');
 const { Resend } = require('resend');
+const { loadFeePdf } = require('../shared/fee-pdf');
 
 const FROM_EMAIL = 'Heritage Union <team@heritage-union.com>';
 const INTERNAL_NOTIFY_EMAIL = 'james@heritage-union.com';
@@ -50,8 +49,10 @@ exports.handler = async function (event) {
   }
 
   var resend = new Resend(process.env.RESEND_API_KEY);
-  var pdfPath = path.join(__dirname, 'assets', 'heritage-union-fee-structure.pdf');
-  var pdfBuffer = fs.readFileSync(pdfPath);
+  var pdfBuffer = loadFeePdf();
+  if (!pdfBuffer) {
+    return jsonResponse(500, { error: 'We could not send the document right now. Please try again shortly, or email team@heritage-union.com.' });
+  }
   var submittedAt = new Date();
 
   try {
