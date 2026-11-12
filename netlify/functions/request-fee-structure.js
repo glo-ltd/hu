@@ -1,5 +1,4 @@
-const fs = require('fs');
-const path = require('path');
+const { feePdfAttachment } = require('../shared/fee-pdf');
 const P = require('../shared/profile-common');
 const E = require('../shared/emails');
 const { sendEmail, sendTeam } = require('../shared/emails/send');
@@ -50,9 +49,10 @@ exports.handler = async function (event) {
     return jsonResponse(400, { error: 'Please provide a valid email address.' });
   }
 
-  var pdfPath = path.join(__dirname, 'assets', 'heritage-union-fee-structure.pdf');
-  var pdfBuffer = fs.readFileSync(pdfPath);
-  var attachments = [{ filename: 'Heritage-Union-Fee-Structure.pdf', content: pdfBuffer.toString('base64') }];
+  var attachments = feePdfAttachment();
+  if (!attachments) {
+    return jsonResponse(500, { error: 'We could not send the document right now. Please try again shortly, or email team@heritage-union.com.' });
+  }
 
   var sent = await sendEmail(email, E.R2.build({ firstName: firstName(name) }), { attachments: attachments });
   if (!sent) {
