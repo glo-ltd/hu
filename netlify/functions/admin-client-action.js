@@ -6,22 +6,9 @@ const E = require('../shared/emails');
 const { sendEmail } = require('../shared/emails/send');
 const { clientPageLink } = require('../shared/emails/refs');
 const { requireAdmin, logAction, isUuid } = require('../shared/admin-auth');
-const fs = require('fs');
-const path = require('path');
+const { feePdfAttachment } = require('../shared/fee-pdf');
 
 const PRE_INVOICE = ['enquiry', 'call_booked', 'call_held', 'thinking', 'invited', 'applying', 'submitted', 'checked'];
-
-// Same file and approach as request-fee-structure.js. If it can't be read,
-// R3 still goes out: it also links to the PDF on the website.
-function feePdfAttachment() {
-  try {
-    const file = path.join(__dirname, 'assets', 'heritage-union-fee-structure.pdf');
-    return [{ filename: 'Heritage-Union-Fee-Structure.pdf', content: fs.readFileSync(file).toString('base64') }];
-  } catch (err) {
-    console.error('Fee PDF could not be read for R3; sending without the attachment:', err.message);
-    return undefined;
-  }
-}
 
 function contactEmail(c) { return (c.application && c.application.email) || c.email; }
 
@@ -52,7 +39,7 @@ const ACTIONS = {
     if (['call_booked', 'call_held', 'thinking'].indexOf(c.status) === -1) return 'Invite after the call (status must be call booked, call held or thinking it over).';
     const l = await newLink(sb, c, CC.C.APPLICATION_LINK_DAYS);
     await CC.setStatus(sb, c.id, 'invited', { invited_at: new Date().toISOString() });
-    const ok = await sendEmail(contactEmail(c), E.R3.build({ firstName: CC.firstName(c.full_name), link: l.link, expiresOn: l.expiresOn }), { attachments: feePdfAttachment() });
+    const ok = await sendEmail(contactEmail(c), E.R3.build({ firstName: CC.firstName(c.full_name), link: l.link, expiresOn: l.expiresOn }), { attachments: feePdfAttachment() || undefined });
     return ok ? null : { warning: 'Status updated, but the email could not be sent. Use "Send a new link" to try again.' };
   },
   async not_a_fit(sb, c) {

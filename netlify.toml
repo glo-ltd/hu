@@ -4,6 +4,8 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+  # esbuild only packs JavaScript; the fee PDF is read from disk at runtime.
+  included_files = ["netlify/functions/assets/**"]
 
 # Reminders, expiries, the 3-month check-in, the 12-month flag and document
 # deletion. Scheduled functions can't be called from outside in production.
