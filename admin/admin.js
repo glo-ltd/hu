@@ -250,6 +250,10 @@
     if (q.type === 'single') return optionLabel(q, v, 'vi') + ' (' + optionLabel(q, v, 'en') + ')';
     if (q.type === 'multi') return v.map(function (x) { return optionLabel(q, x, 'vi') + ' (' + optionLabel(q, x, 'en') + ')'; }).join(', ');
     if (q.type === 'range') return v[0] + '–' + v[1];
+    if (q.type === 'languages') return v.map(function (x) {
+      var lv = (q.levels || []).filter(function (l) { return l.value === x.level; })[0];
+      return (x.language === 'other' ? x.other : optionLabel(q, x.language, 'en')) + ' (' + (lv ? lv.label.en.toLowerCase() : x.level) + ')';
+    }).join(', ');
     return String(v);
   }
 

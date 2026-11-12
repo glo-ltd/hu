@@ -292,11 +292,42 @@ function ownView(client, invoices) {
 }
 
 async function ownState(supabase, clientId) {
-  const c = await supabase.from('clients').select(OWN_COLUMNS).eq('id', clientId).single();
+  const c = await supabase.from('clients').select(OWN_COLUMNS + ', application, country, shortlist_sent_at, choices_submitted_at').eq('id', clientId).single();
   if (c.error) throw c.error;
   const inv = await supabase.from('client_invoices').select('id, number, description, amount_cents, currency, status, sent_at, paid_at').eq('client_id', clientId);
   if (inv.error) throw inv.error;
-  return ownView(c.data, inv.data);
+  const view = ownView(c.data, inv.data);
+  if (['active', 'paused'].indexOf(c.data.status) !== -1) view.engagement = await engagementState(supabase, c.data);
+  return view;
+}
+
+// Phase 2+: his profile, the summary for him to approve, his shortlist and
+// choices. Never the team's translations or who wrote what.
+async function engagementState(supabase, client) {
+  const CP = require('./client-profile');
+  const pr = await supabase.from('client_profiles').select('*').eq('client_id', client.id).maybeSingle();
+  if (pr.error) throw pr.error;
+  const prof = pr.data;
+  const ch = await supabase.from('client_choices').select('candidate_id, rank').eq('client_id', client.id);
+  if (ch.error) throw ch.error;
+  return {
+    profile: {
+      answers: prof ? prof.answers : {},
+      displayName: prof ? prof.display_name : null,
+      message: prof ? prof.message_to_women : null,
+      photos: prof ? await CP.signedPaths(supabase, DOC_BUCKET, prof.photo_paths || []) : [],
+      submittedAt: prof ? prof.submitted_at : null,
+      prefill: CP.prefill(client),
+      questionsVersion: CP.PQ.version,
+    },
+    summary: prof && prof.summary_sent_at ? { html: prof.summary_html, sentAt: prof.summary_sent_at, approvedAt: prof.summary_approved_at } : null,
+    summaryApprovedAt: prof ? prof.summary_approved_at : null,
+    changesRequestedAt: prof ? prof.changes_requested_at : null,
+    shortlistSentAt: client.shortlist_sent_at || null,
+    choicesSubmittedAt: client.choices_submitted_at || null,
+    choiceCount: (ch.data || []).length,
+    paused: client.status === 'paused',
+  };
 }
 
 module.exports = {

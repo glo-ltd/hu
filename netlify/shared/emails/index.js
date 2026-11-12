@@ -9,5 +9,9 @@ module.exports = {
   R6: require('./r6-application-received'),
   R7: require('./r7-invoice'),
   R8: require('./r8-welcome'),
+  R9: require('./r9-profile-ready'),
+  R10: require('./r10-profile-approved'),
+  R11: require('./r11-profiles-to-review'),
+  R12: require('./r12-choices-received'),
   team: require('./team-client'),
 };

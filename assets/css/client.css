@@ -48,7 +48,7 @@ html { background: var(--cream-100); }
 .cl-chip[aria-checked="true"] { background: var(--burgundy-700); border-color: var(--burgundy-700); color: var(--cream-50); }
 .cl-chip:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
 .cl-num { max-width: 140px; }
-.cl-lang-row { display: grid; grid-template-columns: 1fr 150px 44px; gap: 8px; align-items: center; }
+.cl-lang-row { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) 44px; gap: 8px; align-items: center; }
 .cl-lang-row .form-input { min-height: 46px; }
 .cl-icon-btn { min-height: 44px; min-width: 44px; background: none; border: 1px solid var(--cream-300); border-radius: var(--radius-xs); color: var(--burgundy-700); font-size: 20px; cursor: pointer; }
 .cl-link-btn { background: none; border: 0; padding: 6px 2px; font: inherit; font-weight: 600; color: var(--burgundy-700); text-decoration: underline; cursor: pointer; justify-self: start; min-height: 40px; }
@@ -109,4 +109,63 @@ html { background: var(--cream-100); }
   .cl-main { padding-top: 40px; }
 }
 #cl-step-title, #cl-hello { outline: none; }
+
+/* ---------- Phase 2: his profile, summary, profiles to review ---------- */
+.cl-steps--6 { grid-template-columns: repeat(6, 1fr); }
+.cl-steps--6 li { font-size: 0; }                 /* bars only on small screens */
+.cl-steps--6 li button { font-size: 11.5px; line-height: 1.25; }
+@media (max-width: 559px) { .cl-steps--6 li button { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } }
+.cl-range { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 16.5px; }
+.cl-range .form-input { width: 90px; }
+.cl-langs { display: grid; gap: 8px; }
+.cl-guidance { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: 15px; color: var(--ink-700); }
+.cl-photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+.cl-photo { position: relative; margin: 0; border: 1px solid var(--cream-300); border-radius: var(--radius-sm); overflow: hidden; background: var(--cream-50); }
+.cl-photo img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; }
+.cl-photo-main { position: absolute; top: 8px; left: 8px; background: var(--burgundy-700); color: var(--cream-50); font-size: 12px; padding: 3px 8px; border-radius: 10px; }
+.cl-photo-actions { display: flex; }
+.cl-photo-actions button { flex: 1; min-height: 44px; background: none; border: 0; border-top: 1px solid var(--cream-300); font: inherit; font-size: 14px; color: var(--burgundy-700); cursor: pointer; }
+.cl-photo-actions button + button { border-left: 1px solid var(--cream-300); }
+.cl-photo-actions button:disabled { color: var(--ink-200); cursor: default; }
+
+.cl-summary { padding: 20px; background: var(--cream-50); border: 1px solid var(--cream-300); border-left: 3px solid var(--gold-500); border-radius: var(--radius-sm); font-size: 17px; line-height: 1.7; }
+.cl-summary p { margin: 0 0 12px; }
+.cl-summary ul, .cl-summary ol { margin: 0 0 12px; padding-left: 22px; }
+
+/* Profile cards (F5) */
+.cl-pcs { display: grid; gap: 18px; }
+@media (min-width: 720px) { .cl-pcs { grid-template-columns: 1fr 1fr; } }
+.cl-pc { position: relative; background: var(--white); border: 1px solid var(--cream-300); border-radius: var(--radius-sm); overflow: hidden; display: grid; align-content: start; }
+.cl-pc.is-chosen { border-color: var(--burgundy-700); box-shadow: 0 0 0 2px var(--burgundy-050); }
+.cl-pc-rank { position: absolute; top: 10px; right: 10px; z-index: 3; width: 34px; height: 34px; border-radius: 50%; background: var(--burgundy-700); color: var(--cream-50); display: grid; place-items: center; font-family: var(--font-display); font-size: 20px; }
+.cl-pc-photos { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; background: var(--cream-200); }
+.cl-pc-photos.is-empty { padding: 28px 18px; color: var(--ink-600); font-size: 15px; justify-content: center; }
+.cl-pc-photo { position: relative; flex: 0 0 100%; scroll-snap-align: start; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.cl-pc-photo img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; pointer-events: none; }
+/* Faint watermark of the viewer's name over every photo. It discourages
+   sharing; it cannot prevent screenshots. */
+.cl-wm { position: absolute; inset: -20%; display: flex; flex-wrap: wrap; gap: 34px 26px; align-content: center; justify-content: center; transform: rotate(-24deg); pointer-events: none; overflow: hidden; }
+.cl-wm span { font-family: var(--font-text); font-size: 13px; letter-spacing: 0.08em; color: rgba(255, 255, 255, 0.28); text-shadow: 0 0 1px rgba(0, 0, 0, 0.18); white-space: nowrap; }
+.cl-pc-head { padding: 16px 18px 4px; display: grid; gap: 2px; }
+.cl-pc-head h3 { font-size: 26px; }
+.cl-pc-sub { color: var(--ink-600); font-size: 15px; }
+.cl-pc-answers { margin: 0; padding: 6px 18px 12px; display: grid; gap: 2px; }
+.cl-pc-answers dt { font-size: 13px; color: var(--ink-600); margin-top: 8px; }
+.cl-pc-answers dd { margin: 0; font-size: 15.5px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.cl-pc .cl-action { margin: 4px 18px 18px; }
+.cl-choices { position: sticky; bottom: 8px; z-index: 5; display: grid; gap: 8px; padding: 12px 14px; background: var(--white); border: 1px solid var(--burgundy-100); border-radius: var(--radius-sm); box-shadow: var(--shadow-md); }
+.cl-choices-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.cl-choices h2 { font-size: 20px; }
+.cl-choices .btn { text-transform: none; min-height: 40px; padding: 8px 18px; font-size: 15px; }
+.cl-choices .cl-help { font-size: 13.5px; }
+.cl-choices .cl-choice-list li > span:first-child { font-size: 15.5px; }
+.cl-choices .cl-icon-btn { min-height: 36px; min-width: 36px; font-size: 16px; }
+.cl-choice-list { margin: 0; padding-left: 22px; display: grid; gap: 6px; }
+.cl-choice-list li { padding-left: 4px; }
+.cl-choice-list li > span:first-child { font-size: 17px; }
+.cl-choice-move { display: inline-flex; gap: 6px; margin-left: 10px; vertical-align: middle; }
+.cl-confirm { position: fixed; inset: 0; z-index: 50; background: rgba(22, 32, 46, 0.5); display: grid; place-items: center; padding: 16px; }
+.cl-confirm-box { background: var(--white); border-radius: var(--radius-sm); padding: 22px; max-width: 460px; width: 100%; display: grid; gap: 12px; }
+.cl-confirm-box h2 { font-size: 26px; }
+.cl-pre { white-space: pre-line; font-size: 17px; }
 .cl-field--confirm .cl-affirm { padding: 14px; border: 1px solid var(--gold-300); border-radius: var(--radius-sm); background: #FFFBF0; font-weight: 500; }

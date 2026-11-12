@@ -81,6 +81,11 @@ PNG). A new project gets the same from `supabase/schema.sql`.
 | `CLIENT_SIGNUPS_OPEN` | `false` (default) or `true`. Keep it `false` until the client agreement is final. While it is off, the enquiry form still works, but the team page can't send application links and his private page (`/client`) shows "not available yet". |
 | `INVOICE_PAYMENT_DETAILS` | The bank details printed on every invoice and in the invoice email, several lines, e.g. `Account name: …`, `Bank: …`, `IBAN: …`, `SWIFT/BIC: …`. Never committed to the repo. Invoices can be drafted without it but not sent. |
 
+Phase 2 (his profile, matching and choices): run
+`supabase/migrations/2026-12-client-phase-2.sql` (tables `client_profiles`,
+`client_shortlists`, `client_choices`; two new columns on `clients`). No new
+env vars.
+
 The fees, invoice numbering, link lengths and the other client-side
 decisions live in `netlify/shared/client-config.js`.
 

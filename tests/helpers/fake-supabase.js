@@ -11,10 +11,13 @@ const STATUSES = ['new', 'contacted', 'profile_in_progress', 'profile_complete',
 // id: generate a uuid on insert. unique: [column, caseInsensitive].
 // cascade: child tables deleted with a parent row (child, column).
 const TABLES = {
-  candidates: { id: true, cascade: [['candidate_profiles', 'candidate_id']] },
+  candidates: { id: true, cascade: [['candidate_profiles', 'candidate_id'], ['client_shortlists', 'candidate_id'], ['client_choices', 'candidate_id']] },
   candidate_profiles: {},
   candidate_waitlist: { id: true },
-  clients: { id: true, unique: [['email', true]], cascade: [['client_events', 'client_id'], ['client_invoices', 'client_id']] },
+  clients: { id: true, unique: [['email', true]], cascade: [['client_events', 'client_id'], ['client_invoices', 'client_id'], ['client_profiles', 'client_id'], ['client_shortlists', 'client_id'], ['client_choices', 'client_id']] },
+  client_profiles: {},
+  client_shortlists: {},
+  client_choices: {},
   client_events: { id: true },
   client_invoices: { id: true, unique: [['number', false]] },
   general_enquiries: { id: true },
@@ -144,6 +147,10 @@ class Query {
     if (this.table === 'candidate_profiles') {
       return { answers: {}, photo_paths: [], translations: {}, display_name: null, consent_photo_sharing_at: null, consent_profile_text_version: null,
         confirmed_true_at: null, submitted_at: null, translated_by: null, translated_at: null, created_at: now, updated_at: now };
+    }
+    if (this.table === 'client_profiles') {
+      return { answers: {}, photo_paths: [], declaration_vi: {}, display_name: null, message_to_women: null, submitted_at: null, summary_html: null,
+        summary_sent_at: null, summary_approved_at: null, changes_requested_at: null, created_at: now, updated_at: now };
     }
     return { created_at: now, updated_at: now };
   }

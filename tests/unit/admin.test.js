@@ -62,7 +62,7 @@ test('admin-candidate: detail with questions and signed photos; never returns to
   assert.equal(r.status, 200);
   assert.equal(r.body.candidate.full_name, 'Nguyễn Thị Lan');
   assert.equal(r.body.profile.answers.occupation, 'Giáo viên');
-  assert.equal(r.body.questions.version, '2026-11-v2');
+  assert.equal(r.body.questions.version, '2026-12-v3');
   assert.ok(!r.raw.includes(c.row.profile_token_hash));
   assert.ok(!r.raw.includes('iphash'));
 });
