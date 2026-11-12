@@ -354,6 +354,11 @@
     } else ph.appendChild(el('p', { class: 'ad-empty', text: 'No photos.' }));
     left.appendChild(ph);
 
+    if (d.introductions && d.introductions.length) {
+      right.appendChild(el('section', { class: 'ad-section' }, [el('h2', { text: 'Introduction requests' })].concat(d.introductions.map(function (x) {
+        return el('div', { class: 'ad-answer' }, [el('a', { href: '#client-' + x.clientId, text: x.ref + ' · client ' + x.clientRef }), el('span', { class: 'ad-card-sub', text: x.status + (x.sentAt ? ' · sent ' + fmtDate(x.sentAt) : '') + (x.introducedAt ? ' · introduced ' + fmtDate(x.introducedAt) : '') })]);
+      }))));
+    }
     right.appendChild(actions(c, name));
     right.appendChild(clientPreview(c, p, d.photos, translations));
   }

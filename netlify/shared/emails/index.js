@@ -13,5 +13,10 @@ module.exports = {
   R10: require('./r10-profile-approved'),
   R11: require('./r11-profiles-to-review'),
   R12: require('./r12-choices-received'),
+  R13: require('./r13-introduction-request'),
+  R15: require('./r15-she-accepted'),
+  R16: require('./r16-his-details'),
+  R17: require('./r17-not-this-time'),
+  R22: require('./r22-certificate-request'),
   team: require('./team-client'),
 };

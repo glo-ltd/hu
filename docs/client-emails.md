@@ -335,7 +335,7 @@ Dear Michael,
 
 Thank you. Your 5 choices have reached me.
 
-Next, Huyen and I will share your profile, your background declaration and your message with the woman you chose first, in her own language. She will decide, freely and in her own time, whether she would like to be introduced. If she would, I will send you the contact details she chooses to share.
+Next, Huyen and I will share your profile, your background declaration and your message with each woman you chose, in her own language and in your order of preference. Each will decide, freely and in her own time, whether she would like to be introduced. When a woman says yes, I will send you the contact details she chooses to share.
 
 A woman never has to give a reason if she says no, and we never ask her to. If she does, or doesn't reply within 30 days, you can choose someone else from your list.
 
@@ -349,7 +349,308 @@ If anything ever worries you, tell us in confidence: https://heritage-union.com/
 Heritage Union · heritage-union.com
 ```
 
+## R13 (vi) — Tiếng Việt
+
+- **To:** the woman
+- **When:** Her preferred language is Vietnamese.
+- **Subject:** Một khách hàng mong được làm quen với bạn — Heritage Union
+
+```text
+Chào Hoa,
+
+Heritage Union xin báo với bạn: một khách hàng đã đọc hồ sơ của bạn và mong được làm quen với bạn.
+
+Bạn có thể xem hồ sơ, ảnh, lời nhắn và bản khai lý lịch do chính anh ấy ký, bằng tiếng Việt, qua đường link riêng này:
+
+Xem hồ sơ của anh ấy: https://heritage-union.com/vi/gioi-thieu#t=EXAMPLE
+
+Heritage Union không kiểm tra bản khai này. Trước khi quyết định, bạn có thể yêu cầu anh ấy cung cấp phiếu lý lịch tư pháp. Bạn hoàn toàn không có nghĩa vụ gì: bạn có thể đồng ý, từ chối mà không cần nêu lý do, hoặc hỏi chúng tôi trước khi quyết định. Bạn không bao giờ phải trả bất kỳ khoản tiền nào.
+
+Đường link chỉ dành riêng cho bạn và dùng được đến ngày 8/1/2027. Vui lòng không chia sẻ đường link này.
+
+Trân trọng,
+
+James
+Nhà sáng lập, Heritage Union
+
+--
+Nếu có bất cứ điều gì khiến bạn lo ngại, hãy báo cho chúng tôi, mọi thông tin đều được giữ kín: https://heritage-union.com/vi/contact?concern=1
+Heritage Union · heritage-union.com
+```
+
+## R13 (en) — English
+
+- **To:** the woman
+- **When:** Her preferred language is English.
+- **Subject:** A client would like to be introduced to you — Heritage Union
+
+```text
+Dear Hoa,
+
+A Heritage Union client has read your profile and would like to be introduced to you.
+
+You can read his profile, his photos, his message and his own signed background declaration through this private link:
+
+Read his profile: https://heritage-union.com/introduction#t=EXAMPLE
+
+Heritage Union does not check his declaration. Before you decide, you can ask him for an official background check. You are under no obligation at all: you can say yes, say no without giving any reason, or ask us a question first. You never pay anything.
+
+This link is just for you and works until 8 January 2027. Please don't share it.
+
+Warm regards,
+
+James
+Founder, Heritage Union
+
+--
+If anything ever worries you, tell us in confidence: https://heritage-union.com/contact?concern=1
+Heritage Union · heritage-union.com
+```
+
+## R15 — She would like to be introduced
+
+- **To:** the client
+- **When:** When the team taps "Introduce" after she has said yes on her decision page.
+- **Subject:** Hoa would like to be introduced — Heritage Union
+
+```text
+Dear Michael,
+
+I am delighted to tell you that Hoa has read your profile, your background declaration and your message, and would like to be introduced to you.
+
+The details Hoa chose to share
+Zalo: 0912 345 678
+Email: hoa@example.vn
+
+Hoa would prefer to begin with messages or a video call.
+
+A SHORT GUIDE FOR YOUR FIRST CONVERSATIONS
+
+- Time zones: Vietnam is UTC+7. Suggest times that suit her day, not just yours.
+- Language: write simply and kindly. Translation apps help, and Huyen can help with anything important, in both directions.
+- Patience: let things unfold at her pace. There is no rush, and no pressure on either of you.
+- Money: never ask her for money, and never send money, gifts of money or bank details. If anyone ever asks you for money, stop and tell us at once.
+- Huyen: to reach her, reply to this email and James will connect you.
+
+Please treat her details with care and keep them private. Use them only to get to know her.
+
+Warm regards,
+
+James
+Founder, Heritage Union
+
+--
+If anything ever worries you, tell us in confidence: https://heritage-union.com/contact?concern=1
+Heritage Union · heritage-union.com
+```
+
+## R16 (vi) — Tiếng Việt
+
+- **To:** the woman
+- **When:** Her preferred language is Vietnamese.
+- **Subject:** Thông tin liên lạc của Michael — Heritage Union
+
+```text
+Chào Hoa,
+
+Cảm ơn bạn đã đồng ý được giới thiệu với Michael. Anh ấy đã nhận được những thông tin bạn chọn chia sẻ, và biết bạn muốn được liên lạc lần đầu như thế nào.
+
+Thông tin liên lạc của Michael
+Email: michael@example.com
+Điện thoại / WhatsApp: +44 7700 900123
+
+MỘT VÀI LỜI KHUYÊN CHO NHỮNG LẦN TRÒ CHUYỆN ĐẦU TIÊN
+
+- Hãy từ từ. Bạn không cần vội, và không có ai ép buộc bạn.
+- Việt Nam nhanh hơn nước của anh ấy vài tiếng. Hãy chọn giờ thuận tiện cho bạn.
+- Không bao giờ gửi hoặc nhận tiền, và không chia sẻ thông tin ngân hàng hay giấy tờ tùy thân. Nếu có ai hỏi bạn về tiền, hãy dừng lại và báo ngay cho chúng tôi.
+- Nếu gặp mặt, hãy gặp ở nơi công cộng và báo cho người thân biết.
+- Huyền luôn sẵn sàng hỗ trợ bạn bằng tiếng Việt, kể cả giúp dịch. Bạn chỉ cần nhắn cho Heritage Union qua Zalo, hoặc email team@heritage-union.com.
+
+Bạn vẫn có thể dừng lại bất cứ lúc nào, không cần giải thích. Đăng ký hoàn toàn miễn phí, và bạn không bao giờ phải trả bất kỳ khoản tiền nào.
+
+Trân trọng,
+
+James
+Nhà sáng lập, Heritage Union
+
+--
+Nếu có bất cứ điều gì khiến bạn lo ngại, hãy báo cho chúng tôi, mọi thông tin đều được giữ kín: https://heritage-union.com/vi/contact?concern=1
+Heritage Union · heritage-union.com
+```
+
+## R16 (en) — English
+
+- **To:** the woman
+- **When:** Her preferred language is English.
+- **Subject:** Michael's contact details — Heritage Union
+
+```text
+Dear Hoa,
+
+Thank you for agreeing to be introduced to Michael. He has received the details you chose to share, and knows how you would like the first contact to be.
+
+Michael's contact details
+Email: michael@example.com
+Phone / WhatsApp: +44 7700 900123
+
+A FEW TIPS FOR YOUR FIRST CONVERSATIONS
+
+- Take your time. There is no rush, and no one can pressure you.
+- Vietnam is several hours ahead of his country. Choose times that suit you.
+- Never send or receive money, and never share bank details or identity documents. If anyone asks you about money, stop and tell us at once.
+- If you meet, meet in a public place and tell someone close to you.
+- Huyen is always there to help you in Vietnamese, including with translation. Just message Heritage Union on Zalo, or email team@heritage-union.com.
+
+You can stop at any time, without explaining why. Registering is free, and you never pay anything.
+
+Warm regards,
+
+James
+Founder, Heritage Union
+
+--
+If anything ever worries you, tell us in confidence: https://heritage-union.com/contact?concern=1
+Heritage Union · heritage-union.com
+```
+
+## R17 — Not this time
+
+- **To:** the client
+- **When:** Automatically, when she says no, or (phase 4) when her 30 days pass without an answer.
+- **Subject:** An update on your introduction — Heritage Union
+
+```text
+Dear Michael,
+
+Thank you for your patience. Your request to be introduced to Lan has not led to an introduction this time.
+
+Every woman decides freely, and in her own time, and is never asked to give a reason. Please don't take it to heart.
+
+If you would like to, you can choose someone else from the profiles on your list.
+
+Choose someone else: https://heritage-union.com/client#t=EXAMPLE
+
+This link is private to you and works until 8 February 2027.
+
+Warm regards,
+
+James
+Founder, Heritage Union
+
+--
+If anything ever worries you, tell us in confidence: https://heritage-union.com/contact?concern=1
+Heritage Union · heritage-union.com
+```
+
+## R22 — A woman would like an official certificate
+
+- **To:** the client
+- **When:** When the team taps "Send certificate request", after a woman asked for an official background check on her decision page.
+- **Subject:** Hoa would like an official certificate — Heritage Union
+
+```text
+Dear Michael,
+
+Hoa has read your profile and your background declaration. Before she decides, she would like you to provide an official criminal record certificate from your country of residence (for example a DBS check in the UK, a national police certificate in Australia, or an FBI Identity History Summary in the US).
+
+This is entirely your choice. You may provide one, or decline; either way, she will be told your answer, and you don't need to give a reason. Her request to you stays open in the meantime.
+
+If you provide one, it is kept privately, shown only to Hoa through a short-lived link, and deleted 6 months after your engagement closes.
+
+Provide a certificate, or decline: https://heritage-union.com/client#t=EXAMPLE
+
+This link is private to you and works until 10 January 2027.
+
+Warm regards,
+
+James
+Founder, Heritage Union
+
+--
+If anything ever worries you, tell us in confidence: https://heritage-union.com/contact?concern=1
+Heritage Union · heritage-union.com
+```
+
 ## Team notifications
+
+## Team — A woman said yes to an introduction
+
+- **To:** everyone in ADMIN_EMAILS
+- **Subject:** A woman said yes to an introduction (I-9F8E7D6C)
+
+```text
+A woman has said yes and chosen what to share. Tap "Introduce" to send both sides their details. Reference I-9F8E7D6C.
+
+Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
+
+Heritage Union · heritage-union.com
+```
+
+## Team — A woman said no to an introduction
+
+- **To:** everyone in ADMIN_EMAILS
+- **Subject:** A woman said no to an introduction (I-9F8E7D6C)
+
+```text
+A woman has said no. He has been told kindly (R17), with no reason. Reference I-9F8E7D6C.
+
+Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
+
+Heritage Union · heritage-union.com
+```
+
+## Team — A woman asked for an official background check
+
+- **To:** everyone in ADMIN_EMAILS
+- **Subject:** A woman asked for an official background check (I-9F8E7D6C)
+
+```text
+A woman has asked the client for an official criminal record certificate before she decides. Open his page and tap "Send certificate request". Reference I-9F8E7D6C.
+
+Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
+
+Heritage Union · heritage-union.com
+```
+
+## Team — A client provided a certificate
+
+- **To:** everyone in ADMIN_EMAILS
+- **Subject:** A client provided a certificate (I-9F8E7D6C)
+
+```text
+A client has uploaded a certificate a woman asked for. Open it, then tap "Mark as seen" so she can see it. Reference I-9F8E7D6C.
+
+Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
+
+Heritage Union · heritage-union.com
+```
+
+## Team — A client chose not to provide a certificate
+
+- **To:** everyone in ADMIN_EMAILS
+- **Subject:** A client chose not to provide a certificate (I-9F8E7D6C)
+
+```text
+A client chose not to provide the certificate a woman asked for. Her decision page now tells her so; you may want to message her on Zalo. Reference I-9F8E7D6C.
+
+Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
+
+Heritage Union · heritage-union.com
+```
+
+## Team — A woman has a question before deciding
+
+- **To:** everyone in ADMIN_EMAILS
+- **Subject:** A woman has a question before deciding (I-9F8E7D6C)
+
+```text
+A woman has a question before she decides. Her message is on the team page. Reference I-9F8E7D6C.
+
+Open in the team page: https://heritage-union.com/admin/#client-1a2b3c4d-0000-4000-8000-000000000000
+
+Heritage Union · heritage-union.com
+```
 
 ## Team — New client enquiry
 

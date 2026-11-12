@@ -159,3 +159,61 @@ Every action is recorded in the **Timeline** with who did it.
 5. **His choices** arrive by email and show on his page under **Matching and
    choices**, in order. They can only be changed by you.
 
+### Introductions: asking her, and introducing them
+
+His choices appear under **Introductions** on his page, in his order.
+
+- **Ready to send:** tap **Send to her**. It only works when:
+  - the Vietnamese translations of his summary, declaration and message
+    are done (for a woman who registered in English, the English texts are
+    used);
+  - she has no other request open;
+  - his engagement is active.
+
+  This makes her private link (valid 30 days), emails her if she has an
+  email, and shows the message in her language. **Copy it into Zalo.**
+- **Queued:** she has another client's request open. It moves to "Ready"
+  by itself when she answers that one.
+- **She opened it / Sent:** wait. If she lost the link, **New link and
+  message** sends a fresh one (the old one stops working).
+- **Her question:** shown in his Introductions list. Reply to her on Zalo,
+  then tap **Mark question answered**.
+- **She said yes:** her written consent is shown: exactly what she agreed
+  to share, how she would like the first contact, her typed name and the
+  time. Tap **Introduce**. He gets R15 with her chosen details and a short
+  guide; she gets R16 with his email and phone (by email if she has one).
+  **Copy the message into Zalo for her as well.**
+- **She said no:** he has already had a kind note (R17) with no reason.
+  Her private reason, if she gave one, is shown only to the team. **Never
+  pass it on.**
+- **She asked for an official background check:** Heritage Union doesn't
+  check his declaration, so on her decision page she can ask him for an
+  official criminal record certificate before she decides. You get an email
+  (reference only), and his Introductions row shows the request. Her request
+  stays open and her 30 days are paused meanwhile.
+  1. Tap **Send certificate request**. He gets R22, with a fresh link to his
+     page (his old link stops working): she would like him to provide an
+     official certificate; he may agree or decline.
+  2. If he uploads one, you get an email. Tap **Open certificate (10
+     minutes)** and look at it, then tap **Mark as seen**. Her page then shows
+     "He has provided an official certificate" / "Anh ấy đã cung cấp phiếu lý
+     lịch tư pháp" with a 10-minute link, and her 30 days run again (with the
+     paused days added back). We don't verify it with the authority that
+     issued it, and her page says so.
+  3. If he declines, you get an email, her page tells her he chose not to
+     provide one, and her 30 days run again. You may want to message her on
+     Zalo.
+
+  Certificates are deleted with his other documents 6 months after his
+  engagement closes.
+- **No answer in 30 days:** the request expires and counts as a no (Phase 4
+  sends a gentle reminder at 14 days).
+
+He can choose a replacement from the rest of his list on his own page, up
+to 5 introductions in use. A no, an expired request or a cancelled one
+doesn't count.
+
+If a woman withdraws (website, "RÚT" on Zalo, or **Mark withdrawn**), every
+pending request for her is cancelled automatically, and he only sees "No
+longer available".
+

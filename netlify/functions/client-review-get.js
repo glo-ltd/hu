@@ -33,6 +33,7 @@ exports.handler = async function (event) {
     }
     const ch = await sb.from('client_choices').select('candidate_id, rank').eq('client_id', full.id);
     if (ch.error) throw ch.error;
+    const it = await sb.from('introductions').select('candidate_id').eq('client_id', full.id);
     return json(200, {
       ok: true,
       viewer: (full.application && full.application.legal_name) || full.full_name,
@@ -40,6 +41,7 @@ exports.handler = async function (event) {
       choices: (ch.data || []).sort((a, b) => a.rank - b.rank).map((x) => x.candidate_id),
       choicesSubmittedAt: full.choices_submitted_at || null,
       maxChoices: CC.C.CHOICES_MAX,
+      taken: ((it && it.data) || []).map((x) => x.candidate_id),
     });
   } catch (e) {
     console.error('client-review-get failed:', e);

@@ -31,6 +31,21 @@
     Cache-Control = "no-store"
     Referrer-Policy = "no-referrer"
 
+# Her decision pages for an introduction request: never indexed, never cached.
+[[headers]]
+  for = "/vi/gioi-thieu*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+    Referrer-Policy = "no-referrer"
+
+[[headers]]
+  for = "/introduction*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+    Referrer-Policy = "no-referrer"
+
 # Her private profile page: never indexed; no referrer ever leaves it.
 [[headers]]
   for = "/vi/ho-so*"

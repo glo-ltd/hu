@@ -168,4 +168,18 @@ html { background: var(--cream-100); }
 .cl-confirm-box { background: var(--white); border-radius: var(--radius-sm); padding: 22px; max-width: 460px; width: 100%; display: grid; gap: 12px; }
 .cl-confirm-box h2 { font-size: 26px; }
 .cl-pre { white-space: pre-line; font-size: 17px; }
+
+/* Phase 3: his introductions */
+.cl-intros { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; counter-reset: intro; }
+.cl-intro { counter-increment: intro; display: grid; grid-template-columns: 28px 1fr; gap: 2px 10px; padding: 12px 14px; border: 1px solid var(--cream-300); border-radius: var(--radius-sm); background: var(--cream-50); }
+.cl-intro::before { content: counter(intro); grid-row: span 2; width: 26px; height: 26px; border-radius: 50%; background: var(--cream-200); display: grid; place-items: center; font-family: var(--font-display); font-size: 16px; color: var(--burgundy-700); }
+.cl-intro-name { font-family: var(--font-display); font-size: 21px; color: var(--burgundy-700); }
+.cl-intro-status { font-size: 15px; color: var(--ink-600); }
+.cl-intro.is-introduced { border-color: #B8D2B0; background: #F3F8F1; }
+.cl-intro.is-introduced .cl-intro-status { color: #2F5B2A; font-weight: 600; }
+.cl-intro.is-not_this_time, .cl-intro.is-unavailable { opacity: 0.75; }
 .cl-field--confirm .cl-affirm { padding: 14px; border: 1px solid var(--gold-300); border-radius: var(--radius-sm); background: #FFFBF0; font-weight: 500; }
+
+/* A certificate a woman asked him for (optional) */
+.cl-certcard .cl-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 4px; }
+.cl-certcard .cl-actions .btn { cursor: pointer; }

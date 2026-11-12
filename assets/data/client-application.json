@@ -271,7 +271,11 @@
       "type": "confirm",
       "required": true,
       "label": "I am legally free to enter this agreement and I am not married or in a registered partnership.",
-      "help": "Tick to confirm. If this isn't true for you, please don't continue, and reply to James's email instead."
+      "help": "Tick to confirm. If this isn't true for you, please don't continue, and reply to James's email instead.",
+      "forHer": {
+        "vi": "Anh ấy xác nhận mình được tự do về mặt pháp lý để ký thỏa thuận này, và hiện không kết hôn hay có quan hệ đối tác đã đăng ký.",
+        "en": "He confirms he is legally free to enter this agreement, and is not married or in a registered partnership."
+      }
     },
     {
       "id": "conviction",
@@ -282,14 +286,20 @@
       "options": [
         {
           "value": "no",
-          "label": "No"
+          "label": "No",
+          "vi": "Không"
         },
         {
           "value": "yes",
-          "label": "Yes"
+          "label": "Yes",
+          "vi": "Có"
         }
       ],
-      "help": "Include spent convictions and offences outside your country of residence."
+      "help": "Include spent convictions and offences outside your country of residence.",
+      "forHer": {
+        "vi": "Anh ấy đã từng bị kết án về một tội hình sự, ở bất kỳ quốc gia nào, chưa?",
+        "en": "Has he ever been convicted of a criminal offence, in any country?"
+      }
     },
     {
       "id": "conviction_details",
@@ -301,6 +311,10 @@
       "showIf": {
         "id": "conviction",
         "equals": "yes"
+      },
+      "forHer": {
+        "vi": "Chi tiết: tội danh, quốc gia và năm",
+        "en": "Details: the offence, the country and the year"
       }
     },
     {
@@ -312,13 +326,19 @@
       "options": [
         {
           "value": "no",
-          "label": "No"
+          "label": "No",
+          "vi": "Không"
         },
         {
           "value": "yes",
-          "label": "Yes"
+          "label": "Yes",
+          "vi": "Có"
         }
-      ]
+      ],
+      "forHer": {
+        "vi": "Đã từng có lệnh bảo vệ hoặc lệnh cấm tiếp xúc nào được ban hành đối với anh ấy chưa?",
+        "en": "Has a protection order or restraining order ever been made against him?"
+      }
     },
     {
       "id": "protection_order_details",
@@ -330,6 +350,10 @@
       "showIf": {
         "id": "protection_order",
         "equals": "yes"
+      },
+      "forHer": {
+        "vi": "Chi tiết",
+        "en": "Details"
       }
     },
     {
@@ -341,13 +365,19 @@
       "options": [
         {
           "value": "no",
-          "label": "No"
+          "label": "No",
+          "vi": "Không"
         },
         {
           "value": "yes",
-          "label": "Yes"
+          "label": "Yes",
+          "vi": "Có"
         }
-      ]
+      ],
+      "forHer": {
+        "vi": "Anh ấy đã từng bị điều tra hoặc bị cáo buộc về bạo lực gia đình chưa?",
+        "en": "Has he ever been investigated for, or accused of, domestic violence?"
+      }
     },
     {
       "id": "domestic_violence_details",
@@ -359,6 +389,10 @@
       "showIf": {
         "id": "domestic_violence",
         "equals": "yes"
+      },
+      "forHer": {
+        "vi": "Chi tiết, kể cả kết quả",
+        "en": "Details, including the outcome"
       }
     },
     {
@@ -368,7 +402,11 @@
       "required": true,
       "label": "How many times have you been married before?",
       "min": 0,
-      "max": 10
+      "max": 10,
+      "forHer": {
+        "vi": "Số lần anh ấy đã kết hôn trước đây",
+        "en": "How many times he has been married before"
+      }
     },
     {
       "id": "previous_marriages_details",
@@ -381,6 +419,10 @@
       "showIf": {
         "id": "previous_marriages",
         "min": 1
+      },
+      "forHer": {
+        "vi": "Mỗi cuộc hôn nhân đã kết thúc như thế nào",
+        "en": "How each marriage ended"
       }
     },
     {
@@ -389,7 +431,11 @@
       "type": "textarea",
       "required": true,
       "label": "Which countries have you lived in since you turned 18?",
-      "max": 500
+      "max": 500,
+      "forHer": {
+        "vi": "Các quốc gia anh ấy đã sống từ khi 18 tuổi",
+        "en": "Countries he has lived in since he turned 18"
+      }
     },
     {
       "id": "agency_or_visa",
@@ -400,13 +446,19 @@
       "options": [
         {
           "value": "no",
-          "label": "No"
+          "label": "No",
+          "vi": "Không"
         },
         {
           "value": "yes",
-          "label": "Yes"
+          "label": "Yes",
+          "vi": "Có"
         }
-      ]
+      ],
+      "forHer": {
+        "vi": "Anh ấy đã từng dùng dịch vụ môi giới hôn nhân, hoặc bảo lãnh visa cho bạn đời, chưa?",
+        "en": "Has he ever used an introduction or marriage agency, or sponsored a partner's visa?"
+      }
     },
     {
       "id": "agency_or_visa_details",
@@ -418,7 +470,23 @@
       "showIf": {
         "id": "agency_or_visa",
         "equals": "yes"
+      },
+      "forHer": {
+        "vi": "Chi tiết",
+        "en": "Details"
       }
     }
-  ]
+  ],
+  "yesNoForHer": {
+    "vi": {
+      "yes": "Có",
+      "no": "Không",
+      "confirmed": "Có, anh ấy xác nhận"
+    },
+    "en": {
+      "yes": "Yes",
+      "no": "No",
+      "confirmed": "Yes, he confirms"
+    }
+  }
 }

@@ -561,15 +561,102 @@
     document.getElementById('cl-confirm-send').focus();
   }
 
+  var HIS_STATUS = {
+    waiting: 'Waiting for her reply',
+    introduced: '✓ Introduced: James has sent you her details',
+    not_this_time: 'Not this time',
+    unavailable: 'No longer available',
+  };
+
   function chosenView() {
     var v = view();
-    var ol = el('ol', { class: 'cl-choice-list' });
-    chosen.forEach(function (id) { ol.appendChild(el('li', null, [el('span', { text: nameOf(id) })])); });
+    var list = E.introductions && E.introductions.length ? E.introductions : chosen.map(function (id) { return { candidateId: id, name: nameOf(id), status: 'waiting' }; });
+    var ol = el('ol', { class: 'cl-intros' });
+    list.forEach(function (x) {
+      ol.appendChild(el('li', { class: 'cl-intro is-' + x.status }, [
+        el('span', { class: 'cl-intro-name', text: x.name || nameOf(x.candidateId) }),
+        el('span', { class: 'cl-intro-status', text: HIS_STATUS[x.status] || '' }),
+      ]));
+    });
     v.appendChild(progressCard(5));
     v.appendChild(card('cl-card--accent', [
-      el('h2', { text: 'Your choices' }), ol,
-      el('p', { text: 'James and Huyen will share your profile with your first choice, in her language. She decides, freely and in her own time, whether she would like to be introduced. You will hear from James as soon as there is news.' }),
+      el('h2', { text: 'Your introductions' }), ol,
+      el('p', { class: 'cl-help', text: (E.introductionsUsed || list.length) + ' of 5 introductions in use. A "no" or an unanswered request doesn\'t count.' }),
+      el('p', { text: 'James and Huyen share your profile with each woman in her language. Each decides freely, in her own time, and never has to give a reason. When a woman says yes, James sends you the details she chose to share.' }),
     ]));
+    (E.certificateRequests || []).forEach(function (q) { v.appendChild(certificateCard(q)); });
+    if (E.canReplace) v.appendChild(replacementCard());
+    v.querySelectorAll('.cl-pc-photo').forEach(function (p) { p.addEventListener('contextmenu', function (e) { e.preventDefault(); }); });
+  }
+
+  // A woman asked for an official criminal record certificate before she
+  // decides. Optional: he may provide one or decline, and she is told either way.
+  var CERT_TYPES = { 'application/pdf': 1, 'image/jpeg': 1, 'image/png': 1 };
+  function certificateCard(q) {
+    var c = card('cl-card--accent cl-certcard', [el('h2', { text: q.name + ' would like an official certificate' })]);
+    if (q.answered === 'provided') {
+      c.appendChild(el('p', { text: 'Thank you. Your certificate has reached us safely. Once we have looked at it, ' + q.name + ' can see it through a short-lived link.' }));
+      return c;
+    }
+    if (q.answered === 'declined') {
+      c.appendChild(el('p', { text: 'You chose not to provide one. ' + q.name + ' has been told, and her decision is still entirely her own.' }));
+      return c;
+    }
+    var stat = el('p', { class: 'cl-help', role: 'status' });
+    var input = el('input', { type: 'file', id: 'cl-cert-file-' + q.introId, accept: 'application/pdf,image/jpeg,image/png', hidden: true });
+    var pick = el('label', { class: 'btn btn--primary btn--md', for: 'cl-cert-file-' + q.introId, text: 'Upload a certificate' });
+    var decline = el('button', { type: 'button', class: 'btn btn--secondary btn--md', text: 'I\'d rather not' });
+    c.appendChild(el('p', { text: 'Heritage Union does not carry out background checks. ' + q.name + ' has read your signed declaration and, before she decides, would like you to provide an official criminal record certificate from your country of residence.' }));
+    c.appendChild(el('p', { text: 'This is entirely your choice. If you provide one, it is kept privately, shown only to ' + q.name + ' through a 10-minute link, and deleted 6 months after your engagement closes. If you decline, she is simply told that you chose not to provide one.' }));
+    c.appendChild(el('p', { class: 'cl-help', text: 'PDF, JPEG or PNG, up to 10 MB.' }));
+    c.appendChild(el('div', { class: 'cl-actions' }, [input, pick, decline]));
+    c.appendChild(stat);
+    input.addEventListener('change', function () {
+      var f = input.files && input.files[0];
+      input.value = '';
+      if (!f) return;
+      if (!CERT_TYPES[f.type]) { stat.textContent = 'Please choose a PDF, JPEG or PNG file.'; return; }
+      if (f.size > 10 * 1024 * 1024) { stat.textContent = 'That file is larger than 10 MB. Please try a smaller one.'; return; }
+      stat.textContent = 'Uploading…';
+      var path;
+      H.api('client-certificate', { introId: q.introId, op: 'upload-url', type: f.type }).then(function (r) {
+        path = r.path;
+        return fetch(r.signedUrl, { method: 'PUT', headers: { 'Content-Type': f.type, 'x-upsert': 'false' }, body: f, credentials: 'omit', referrerPolicy: 'no-referrer' });
+      }).then(function (res) {
+        if (!res.ok) throw new Error('The upload didn\'t complete. Please try again.');
+        return H.api('client-certificate', { introId: q.introId, op: 'confirm', path: path });
+      }).then(function (d) { H.setState(d.state); }).catch(function (e) { if (!e.fatal) stat.textContent = e.message; });
+    });
+    decline.addEventListener('click', function () {
+      if (!window.confirm(q.name + ' will be told that you chose not to provide a certificate. Continue?')) return;
+      decline.disabled = true;
+      H.api('client-certificate', { introId: q.introId, op: 'decline' }).then(function (d) { H.setState(d.state); }, function (e) { if (!e.fatal) { decline.disabled = false; stat.textContent = e.message; } });
+    });
+    return c;
+  }
+
+  function replacementCard() {
+    var left = R.cards.filter(function (c) { return (R.taken || []).indexOf(c.id) === -1; });
+    var c = card('', [el('h2', { text: 'Choose someone else' })]);
+    if (!left.length) { c.appendChild(el('p', { text: 'Everyone on your list has already been asked. James will be in touch about what happens next.' })); return c; }
+    c.appendChild(el('p', { text: 'You can choose another woman from your list. She will be asked in the same way.' }));
+    var grid = el('div', { class: 'cl-pcs' });
+    left.forEach(function (x) {
+      var pc = profileCard(x);
+      var btn = pc.querySelector('.cl-action');
+      var fresh = btn.cloneNode(false);
+      fresh.textContent = 'Choose ' + x.displayName;
+      fresh.disabled = false;
+      fresh.setAttribute('aria-pressed', 'false');
+      fresh.addEventListener('click', function () {
+        fresh.disabled = true;
+        H.api('client-replacement', { candidateId: x.id }).then(function (d) { H.setState(d); }, function (e) { if (!e.fatal) { fresh.disabled = false; window.alert(e.message); } });
+      });
+      btn.replaceWith(fresh);
+      grid.appendChild(pc);
+    });
+    c.appendChild(grid);
+    return c;
   }
 
   window.HUEngagement = { render: render };
