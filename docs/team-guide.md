@@ -217,3 +217,50 @@ If a woman withdraws (website, "RÚT" on Zalo, or **Mark withdrawn**), every
 pending request for her is cancelled automatically, and he only sees "No
 longer available".
 
+### Every day, automatically (`daily-tasks`)
+
+You don't need to do anything for these; they happen once a day and never
+twice:
+
+- **14 days with no answer:** she gets a gentle reminder (R14) by email. If
+  she has no email, you get "Send a gentle reminder on Zalo": open his page
+  and tap **Copy 14-day reminder for Zalo**.
+- **30 days with no answer:** the request expires and counts as a no. He
+  gets the kind R17, and her next waiting request (if any) becomes ready.
+- **Thinking it over for 7 days:** you get a reminder to follow up.
+- **3 months after his first introduction:** he gets R18, "We're here if
+  you need us", once.
+- **12 months:** his card shows **12 months reached**, and you get an
+  email. Nothing closes by itself: you choose how to close.
+- **While she waits for a certificate she asked him for**, neither of the
+  two steps above happens: her 30 days are paused until he declines or you
+  mark his certificate as seen, and the paused days are added back.
+- **6 months after closing:** his photos, and any certificate he provided
+  at a woman's request, are deleted.
+
+### Closing an engagement (his page → Engagement)
+
+- **Relationship success…:** only when they have told you so. He gets
+  R19, congratulations, with the honour-payment invoice (amount editable).
+- **12 months complete…:** he gets R20 confirming nothing more is owed.
+- **Close…:** for anything else (e.g. he ends early).
+
+Every closing also asks him for feedback (R21), cancels any requests still
+waiting, and starts the 6-month deletion clock. Feedback shows on his page
+with his publishing choice. **Never publish anything marked "Do NOT
+publish"**, and otherwise only in the way he chose.
+
+### Concerns
+
+"Report a concern" links in every email lead to `/contact?concern=1`
+(English) or `/vi/contact?concern=1` (Vietnamese). Every report is emailed
+to you (reference only) and listed under **Clients → Concerns**. Read each
+the same day.
+
+- If it's about a client, **link it to him**, and if needed tap **Pause
+  (after a concern)** on his page. Pausing blocks new requests (sending to
+  women, his replacements, his shortlist) and shows "paused" on his page.
+- Requests already with a woman stay open, but **Introduce** waits until
+  you **Unpause**.
+- Tap **Mark handled** when it's dealt with.
+

@@ -409,9 +409,9 @@ test('emails: every client email has a plain-text version, the concern link and 
     }
   }
   for (const k of Object.keys(E.team)) {
-    const o = E.team[k].build({ clientId: crypto.randomUUID(), introId: crypto.randomUUID() });
-    assert.ok(!o.text.includes('concern'), 'team emails have no concern footer');
-    assert.match(o.subject, /\([CI]-[0-9A-F]{8}\)$/);
+    const o = E.team[k].build({ clientId: crypto.randomUUID(), introId: crypto.randomUUID(), concernId: crypto.randomUUID() });
+    assert.ok(!o.text.includes('/contact?concern=1'), 'team emails have no concern footer');
+    assert.match(o.subject, /\([CIR]-[0-9A-F]{8}\)$/);
   }
 });
 

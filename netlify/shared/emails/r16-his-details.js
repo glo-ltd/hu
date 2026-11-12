@@ -13,7 +13,7 @@ const T = {
     guide: 'Một vài lời khuyên cho những lần trò chuyện đầu tiên',
     tips: [
       'Hãy từ từ. Bạn không cần vội, và không có ai ép buộc bạn.',
-      'Việt Nam nhanh hơn nước của anh ấy vài tiếng. Hãy chọn giờ thuận tiện cho bạn.',
+      'Giờ ở Việt Nam và nước của anh ấy có thể chênh nhau nhiều tiếng. Hãy chọn giờ thuận tiện cho bạn.',
       'Không bao giờ gửi hoặc nhận tiền, và không chia sẻ thông tin ngân hàng hay giấy tờ tùy thân. Nếu có ai hỏi bạn về tiền, hãy dừng lại và báo ngay cho chúng tôi.',
       'Nếu gặp mặt, hãy gặp ở nơi công cộng và báo cho người thân biết.',
       'Huyền luôn sẵn sàng hỗ trợ bạn bằng tiếng Việt, kể cả giúp dịch. Bạn chỉ cần nhắn cho Heritage Union qua Zalo, hoặc email team@heritage-union.com.',
@@ -30,7 +30,7 @@ const T = {
     guide: 'A few tips for your first conversations',
     tips: [
       'Take your time. There is no rush, and no one can pressure you.',
-      'Vietnam is several hours ahead of his country. Choose times that suit you.',
+      'There may be several hours\' time difference between Vietnam and his country. Choose times that suit you.',
       'Never send or receive money, and never share bank details or identity documents. If anyone asks you about money, stop and tell us at once.',
       'If you meet, meet in a public place and tell someone close to you.',
       'Huyen is always there to help you in Vietnamese, including with translation. Just message Heritage Union on Zalo, or email team@heritage-union.com.',

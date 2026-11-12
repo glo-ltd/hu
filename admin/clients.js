@@ -40,10 +40,12 @@
     profile_summary_send: 'Summary sent for approval (R9)', profile_translate: 'Translations saved', summary_approved: 'Approved his summary (R10)',
     summary_changes_requested: 'Asked for changes to his summary', intro_send: 'Request sent to her (R13)', intro_resend: 'New decision link made',
     intro_introduce: 'Introduced (R15, R16)', intro_cancel: 'Request cancelled', intro_answered: 'Her question answered', intro_accepted: 'She said yes',
-    intro_declined: 'She said no (R17 to him)', intro_question: 'She asked a question',
+    intro_declined: 'She said no (R17 to him)', intro_reminder: '14-day reminder (R14)', intro_expired: 'Request expired at 30 days (R17 to him)', intro_reminder_copy: 'Reminder copied for Zalo',
+    pause: 'Paused', unpause: 'Unpaused', closed_success: 'Closed: relationship success (R19, honour invoice, R21)', closed_completed: 'Closed: 12 months complete (R20, R21)', closed_closed: 'Closed (R21)',
+    checkin_sent: '3-month check-in (R18)', engagement_12_months: 'Reached 12 months', documents_deleted: 'Documents deleted (6 months after closing)', feedback_received: 'Feedback received', concern_linked: 'A concern was linked to him', intro_question: 'She asked a question', replacement_chosen: 'He chose a replacement', shortlist_sent: 'Shortlist sent (R11)', choices_submitted: 'Sent his choices (R12)',
     intro_cert_requested: 'She asked for an official certificate', intro_cert_request: 'Certificate request sent to him (R22)',
     intro_cert_provided: 'He provided a certificate', intro_cert_declined: 'He chose not to provide a certificate',
-    intro_cert_view: 'Certificate opened', intro_cert_seen: 'Certificate marked as seen', replacement_chosen: 'He chose a replacement', shortlist_sent: 'Shortlist sent (R11)', choices_submitted: 'Sent his choices (R12)',
+    intro_cert_view: 'Certificate opened', intro_cert_seen: 'Certificate marked as seen',
     invoice_create: 'Invoice drafted', invoice_update: 'Invoice draft changed',
     invoice_send: 'Invoice sent (R7)', invoice_paid: 'Payment received (R8 welcome)', invoice_void: 'Invoice voided',
   };
@@ -84,6 +86,10 @@
       general = d.general || [];
       signupsOpen = !!d.signupsOpen;
       $('cl-signups').hidden = signupsOpen;
+      var cl = $('cl-concerns-link');
+      cl.hidden = false;
+      cl.textContent = d.openConcerns ? '⚠ ' + d.openConcerns + ' open concern' + (d.openConcerns === 1 ? '' : 's') + ': read them now' : 'Concerns: none open';
+      cl.classList.toggle('is-quiet', !d.openConcerns);
       drawList();
     }, function (err) { H.flash(err.message, true); });
   }
@@ -100,6 +106,7 @@
     var search = el('input', { class: 'form-input ad-search', type: 'search', id: 'cl-search', placeholder: 'Search name, email or country', 'aria-label': 'Search clients' });
     search.addEventListener('input', drawList);
     box.appendChild(el('p', { id: 'cl-signups', class: 'ad-preview-banner', hidden: true, text: 'Client sign-ups are switched off (CLIENT_SIGNUPS_OPEN is not true). Enquiries still arrive, but application links can\'t be sent and his private page shows "not available yet".' }));
+    box.appendChild(el('a', { id: 'cl-concerns-link', class: 'ad-preview-banner cl-concerns-link', href: '#clients/concerns', hidden: true }));
     var add = el('button', { type: 'button', class: 'btn btn--secondary btn--md', id: 'cl-add', text: '+ Add client', onclick: addClient });
     box.appendChild(el('div', { class: 'ad-toolbar' }, [filters, search, add]));
     box.appendChild(el('p', { id: 'cl-count', class: 'form-note' }));
@@ -167,7 +174,9 @@
     var badges = [el('span', { class: 'ad-badge ad-badge--status', text: STATUS[c.status] || c.status })];
     if (c.fee_document_sent_at) badges.push(el('span', { class: 'ad-badge', text: 'Fee document sent' }));
     if (c.status === 'submitted') badges.push(el('span', { class: 'ad-badge ad-badge--warn', text: 'Application and declaration to read' }));
-    if (c.status === 'active' && c.engagement_ends_at) badges.push(el('span', { class: 'ad-badge ad-badge--ok', text: 'Until ' + H.fmtDate(c.engagement_ends_at) }));
+    if (c.status === 'active' && c.engagement_ends_at && !c.engagement_flagged_at) badges.push(el('span', { class: 'ad-badge ad-badge--ok', text: 'Until ' + H.fmtDate(c.engagement_ends_at) }));
+    if (c.engagement_flagged_at && ['active', 'paused'].indexOf(c.status) !== -1) badges.push(el('span', { class: 'ad-badge ad-badge--danger', text: '12 months reached: decide how to close' }));
+    if (c.status === 'closed' && c.closed_kind) badges.push(el('span', { class: 'ad-badge', text: { success: 'Relationship success', completed: '12 months complete', closed: 'Closed' }[c.closed_kind] }));
     return el('button', { type: 'button', class: 'ad-card', onclick: function () { location.hash = 'client-' + c.id; } }, [
       el('div', { class: 'ad-card-top' }, [el('span', { class: 'ad-card-name', text: c.full_name }), el('span', { class: 'ad-card-sub', text: 'Enquired ' + H.fmtDate(c.created_at) })]),
       el('span', { class: 'ad-card-sub', text: [c.country, c.age ? 'age ' + c.age : null].filter(Boolean).join(' · ') }),
@@ -284,6 +293,7 @@
       right.appendChild(matchingSection(c, d));
       if (d.introductions && d.introductions.length) left.insertBefore(introductionsSection(c, d), left.firstChild);
     }
+    if (['active', 'paused', 'closed'].indexOf(c.status) !== -1) right.appendChild(engagementSection(c, d));
     right.appendChild(actionsSection(c, d));
     if (['submitted', 'checked'].indexOf(c.status) !== -1) right.appendChild(readSection(c));
     if (['submitted', 'checked', 'invoiced', 'active', 'paused', 'closed'].indexOf(c.status) !== -1 || d.invoices.length) right.appendChild(invoicesSection(c, d));
@@ -631,6 +641,7 @@
         if (why) acts.appendChild(el('span', { text: why }));
       }
       if (x.status === 'sent' || x.status === 'opened') acts.appendChild(el('button', { type: 'button', class: 'btn btn--secondary btn--sm', text: 'New link and message', onclick: op('resend', 'New link made; the old one no longer works.') }));
+      if ((x.status === 'sent' || x.status === 'opened') && x.reminderSentAt) acts.appendChild(el('button', { type: 'button', class: (x.hasEmail ? 'btn btn--secondary' : 'btn btn--primary') + ' btn--sm', text: x.hasEmail ? 'Reminder emailed · copy for Zalo too' : 'Copy 14-day reminder for Zalo', onclick: op('reminder', 'Reminder ready to copy.') }));
       if (x.status === 'accepted') acts.appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--sm', text: 'Introduce (R15 to him, R16 to her)', onclick: op('introduce', 'Introduced. Copy her message into Zalo.', ['Introduce them?', 'He receives R15 with the details she chose. She receives R16 with his email and phone, and you get the message to paste into Zalo.', 'Introduce']) }));
       if (['queued', 'ready', 'sent', 'opened'].indexOf(x.status) !== -1) acts.appendChild(el('button', { type: 'button', class: 'ad-link', text: 'Cancel request', onclick: op('cancel', 'Request cancelled.', ['Cancel this request?', 'He will see "No longer available". Her link stops working.', 'Cancel request']) }));
       if (x.questions.some(function (q) { return !q.answeredAt; })) acts.appendChild(el('button', { type: 'button', class: 'btn btn--secondary btn--sm', text: 'Mark question answered', onclick: op('answered', 'Marked answered.') }));
@@ -644,6 +655,89 @@
     });
     sec.appendChild(out);
     return sec;
+  }
+
+  // ------------------------------------------------------------------ phase 4: engagement, closing, feedback
+  function engagementSection(c, d) {
+    var sec = el('section', { class: 'ad-section' }, [el('h2', { text: 'Engagement' })]);
+    var KIND = { success: 'Relationship success (R19 and honour invoice)', completed: '12 months complete (R20)', closed: 'Closed' };
+    sec.appendChild(dl([
+      ['Started', H.fmtDate(c.engagement_starts_at)],
+      ['12 months', H.fmtDate(c.engagement_ends_at) + (c.engagement_flagged_at ? ' · reached' : '')],
+      c.status === 'paused' ? ['Paused', H.fmtDateTime(c.paused_at) + ' (new requests blocked)'] : null,
+      c.status === 'closed' ? ['Closed', H.fmtDateTime(c.closed_at) + ' by ' + c.closed_by + ' · ' + (KIND[c.closed_kind] || '')] : null,
+      c.status === 'closed' ? ['Documents', c.documents_deleted_at ? 'Deleted ' + H.fmtDate(c.documents_deleted_at) : 'Will be deleted on ' + H.fmtDate(c.documents_delete_after)] : null,
+      c.checkin_sent_at ? ['3-month check-in (R18)', H.fmtDate(c.checkin_sent_at)] : null,
+    ]));
+    if (c.engagement_flagged_at && c.status !== 'closed') sec.appendChild(el('p', { class: 'ad-preview-no', text: 'His 12 months are up. Choose how to close: 12 months complete, relationship success, or close.' }));
+    var acts = el('div', { class: 'ad-actions' });
+    var first = c.full_name.split(' ')[0];
+    if (c.status === 'active') acts.appendChild(el('button', { type: 'button', class: 'btn btn--secondary btn--md', text: 'Pause (after a concern)', onclick: function () {
+      modal('Pause ' + first + '\'s engagement?', 'No new requests can be sent for him and his page shows "paused". Requests already with a woman stay open, but "Introduce" waits until you unpause.', 'Pause', function () { act(c.id, 'pause', 'Paused.'); }, true);
+    } }));
+    if (c.status === 'paused') acts.appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--md', text: 'Unpause', onclick: function () { act(c.id, 'unpause', 'Unpaused.'); } }));
+    if (['active', 'paused'].indexOf(c.status) !== -1) {
+      var amount = el('input', { class: 'form-input', type: 'number', min: 1, step: '0.01', value: (d.honourFeeCents / 100).toFixed(2), id: 'cl-honour', 'aria-label': 'Honour payment amount (USD)' });
+      acts.appendChild(el('button', { type: 'button', class: 'btn btn--primary btn--md', text: 'Relationship success…', onclick: function () {
+        modal('Relationship success?', [el('p', { text: 'Only if they have told you so. He receives R19, congratulations, with the honour-payment invoice attached. His engagement closes, any pending requests are cancelled, he is asked for feedback (R21), and his documents are deleted in ' + d.retentionMonths + ' months.' }),
+          el('label', { class: 'form-label', for: 'cl-honour', text: 'Honour payment (USD)' }), amount], 'Send congratulations', function () { close(c, 'success', Math.round(Number(amount.value) * 100)); });
+      } }));
+      acts.appendChild(el('button', { type: 'button', class: 'btn btn--secondary btn--md', text: '12 months complete…', onclick: function () {
+        modal('Close as "12 months complete"?', 'He receives R20, confirming nothing more is owed. His engagement closes, pending requests are cancelled, he is asked for feedback (R21), and his documents are deleted in ' + d.retentionMonths + ' months.', 'Close and send R20', function () { close(c, 'completed'); });
+      } }));
+      acts.appendChild(el('button', { type: 'button', class: 'btn btn--danger btn--md', text: 'Close…', onclick: function () {
+        modal('Close ' + first + '\'s engagement?', 'No closing email apart from the feedback request (R21). Pending requests are cancelled and his documents are deleted in ' + d.retentionMonths + ' months.', 'Close', function () { close(c, 'closed'); }, true);
+      } }));
+    }
+    if (acts.firstChild) sec.appendChild(acts);
+    d.feedback.forEach(function (f) {
+      var PERM = { none: 'Do NOT publish', first_name: 'May publish with first name only', first_name_country: 'May publish with first name and country', anonymous: 'May publish anonymously' };
+      sec.appendChild(el('div', { class: 'ad-answer' }, [
+        el('span', { class: 'ad-q', text: 'Feedback, ' + H.fmtDate(f.created_at) + ' · ' + f.rating + ' of 5' }),
+        f.comments ? el('span', { class: 'ad-a', text: f.comments }) : null,
+        el('span', { class: 'ad-badge' + (f.publish_permission === 'none' ? ' ad-badge--danger' : ' ad-badge--ok'), text: PERM[f.publish_permission] + ' (' + f.permission_text_version + ')' }),
+      ]));
+    });
+    d.concerns.forEach(function (x) {
+      sec.appendChild(el('div', { class: 'ad-answer' }, [el('span', { class: 'ad-q', text: 'Concern linked to him, ' + H.fmtDate(x.created_at) + (x.handled_at ? ' · handled' : ' · OPEN') }), el('span', { class: 'ad-a', text: x.message })]));
+    });
+    return sec;
+  }
+
+  function close(c, kind, amountCents) {
+    H.api('admin-client-close', { id: c.id, kind: kind, amountCents: amountCents }).then(function (r) {
+      H.flash(r.emailed === false || r.feedbackEmailed === false ? 'Closed, but an email failed. Please check his email address.' : 'Closed.', r.emailed === false || r.feedbackEmailed === false);
+      loadDetail(c.id);
+    }, function (e) { H.flash(e.message, true); });
+  }
+
+  // ------------------------------------------------------------------ concerns
+  function loadConcerns() {
+    H.show('ad-client-detail');
+    var box = $('ad-client-detail');
+    box.innerHTML = '';
+    box.appendChild(el('p', { text: 'Loading…' }));
+    H.api('admin-concerns', { op: 'list' }).then(function (d) {
+      box.innerHTML = '';
+      box.appendChild(el('div', { class: 'ad-detail-head' }, [el('a', { class: 'ad-link', href: '#clients', text: '← All clients' })]));
+      box.appendChild(el('h1', { text: 'Concerns' }));
+      box.appendChild(el('p', { class: 'form-note', text: 'From the "Report a concern" form. Read each the same day. If it is about a client, link it to him and consider pausing his engagement from his page.' }));
+      var ABOUT = { client: 'About a client', woman: 'About a candidate', heritage_union: 'About Heritage Union', other: 'Other' };
+      var ROLE = { candidate: 'from a candidate', client: 'from a client', other: 'from someone else' };
+      if (!d.concerns.length) box.appendChild(el('p', { class: 'ad-empty', text: 'No concerns reported.' }));
+      d.concerns.forEach(function (x) {
+        var sel = el('select', { class: 'form-input', 'aria-label': 'Link to a client' }, [el('option', { value: '', text: 'Link to a client…' })].concat(d.clients.map(function (cl) { var o = el('option', { value: cl.id, text: cl.name + ' (' + cl.status + ')' }); if (x.client_id === cl.id) o.selected = true; return o; })));
+        sel.addEventListener('change', function () { H.api('admin-concerns', { op: 'link', concernId: x.id, clientId: sel.value || null }).then(function () { H.flash('Linked.'); }, function (e) { H.flash(e.message, true); }); });
+        box.appendChild(el('section', { class: 'ad-section cl-concern' + (x.handled_at ? '' : ' is-open') }, [
+          el('div', { class: 'ad-card-top' }, [el('strong', { text: ABOUT[x.about] + ', ' + ROLE[x.reporter_role] }), el('span', { class: 'ad-badge ' + (x.handled_at ? 'ad-badge--ok' : 'ad-badge--danger'), text: x.handled_at ? 'Handled by ' + x.handled_by : 'Open' })]),
+          el('span', { class: 'ad-card-sub', text: 'R-' + x.id.slice(0, 8).toUpperCase() + ' · ' + H.fmtDateTime(x.created_at) + ' · ' + (x.lang === 'vi' ? 'Vietnamese' : 'English') }),
+          x.subject_hint ? el('span', { class: 'ad-a', text: 'About: ' + x.subject_hint }) : null,
+          el('p', { class: 'ad-a', lang: x.lang, text: x.message }),
+          el('span', { class: 'ad-card-sub', text: 'Reporter: ' + ([x.reporter_name, x.reporter_contact].filter(Boolean).join(' · ') || 'no contact details given') }),
+          el('div', { class: 'ad-translate-row' }, [sel, x.handled_at ? null : el('button', { type: 'button', class: 'btn btn--secondary btn--sm', text: 'Mark handled', onclick: function () { H.api('admin-concerns', { op: 'handled', concernId: x.id }).then(function () { loadConcerns(); }, function (e) { H.flash(e.message, true); }); } })]),
+        ]));
+      });
+    }, function (e) { box.innerHTML = ''; box.appendChild(el('p', { class: 'ad-flash is-error', text: e.message })); });
   }
 
   // ------------------------------------------------------------------ matching screen
@@ -726,6 +820,7 @@
   window.HUClients = {
     route: function (hash) {
       H = window.HUAdmin;
+      if (hash === '#clients/concerns') { loadConcerns(); return; }
       var mm = /^#client-([0-9a-f-]{36})\/matching$/i.exec(hash);
       if (mm) { loadMatching(mm[1]); return; }
       var m = /^#client-([0-9a-f-]{36})$/i.exec(hash);

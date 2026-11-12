@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your feedback — Heritage Union</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/assets/css/main.css?v=7">
+  <link rel="stylesheet" href="/assets/css/client.css?v=5">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 44'%3E%3Ccircle cx='26' cy='22' r='12' fill='none' stroke='%235E2A2E' stroke-width='2'/%3E%3Ccircle cx='38' cy='22' r='12' fill='none' stroke='%23C2A35A' stroke-width='2'/%3E%3C/svg%3E">
+</head>
+<body class="cl-body">
+<header class="cl-header">
+  <a class="cl-logo" href="/" aria-label="Heritage Union — home">
+    <svg width="40" height="28" viewBox="0 0 52 36" fill="none" aria-hidden="true"><circle cx="18" cy="18" r="12.5" stroke="#5E2A2E" stroke-width="1.8"/><circle cx="34" cy="18" r="12.5" stroke="#C2A35A" stroke-width="1.8"/></svg>
+    <span>HERITAGE UNION</span>
+  </a>
+  <span class="cl-header-title">Your feedback</span>
+</header>
+<main id="main-content" class="cl-main">
+  <section id="fb-loading" class="cl-card cl-center"><p>Opening…</p></section>
+  <section id="fb-message" class="cl-card" hidden><h1 id="fb-title">This link no longer works</h1><p id="fb-text"></p></section>
+  <form id="fb-form" class="cl-card cl-card--accent" hidden novalidate>
+    <span class="eyebrow">Two minutes, entirely optional</span>
+    <h1 id="fb-hello">Thank you</h1>
+    <fieldset class="fb-set">
+      <legend class="cl-label">Overall, how was your experience with Heritage Union?</legend>
+      <div class="cl-chips" id="fb-rating" role="radiogroup" aria-label="Rating from 1 to 5"></div>
+      <p class="cl-help">1 = poor, 5 = excellent</p>
+    </fieldset>
+    <div class="cl-field">
+      <label class="cl-label" for="fb-comments">Anything you would like to tell us <span class="cl-opt">(optional)</span></label>
+      <textarea class="form-textarea" id="fb-comments" maxlength="4000" rows="6"></textarea>
+    </div>
+    <fieldset class="fb-set">
+      <legend class="cl-label">May we publish what you wrote?</legend>
+      <p class="cl-help">We never publish anything without your written permission, and only in the way you choose here.</p>
+      <div id="fb-perm" class="fb-perm"></div>
+      <label class="cl-check" id="fb-agree-row" for="fb-agree" hidden><input type="checkbox" id="fb-agree"> <span id="fb-agree-text"></span></label>
+    </fieldset>
+    <p class="cl-form-error" id="fb-error" role="alert"></p>
+    <div class="cl-nav"><button type="submit" class="btn btn--primary btn--md" id="fb-send">Send my feedback</button></div>
+  </form>
+  <section id="fb-done" class="cl-card cl-card--accent" hidden tabindex="-1"><h1>Thank you.</h1><p>Your feedback has reached us. It means a great deal.</p></section>
+</main>
+<footer class="cl-footer"><a href="/privacy">Privacy</a> &middot; <a href="/contact?concern=1">Report a concern</a></footer>
+<script src="/assets/js/feedback.js?v=2" defer></script>
+</body>
+</html>

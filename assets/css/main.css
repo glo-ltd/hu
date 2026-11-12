@@ -1803,3 +1803,8 @@ select.form-input { cursor: pointer; }
 #enq-turnstile:empty { display: none; }
 .enq-success { text-align: left; background: var(--white); border: 1px solid var(--cream-300); border-top: 3px solid var(--gold-500); border-radius: var(--radius-sm); padding: 28px; }
 .enquiry-form[hidden] { display: none; }
+
+/* Report a concern (/contact?concern=1, /vi/contact?concern=1) */
+.concern-form { background: var(--white); border: 1px solid var(--cream-300); border-top: 3px solid var(--burgundy-700); border-radius: var(--radius-sm); padding: 22px; }
+.concern-urgent { font-size: 14.5px; color: #6E2B26; background: #FBEDEA; border: 1px solid #E2B5AE; border-radius: var(--radius-sm); padding: 10px 12px; }
+.concern-done { text-align: left; }

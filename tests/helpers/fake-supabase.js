@@ -23,6 +23,8 @@ const TABLES = {
   client_events: { id: true },
   client_invoices: { id: true, unique: [['number', false]] },
   general_enquiries: { id: true },
+  client_feedback: { id: true },
+  concerns: { id: true },
 };
 
 function clone(v) { return v === undefined ? undefined : JSON.parse(JSON.stringify(v)); }

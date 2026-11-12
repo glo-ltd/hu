@@ -56,6 +56,16 @@ const ACTIONS = {
     const ok = await sendEmail(contactEmail(c), E.R5.build({ firstName: CC.firstName(c.full_name), link: l.link, expiresOn: l.expiresOn, purpose: applying ? 'application' : 'page' }));
     return ok ? null : { warning: 'A new link was made, but the email could not be sent.' };
   },
+  // A concern about him: pause blocks new requests and shows "paused" on
+  // his page. Requests already with a woman stay open; "Introduce" waits.
+  async pause(sb, c) {
+    if (c.status !== 'active') return 'Only an active engagement can be paused.';
+    await CC.setStatus(sb, c.id, 'paused', { paused_at: new Date().toISOString(), paused_reason: 'concern' });
+  },
+  async unpause(sb, c) {
+    if (c.status !== 'paused') return 'He isn\'t paused.';
+    await CC.setStatus(sb, c.id, 'active', { paused_at: null, paused_reason: null });
+  },
   // Stage 3: James reads his application and sworn declaration. Heritage
   // Union does not check them; reading them is what unlocks the invoice.
   async mark_read(sb, c, email) {
