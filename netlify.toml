@@ -4,6 +4,8 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+  # esbuild only packs JavaScript; the fee PDF is read from disk at runtime.
+  included_files = ["netlify/functions/assets/**"]
 
 [[headers]]
   for = "/*"
